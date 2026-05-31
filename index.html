@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Annotated 1611</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Cinzel:wght@400;600&display=swap');
+:root {
+  --parchment:#0d0b08;--ink:#e8dfc8;--ink-dim:#9e9278;--ink-faint:#4a4438;
+  --accent:#c8973a;--accent-dim:#8a6526;--accent-glow:rgba(200,151,58,0.15);
+  --margin-bg:#13110d;--margin-border:#2a2418;
+  --serif:'EB Garamond',Georgia,serif;--display:'Cinzel',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--parchment);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.85;min-height:100vh}
+header{border-bottom:1px solid var(--margin-border);padding:2rem 2rem 1.75rem;background:linear-gradient(180deg,#111009 0%,var(--parchment) 100%);text-align:center}
+header .eyebrow{font-family:var(--display);font-size:.62rem;letter-spacing:.3em;color:var(--accent);text-transform:uppercase;margin-bottom:.6rem}
+header h1{font-family:var(--display);font-size:clamp(1.8rem,5vw,3rem);font-weight:400;color:var(--ink);letter-spacing:.06em;margin-bottom:.5rem}
+header .subtitle{font-size:.9rem;color:var(--ink-dim);font-style:italic;max-width:520px;margin:0 auto}
+.page{max-width:900px;margin:0 auto;padding:3rem 2rem 6rem}
+.testament{margin-bottom:3.5rem}
+.testament-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--margin-border)}
+.testament-header h2{font-family:var(--display);font-size:.7rem;letter-spacing:.22em;color:var(--accent);text-transform:uppercase}
+.testament-header .t-meta{font-size:.75rem;color:var(--ink-faint);font-style:italic}
+.book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem}
+.book-card{background:var(--margin-bg);border:1px solid var(--margin-border);border-radius:4px;padding:1.1rem 1.25rem;text-decoration:none;display:block;position:relative;overflow:hidden;transition:all .18s}
+.book-card.available::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-glow) 0%,transparent 60%);opacity:0;transition:opacity .18s}
+.book-card.available:hover{border-color:var(--accent-dim)}
+.book-card.available:hover::before{opacity:1}
+.book-card.coming{cursor:default}
+.book-card .b-abbr{font-family:var(--display);font-size:.6rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:.3rem;display:block}
+.book-card .b-name{font-family:var(--display);font-size:1rem;color:var(--ink);display:block;margin-bottom:.35rem;line-height:1.2}
+.book-card .b-meta{font-size:.72rem;color:var(--ink-dim);font-style:italic;display:block;line-height:1.4}
+.book-card .b-badge{position:absolute;top:.75rem;right:.85rem;font-family:var(--display);font-size:.55rem;letter-spacing:.08em;padding:.15em .5em;border-radius:2px;font-weight:600}
+.b-badge.avail{color:var(--accent);background:rgba(200,151,58,0.12);border:1px solid rgba(200,151,58,0.25)}
+.b-badge.soon{color:var(--ink-faint);background:rgba(74,68,56,0.3);border:1px solid rgba(74,68,56,0.4)}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin:2rem 0 3rem;flex-wrap:wrap;padding:1.5rem;background:var(--margin-bg);border:1px solid var(--margin-border);border-radius:4px}
+.h-stat{text-align:center}
+.h-stat .num{font-family:var(--display);font-size:1.5rem;color:var(--accent);display:block}
+.h-stat .lbl{font-size:.65rem;color:var(--ink-dim);letter-spacing:.12em;text-transform:uppercase;font-family:var(--display)}
+footer{text-align:center;padding:2rem;font-size:.75rem;color:var(--ink-faint);font-style:italic;border-top:1px solid var(--margin-border)}
+@media(max-width:600px){header{padding:1.5rem 1rem 1.25rem}.page{padding:2rem 1rem 4rem}.book-grid{grid-template-columns:1fr 1fr}.hero-stats{gap:1.5rem}}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">King James Version · 1611 First Edition</div>
+  <h1>The Annotated 1611</h1>
+  <div class="subtitle">Marginal notes of the 1611 translators — alternate renderings, Hebrew &amp; Greek glosses, and annotations — restored inline beside the sacred text.</div>
+</header>
+<div class="page">
+  <div class="hero-stats">
+    <div class="h-stat"><span class="num">4</span><span class="lbl">Books Available</span></div>
+    <div class="h-stat"><span class="num">81</span><span class="lbl">Chapters</span></div>
+    <div class="h-stat"><span class="num">2,997</span><span class="lbl">Verses</span></div>
+    <div class="h-stat"><span class="num">800+</span><span class="lbl">Marginal Notes</span></div>
+  </div>
+
+  <!-- OLD TESTAMENT -->
+  <div class="testament">
+    <div class="testament-header">
+      <h2>Old Testament</h2>
+      <span class="t-meta">Coming</span>
+    </div>
+    <div class="book-grid">
+
+      <div class="book-card coming">
+        <span class="b-abbr">Law · Genesis</span>
+        <span class="b-name">The First Book of Moses, called Genesis</span>
+        <span class="b-meta">50 chapters · 1,533 verses</span>
+        <span class="b-badge soon">Coming</span>
+      </div>
+
+      <div class="book-card coming">
+        <span class="b-abbr">Poetry · Psalms</span>
+        <span class="b-name">The Book of Psalms</span>
+        <span class="b-meta">150 chapters · 2,461 verses</span>
+        <span class="b-badge soon">Coming</span>
+      </div>
+
+      <div class="book-card coming">
+        <span class="b-abbr">Prophecy · Isaiah</span>
+        <span class="b-name">The Book of the Prophet Isaiah</span>
+        <span class="b-meta">66 chapters · 1,292 verses</span>
+        <span class="b-badge soon">Coming</span>
+      </div>
+
+      <div class="book-card coming">
+        <span class="b-abbr">Prophecy · Daniel</span>
+        <span class="b-name">The Book of Daniel</span>
+        <span class="b-meta">12 chapters · 357 verses</span>
+        <span class="b-badge soon">Coming</span>
+      </div>
+
+      <div class="book-card coming">
+        <span class="b-abbr">Prophecy · Zechariah</span>
+        <span class="b-name">The Book of Zechariah</span>
+        <span class="b-meta">14 chapters · 211 verses</span>
+        <span class="b-badge soon">Coming</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NEW TESTAMENT -->
+  <div class="testament">
+    <div class="testament-header">
+      <h2>New Testament</h2>
+      <span class="t-meta">4 books available · 17 more coming</span>
+    </div>
+    <div class="book-grid">
+
+      <div class="book-card coming">
+        <span class="b-abbr">Gospel · Matthew</span>
+        <span class="b-name">The Gospel According to Saint Matthew</span>
+        <span class="b-meta">28 chapters · 1,071 verses</span>
+        <span class="b-badge soon">Coming</span>
+      </div>
+
+      <a class="book-card available" href="annotated-1611-mark.html">
+        <span class="b-abbr">Gospel · Mark</span>
+        <span class="b-name">The Gospel According to Saint Mark</span>
+        <span class="b-meta">16 chapters · 678 verses · The servant Gospel, Peter's testimony, the Cross</span>
+        <span class="b-badge avail">Available</span>
+      </a>
+
+      <div class="book-card coming">
+        <span class="b-abbr">Gospel · Luke</span>
+        <span class="b-name">The Gospel According to Saint Luke</span>
+        <span class="b-meta">24 chapters · 1,151 verses</span>
+        <span class="b-badge soon">Coming</span>
+      </div>
+
+      <a class="book-card available" href="annotated-1611-john-complete.html">
+        <span class="b-abbr">Gospel · John</span>
+        <span class="b-name">The Gospel According to Saint John</span>
+        <span class="b-meta">21 chapters · 879 verses · The Eternal Word, the seven I AMs, the Passion</span>
+        <span class="b-badge avail">Available</span>
+      </a>
+
+      <a class="book-card available" href="annotated-1611-acts.html">
+        <span class="b-abbr">Acts</span>
+        <span class="b-name">The Acts of the Apostles</span>
+        <span class="b-meta">28 chapters · 1,007 verses · Pentecost, the church's birth, Paul's journeys to Rome</span>
+        <span class="b-badge avail">Available</span>
+      </a>
+
+      <a class="book-card available" href="annotated-1611-romans.html">
+        <span class="b-abbr">Epistle · Romans</span>
+        <span class="b-name">The Epistle of Paul to the Romans</span>
+        <span class="b-meta">16 chapters · 433 verses · Justification, election, Israel, sanctification</span>
+        <span class="b-badge avail">Available</span>
+      </a>
+
+      <div class="book-card coming">
+        <span class="b-abbr">Epistle · Galatians</span>
+        <span class="b-name">The Epistle of Paul to the Galatians</span>
+        <span class="b-meta">6 chapters · 149 verses</span>
+        <span class="b-badge soon">Coming</span>
+      </div>
+
+      <div class="book-card coming">
+        <span class="b-abbr">Epistle · Ephesians</span>
+        <span class="b-name">The Epistle of Paul to the Ephesians</span>
+        <span class="b-meta">6 chapters · 155 verses</span>
+        <span class="b-badge soon">Coming</span>
+      </div>
+
+      <div class="book-card coming">
+        <span class="b-abbr">Epistle · Hebrews</span>
+        <span class="b-name">The Epistle to the Hebrews</span>
+        <span class="b-meta">13 chapters · 303 verses</span>
+        <span class="b-badge soon">Coming</span>
+      </div>
+
+      <div class="book-card coming">
+        <span class="b-abbr">Prophecy · Revelation</span>
+        <span class="b-name">The Revelation of Saint John the Divine</span>
+        <span class="b-meta">22 chapters · 404 verses</span>
+        <span class="b-badge soon">Coming</span>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<footer>
+  The Annotated 1611 · Marginal notes of the first edition King James Bible, 1611 · All texts KJV · Offline · No accounts · No ads
+</footer>
+</body>
+</html>
