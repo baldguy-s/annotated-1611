@@ -23,8 +23,8 @@ header .eyebrow{font-family:var(--display);font-size:.6rem;letter-spacing:.25em;
 header h1{font-family:var(--display);font-size:clamp(1rem,3vw,1.4rem);font-weight:600;color:var(--ink);letter-spacing:.04em;cursor:pointer}
 header h1:hover{color:var(--accent)}
 .header-right{display:flex;gap:.5rem;align-items:center}
-button.nav-btn{font-family:var(--display);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--ink-dim);border:1px solid var(--ink-faint);padding:.35em .85em;border-radius:2px;cursor:pointer;transition:all .15s}
-button.nav-btn:hover{color:var(--accent);border-color:var(--accent-dim)}
+button.nav-btn,a.nav-btn{font-family:var(--display);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--ink-dim);border:1px solid var(--ink-faint);padding:.35em .85em;border-radius:2px;cursor:pointer;transition:all .15s;text-decoration:none;display:inline-flex;align-items:center}
+button.nav-btn:hover,a.nav-btn:hover{color:var(--accent);border-color:var(--accent-dim)}
 .legend{display:flex;flex-wrap:wrap;gap:.6rem 1.25rem;padding:.65rem 2rem;border-bottom:1px solid var(--margin-border);background:var(--margin-bg)}
 .legend-item{display:flex;align-items:center;gap:.4rem;font-size:.7rem;color:var(--ink-dim)}
 .tag{display:inline-block;font-size:.58rem;font-family:var(--display);letter-spacing:.08em;padding:.1em .45em;border-radius:2px;font-weight:600;vertical-align:middle}
@@ -90,7 +90,7 @@ button.ctrl:hover{background:var(--accent-glow)}
     <div class="eyebrow">The Annotated 1611</div>
     <h1 onclick="showIndex()">The Epistle of Paul to the Romans</h1>
   </div>
-  <div class="header-right" id="header-nav"></div>
+  <div class="header-right" id="header-nav"><a class="nav-btn" href="index.html">← Bible</a></div>
 </header>
 <div class="legend">
   <div class="legend-item"><span class="tag tag-alt">OR</span> Alternate rendering</div>
@@ -739,7 +739,7 @@ function openChapter(n) {
 
   document.getElementById('ch-stats').innerHTML =
     `Romans ${n} — <span>${data.verses.length}</span> verses &nbsp;|&nbsp; Annotated: <span>${annotated}</span> &nbsp;|&nbsp; Notes: <span>${noteCount}</span>`;
-  document.getElementById('header-nav').innerHTML = `<button class="nav-btn" onclick="showIndex()">↑ Index</button>`;
+  document.getElementById('header-nav').innerHTML = '<a class="nav-btn" href="index.html">← Bible</a><button class="nav-btn" onclick="showIndex()">↑ Index</button>';
   showView('view-chapter');
   window.scrollTo(0, 0);
 }
@@ -748,7 +748,7 @@ function prevChapter() { if (currentChapter > 1) openChapter(currentChapter - 1)
 function nextChapter() { if (currentChapter < 16) openChapter(currentChapter + 1); }
 
 function showIndex() {
-  document.getElementById('header-nav').innerHTML = '';
+  document.getElementById('header-nav').innerHTML = '<a class="nav-btn" href="index.html">← Bible</a>';
   showView('view-index');
   window.scrollTo(0, 0);
 }
