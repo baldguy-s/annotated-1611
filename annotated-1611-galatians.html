@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Annotated 1611 — The Epistle of Paul to the Galatians</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Cinzel:wght@400;600&display=swap');
+:root {
+  --parchment:#0d0b08;--ink:#e8dfc8;--ink-dim:#9e9278;--ink-faint:#4a4438;
+  --accent:#c8973a;--accent-dim:#8a6526;--accent-glow:rgba(200,151,58,0.15);
+  --margin-bg:#13110d;--margin-border:#2a2418;--note-bg:#1a1710;
+  --note-border:#c8973a;--highlight:rgba(200,151,58,0.18);--verse-hover:rgba(200,151,58,0.07);
+  --tag-alt:#7ab8d4;--tag-heb:#a8c87a;--tag-grk:#c87ab8;--tag-note:#c8973a;
+  --serif:'EB Garamond',Georgia,serif;--display:'Cinzel',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--parchment);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.85;min-height:100vh}
+.view{display:none}.view.active{display:block}
+header{border-bottom:1px solid var(--margin-border);padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#111009 0%,var(--parchment) 100%);position:sticky;top:0;z-index:100}
+.header-left{display:flex;flex-direction:column;gap:.15rem}.header-right{display:flex;gap:.5rem;align-items:center}
+header .eyebrow{font-family:var(--display);font-size:.6rem;letter-spacing:.25em;color:var(--accent);text-transform:uppercase}
+header h1{font-family:var(--display);font-size:clamp(1rem,3vw,1.4rem);font-weight:600;color:var(--ink);letter-spacing:.04em;cursor:pointer}
+header h1:hover{color:var(--accent)}
+button.nav-btn,a.nav-btn{font-family:var(--display);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--ink-dim);border:1px solid var(--ink-faint);padding:.35em .85em;border-radius:2px;cursor:pointer;transition:all .15s;text-decoration:none;display:inline-flex;align-items:center}
+button.nav-btn:hover,a.nav-btn:hover{color:var(--accent);border-color:var(--accent-dim)}
+.legend{display:flex;flex-wrap:wrap;gap:.6rem 1.25rem;padding:.65rem 2rem;border-bottom:1px solid var(--margin-border);background:var(--margin-bg)}
+.legend-item{display:flex;align-items:center;gap:.4rem;font-size:.7rem;color:var(--ink-dim)}
+.tag{display:inline-block;font-size:.58rem;font-family:var(--display);letter-spacing:.08em;padding:.1em .45em;border-radius:2px;font-weight:600;vertical-align:middle}
+.tag-alt{background:rgba(122,184,212,.15);color:var(--tag-alt);border:1px solid rgba(122,184,212,.3)}
+.tag-heb{background:rgba(168,200,122,.15);color:var(--tag-heb);border:1px solid rgba(168,200,122,.3)}
+.tag-grk{background:rgba(200,122,184,.15);color:var(--tag-grk);border:1px solid rgba(200,122,184,.3)}
+.tag-note{background:rgba(200,151,58,.12);color:var(--tag-note);border:1px solid rgba(200,151,58,.3)}
+#view-index{max-width:860px;margin:0 auto;padding:2.5rem 2rem 5rem}
+.index-hero{text-align:center;margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--margin-border)}
+.index-hero .kicker{font-family:var(--display);font-size:.62rem;letter-spacing:.25em;color:var(--accent);text-transform:uppercase;margin-bottom:.6rem}
+.index-hero h2{font-family:var(--display);font-size:clamp(1.4rem,4vw,2.4rem);color:var(--ink);font-weight:400;letter-spacing:.06em;margin-bottom:.75rem}
+.index-hero p{font-size:.9rem;color:var(--ink-dim);font-style:italic;max-width:500px;margin:0 auto;line-height:1.7}
+.index-stats{display:flex;justify-content:center;gap:2.5rem;margin-top:1.5rem;flex-wrap:wrap}
+.index-stat{text-align:center}
+.index-stat .num{font-family:var(--display);font-size:1.6rem;color:var(--accent);display:block}
+.index-stat .lbl{font-size:.68rem;color:var(--ink-dim);letter-spacing:.1em;text-transform:uppercase;font-family:var(--display)}
+.book-section{margin-bottom:2rem}
+.book-section h3{font-family:var(--display);font-size:.62rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--margin-border)}
+.chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.55rem}
+.chapter-card{background:var(--margin-bg);border:1px solid var(--margin-border);border-radius:3px;padding:.65rem .9rem;cursor:pointer;transition:all .15s}
+.chapter-card:hover{border-color:var(--accent-dim);background:var(--accent-glow)}
+.chapter-card .ch-num{font-family:var(--display);font-size:.95rem;color:var(--accent);display:block;margin-bottom:.15rem}
+.chapter-card .ch-label{font-size:.68rem;color:var(--ink-dim);font-style:italic;line-height:1.3;display:block}
+.chapter-card .ch-notes{font-size:.6rem;color:var(--ink-faint);font-family:var(--display);letter-spacing:.05em;margin-top:.25rem;display:block}
+#view-chapter{max-width:900px;margin:0 auto;padding:2rem 1.5rem 5rem}
+.chapter-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;gap:1rem}
+.chapter-nav-center{font-family:var(--display);font-size:.68rem;letter-spacing:.15em;color:var(--ink-dim);text-transform:uppercase;text-align:center}
+.chapter-heading{text-align:center;margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--margin-border)}
+.chapter-heading .book{font-family:var(--display);font-size:.62rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:.4rem}
+.chapter-heading h2{font-family:var(--display);font-size:clamp(1.1rem,3vw,1.7rem);color:var(--ink);font-weight:400;letter-spacing:.06em}
+.chapter-heading .running-head{font-size:.8rem;color:var(--ink-dim);font-style:italic;margin-top:.4rem}
+.controls{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
+button.ctrl{font-family:var(--display);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--accent);border:1px solid var(--accent-dim);padding:.35em .9em;border-radius:2px;cursor:pointer;transition:background .15s}
+button.ctrl:hover{background:var(--accent-glow)}
+.verse-block{display:flex;margin-bottom:.15rem;border-radius:4px;transition:background .15s;padding:.2rem .5rem .2rem 0}
+.verse-block:hover{background:var(--verse-hover)}
+.verse-block.has-note{cursor:pointer}
+.verse-block.active{background:var(--highlight)}
+.verse-num{font-family:var(--display);font-size:.58rem;color:var(--accent);min-width:2.8rem;padding-top:.55rem;text-align:right;padding-right:.75rem;letter-spacing:.05em;flex-shrink:0;user-select:none}
+.verse-text{flex:1;font-size:1rem;color:var(--ink);line-height:1.9}
+.verse-text em{font-style:italic;font-weight:600}
+.note-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-left:4px;opacity:.7;flex-shrink:0;align-self:flex-start;margin-top:.75rem}
+.note-panel{display:none;margin:.4rem 0 .8rem 2.8rem;background:var(--note-bg);border-left:3px solid var(--note-border);border-radius:0 4px 4px 0;padding:.9rem 1.1rem;font-size:.88rem;line-height:1.75;animation:slideIn .18s ease}
+.note-panel.open{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.note-entry{margin-bottom:.65rem;padding-bottom:.65rem;border-bottom:1px solid var(--margin-border);display:flex;gap:.6rem;align-items:flex-start}
+.note-entry:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.note-content{flex:1}
+.note-content .anchor{font-style:italic;color:var(--ink-dim);margin-right:.3rem;font-size:.83rem}
+.note-content .text{color:var(--ink)}
+.note-content .source{font-size:.7rem;color:var(--ink-faint);margin-top:.2rem;font-style:italic}
+.section-break{text-align:center;margin:1.5rem 0 1rem;font-family:var(--display);font-size:.62rem;letter-spacing:.18em;color:var(--ink);text-transform:uppercase}
+.section-break::before,.section-break::after{content:"— "}
+.ch-stats{margin-top:2.5rem;padding:1rem 1.5rem;background:var(--margin-bg);border:1px solid var(--margin-border);border-radius:4px;font-size:.78rem;color:var(--ink-dim);display:flex;flex-wrap:wrap;gap:.5rem 2rem}
+.ch-stats span{color:var(--accent)}
+@media(max-width:600px){header{padding:1rem}.legend{padding:.6rem 1rem}#view-index{padding:1.25rem 1rem 4rem}#view-chapter{padding:1.25rem .75rem 3rem}.verse-num{min-width:2.2rem;font-size:.52rem}.note-panel{margin-left:2.2rem}body{font-size:16px}.chapter-grid{grid-template-columns:repeat(auto-fill,minmax(95px,1fr))}}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--parchment)}::-webkit-scrollbar-thumb{background:var(--ink-faint);border-radius:3px}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <span class="eyebrow">King James Version · 1611</span>
+    <h1 onclick="showIndex()">The Annotated 1611</h1>
+  </div>
+  <div class="header-right">
+    <a class="nav-btn" href="index.html">← Bible</a>
+  </div>
+</header>
+<div class="legend">
+  <div class="legend-item"><span class="tag tag-alt">OR</span> Alternate rendering</div>
+  <div class="legend-item"><span class="tag tag-heb">HEB</span> Hebrew / Aramaic gloss</div>
+  <div class="legend-item"><span class="tag tag-grk">GRK</span> Greek gloss</div>
+  <div class="legend-item"><span class="tag tag-note">NOTE</span> Translators' annotation</div>
+</div>
+
+<div id="view-index" class="view active">
+  <div class="index-hero">
+    <div class="kicker">Epistle · New Testament</div>
+    <h2>The Epistle of Paul to the Galatians</h2>
+    <p>The Magna Carta of Christian liberty — justification by faith alone defended against the Judaizers, the law as schoolmaster, and the fruit of the Spirit against the works of the flesh.</p>
+    <div class="index-stats">
+      <div class="index-stat"><span class="num">6</span><span class="lbl">Chapters</span></div>
+      <div class="index-stat"><span class="num">149</span><span class="lbl">Verses</span></div>
+      <div class="index-stat"><span class="num">110+</span><span class="lbl">Marginal Notes</span></div>
+    </div>
+  </div>
+  <div class="book-section">
+    <h3>Chapters</h3>
+    <div class="chapter-grid" id="chapter-grid"></div>
+  </div>
+</div>
+
+<div id="view-chapter" class="view">
+  <div class="chapter-nav">
+    <button class="nav-btn" onclick="prevChapter()">← Prev</button>
+    <div class="chapter-nav-center" id="nav-label"></div>
+    <button class="nav-btn" onclick="nextChapter()">Next →</button>
+  </div>
+  <div class="chapter-heading">
+    <div class="book">Galatians</div>
+    <h2 id="ch-heading"></h2>
+    <div class="running-head" id="ch-running"></div>
+  </div>
+  <div class="controls">
+    <button class="ctrl" onclick="expandAll()">Expand All Notes</button>
+    <button class="ctrl" onclick="collapseAll()">Collapse All</button>
+  </div>
+  <div id="verse-container"></div>
+  <div class="ch-stats" id="ch-stats"></div>
+</div>
+
+<script>
+const GALATIANS = {
+1:{heading:"Chapter I",running:"No other gospel — Paul's apostleship from Christ alone, not men; his conversion and early history",sections:{1:"Salutation and Rebuke",6:"No Other Gospel",11:"Paul's Gospel Received by Revelation"},verses:[
+{v:1,t:"Paul, an apostle, (not of men, neither by man, but by Jesus Christ, and God the Father, who raised him from the dead;)",n:[{tag:"note",a:"not of men, neither by man",t:"The double denial opens the epistle because the Judaizers had attacked Paul's apostolic credentials — arguing he was secondary to the Jerusalem apostles and therefore his gospel was inferior. Paul answers before they can ask: his authority derives from Christ alone.",s:"1611 margin, Gal 1:1"}]},
+{v:2,t:"And all the brethren which are with me, unto the churches of Galatia:",n:[{tag:"note",a:"churches of Galatia",t:"Written to multiple churches in the Roman province of Galatia in Asia Minor — likely Antioch of Pisidia, Iconium, Lystra, and Derbe, planted on Paul's first missionary journey (Acts 13-14). The defection was regional, not isolated.",s:"1611 margin, Gal 1:2"}]},
+{v:3,t:"Grace <em>be</em> to you and peace from God the Father, and <em>from</em> our Lord Jesus Christ,",n:[]},
+{v:4,t:"Who gave himself for our sins, that he might deliver us from this present evil world, according to the will of God and our Father:",n:[{tag:"note",a:"deliver us from this present evil world",t:"Exaireo — to rescue, to pluck out. The deliverance is not from the physical world but from its moral and spiritual system — the age dominated by sin and under the power of the god of this world (2 Cor 4:4). The cross accomplishes rescue from that domain.",s:"1611 margin, Gal 1:4"}]},
+{v:5,t:"To whom <em>be</em> glory for ever and ever. Amen.",n:[]},
+{v:6,t:"I marvel that ye are so soon removed from him that called you into the grace of Christ unto another gospel:",n:[{tag:"note",a:"I marvel",t:"Thaumazo — to be astonished. Paul skips his customary thanksgiving (compare Rom 1:8; 1 Cor 1:4) and goes straight to rebuke. In every other epistle he thanks God for the church; here he marvels at their defection. The omission is itself a sermon.",s:"1611 margin, Gal 1:6"}]},
+{v:7,t:"Which is not another; but there be some that trouble you, and would pervert the gospel of Christ.",n:[{tag:"note",a:"which is not another",t:"Two Greek words for another: heteron (different in kind) and allo (another of the same kind). Paul uses heteron — a gospel of a different kind is not a variant of the gospel; it is a different thing entirely. There is only one gospel.",s:"1611 margin, Gal 1:7"}]},
+{v:8,t:"But though we, or an angel from heaven, preach any other gospel unto you than that which we have preached unto you, let him be accursed.",n:[{tag:"note",a:"let him be accursed",t:"Anathema — devoted to destruction, cut off from God. The severity is deliberate and startling: Paul includes himself and angels in the curse. The integrity of the gospel is not negotiable regardless of the messenger's pedigree or prestige.",s:"1611 margin, Gal 1:8"}]},
+{v:9,t:"As we said before, so say I now again, If any <em>man</em> preach any other gospel unto you than that ye have received, let him be accursed.",n:[{tag:"note",a:"so say I now again",t:"The double anathema is not rhetorical excess but deliberate emphasis. The repetition underscores that this is not a hasty statement Paul might walk back — it is considered, settled judgment.",s:"1611 margin, Gal 1:9"}]},
+{v:10,t:"For do I now persuade men, or God? or do I seek to please men? for if I yet pleased men, I should not be the servant of Christ.",n:[{tag:"note",a:"if I yet pleased men, I should not be the servant of Christ",t:"The Judaizers likely accused Paul of being a man-pleaser — softening the law to attract Gentile converts. Paul inverts the charge: his bold rebuke of the Galatians is proof he does not seek human approval. A man-pleaser would have said nothing.",s:"1611 margin, Gal 1:10"}]},
+{v:11,t:"But I certify you, brethren, that the gospel which was preached of me is not after man.",n:[]},
+{v:12,t:"For I neither received it of man, neither was I taught <em>it</em>, but by the revelation of Jesus Christ.",n:[{tag:"note",a:"by the revelation of Jesus Christ",t:"Paul's gospel came neither from the Jerusalem apostles nor from human tradition — it came by direct revelation from the risen Christ. This makes the Judaizers' charge that Paul's gospel was a second-hand, diluted version of Peter's gospel impossible.",s:"1611 margin, Gal 1:12"}]},
+{v:13,t:"For ye have heard of my conversation in time past in the Jews' religion, how that beyond measure I persecuted the church of God, and wasted it:",n:[{tag:"note",a:"conversation",t:"The KJV word conversation renders anastrophe — manner of life, conduct, the whole way one lives. Not merely speech but the entire pattern of behavior in the former life under Judaism.",s:"1611 margin, Gal 1:13"}]},
+{v:14,t:"And profited in the Jews' religion above many my equals in mine own nation, being more exceedingly zealous of the traditions of my fathers.",n:[{tag:"note",a:"profited ... above many my equals",t:"Paul's credentials in Judaism were impeccable (Phil 3:4-6). He was not converted from ignorance or failure but from the pinnacle of Jewish religious achievement. His rejection of law-righteousness cannot be attributed to inability to keep it.",s:"1611 margin, Gal 1:14"}]},
+{v:15,t:"But when it pleased God, who separated me from my mother's womb, and called <em>me</em> by his grace,",n:[{tag:"note",a:"separated me from my mother's womb",t:"An echo of Jeremiah's call (Jer 1:5). Paul's apostleship was not an accident of his Damascus road experience — it was purposed before he was born. Sovereignty, not circumstance, explains his commission.",s:"1611 margin, Gal 1:15"}]},
+{v:16,t:"To reveal his Son in me, that I might preach him among the heathen; immediately I conferred not with flesh and blood:",n:[{tag:"note",a:"I conferred not with flesh and blood",t:"The independence of Paul's gospel from human authority is demonstrated by his behavior after conversion: he did not go to Jerusalem to have his message approved. He went to Arabia — alone with Christ and the revelation he had received.",s:"1611 margin, Gal 1:16"}]},
+{v:17,t:"Neither went I up to Jerusalem to them which were apostles before me; but I went into Arabia, and returned again unto Damascus.",n:[]},
+{v:18,t:"Then after three years I went up to Jerusalem to see Peter, and abode with him fifteen days.",n:[{tag:"note",a:"after three years",t:"Three years after his conversion. By the time Paul finally visited Peter, he had been preaching the gospel independently for three years. He did not need Peter's endorsement — he came to visit, not to be instructed.",s:"1611 margin, Gal 1:18"}]},
+{v:19,t:"But other of the apostles saw I none, save James the Lord's brother.",n:[]},
+{v:20,t:"Now the things which I write unto you, behold, before God, I lie not.",n:[]},
+{v:21,t:"Afterwards I came into the regions of Syria and Cilicia;",n:[]},
+{v:22,t:"And was unknown by face unto the churches of Judaea which were in Christ:",n:[]},
+{v:23,t:"But they had heard only, That he which persecuted us in times past now preacheth the faith which once he destroyed.",n:[]},
+{v:24,t:"And they glorified God in me.",n:[{tag:"note",a:"they glorified God in me",t:"The churches of Judaea did not know Paul by face — they knew him only by reputation. And the reputation that reached them was not of a great apostle but of a great miracle: the persecutor become the preacher. Their response was not to praise Paul but to praise God.",s:"1611 margin, Gal 1:24"}]}
+]},
+2:{heading:"Chapter II",running:"Paul's gospel confirmed at Jerusalem — the rebuke of Peter at Antioch — justification by faith, not by law",sections:{1:"Confirmed by the Jerusalem Apostles",11:"Paul Rebukes Peter at Antioch",15:"Justified by Faith, Not by Law"},verses:[
+{v:1,t:"Then fourteen years after I went up again to Jerusalem with Barnabas, and took Titus with me also.",n:[{tag:"note",a:"fourteen years after",t:"Fourteen years after his conversion, or possibly after his first Jerusalem visit. Either way, the interval underscores Paul's independence: he had been a fully operative apostle for over a decade before this council visit (Acts 15).",s:"1611 margin, Gal 2:1"}]},
+{v:2,t:"And I went up by revelation, and communicated unto them that gospel which I preach among the Gentiles, but privately to them which were of reputation, lest by any means I should run, or had run, in vain.",n:[{tag:"note",a:"by revelation",t:"Not summoned by Jerusalem's authority but sent by divine direction. Even his attendance at the Jerusalem council was not an act of submission to human ecclesiastical hierarchy but of obedience to God.",s:"1611 margin, Gal 2:2"}]},
+{v:3,t:"But neither Titus, who was with me, being a Greek, was compelled to be circumcised:",n:[{tag:"note",a:"Titus ... being a Greek, was not compelled to be circumcised",t:"The test case. Titus was a Gentile convert traveling with Paul to Jerusalem. The Jerusalem apostles did not require his circumcision — their own practice confirmed Paul's gospel of grace without the law.",s:"1611 margin, Gal 2:3"}]},
+{v:4,t:"And that because of false brethren unawares brought in, who came in privily to spy out our liberty which we have in Christ Jesus, that they might bring us into bondage:",n:[{tag:"note",a:"false brethren ... to spy out our liberty",t:"Pseudadelphoi — false brothers. They had the external appearance of belonging to the church but their mission was subversion — infiltrating to observe and then attack the freedom that the gospel produces in those under grace rather than law.",s:"1611 margin, Gal 2:4"}]},
+{v:5,t:"To whom we gave place by subjection, no, not for an hour; that the truth of the gospel might continue with you.",n:[{tag:"note",a:"not for an hour",t:"Paul did not yield a moment. The principle at stake — that Gentile believers are fully free from the Mosaic law — was worth every conflict. One concession on this point would have implied the gospel was insufficient without legal addition.",s:"1611 margin, Gal 2:5"}]},
+{v:6,t:"But of these who seemed to be somewhat, (whatsoever they were, it maketh no matter to me: God accepteth no man's person:) for they who seemed <em>to be somewhat</em> in conference added nothing to me:",n:[{tag:"note",a:"God accepteth no man's person",t:"Paul refuses to be overawed by the reputation of the Jerusalem apostles. God does not judge by rank or seniority, and neither does Paul. The gospel he received from Christ needs no addition from men of repute.",s:"1611 margin, Gal 2:6"}]},
+{v:7,t:"But contrariwise, when they saw that the gospel of the uncircumcision was committed unto me, as <em>the gospel</em> of the circumcision <em>was</em> unto Peter;",n:[{tag:"note",a:"the gospel of the uncircumcision ... the gospel of the circumcision",t:"Not two different gospels but the same gospel directed to two different audiences. Peter's primary field was Israel; Paul's was the Gentiles. The distinction is of missionary sphere, not doctrinal content.",s:"1611 margin, Gal 2:7"}]},
+{v:8,t:"(For he that wrought effectually in Peter to the apostleship of the circumcision, the same was mighty in me toward the Gentiles:)",n:[]},
+{v:9,t:"And when James, Cephas, and John, who seemed to be pillars, perceived the grace that was given unto me, they gave to me and Barnabas the right hands of fellowship; that we <em>should go</em> unto the heathen, and they unto the circumcision.",n:[{tag:"note",a:"the right hands of fellowship",t:"The formal gesture of covenant partnership. The Jerusalem pillars did not correct Paul's gospel — they extended the hand of partnership. This is Paul's definitive answer to the Judaizers: the mother church itself endorsed his mission and his message.",s:"1611 margin, Gal 2:9"}]},
+{v:10,t:"Only <em>they would</em> that we should remember the poor; the same which I also was forward to do.",n:[]},
+{v:11,t:"But when Peter was come to Antioch, I withstood him to the face, because he was to be blamed.",n:[{tag:"note",a:"I withstood him to the face",t:"Kata prosopon — face to face, publicly. The confrontation was not private correspondence but an open rebuke in the assembly. The gospel's integrity required nothing less. Even an apostle who walks inconsistently with the truth must be corrected.",s:"1611 margin, Gal 2:11"}]},
+{v:12,t:"For before that certain came from James, he did eat with the Gentiles: but when they were come, he withdrew and separated himself, fearing them which were of the circumcision.",n:[{tag:"note",a:"fearing them which were of the circumcision",t:"Peter's failure was not theological confusion but social cowardice — he knew better but acted differently under peer pressure. His separation from Gentile believers at meals implied that they were second-class members of the body, requiring Jewish ceremonial distinctions.",s:"1611 margin, Gal 2:12"}]},
+{v:13,t:"And the other Jews dissembled likewise with him; insomuch that Barnabas also was carried away with their dissimulation.",n:[{tag:"note",a:"Barnabas also was carried away",t:"The contagion of hypocrisy — even Barnabas, Paul's companion and partner in Gentile mission, was swept into the inconsistency. No man is immune to social pressure when it wears the face of deference.",s:"1611 margin, Gal 2:13"}]},
+{v:14,t:"But when I saw that they walked not uprightly according to the truth of the gospel, I said unto Peter before <em>them</em> all, If thou, being a Jew, livest after the manner of Gentiles, and not as do the Jews, why compellest thou the Gentiles to live as do the Jews?",n:[{tag:"note",a:"walked not uprightly according to the truth of the gospel",t:"Orthopodeo — to walk straight, to be orthopaedic. Peter's behavior was a crooked walk — his feet went one direction while the gospel pointed another. Truth is not only believed; it is walked.",s:"1611 margin, Gal 2:14"}]},
+{v:15,t:"We who are Jews by nature, and not sinners of the Gentiles,",n:[]},
+{v:16,t:"Knowing that a man is not justified by the works of the law, but by the faith of Jesus Christ, even we have believed in Jesus Christ, that we might be justified by the faith of Christ, and not by the works of the law: for by the works of the law shall no flesh be justified.",n:[{tag:"note",a:"not justified by the works of the law",t:"The thesis of the epistle, stated three times in one verse. Dikaioo — to declare righteous, to acquit. Even Jewish believers who had every advantage of the law have believed in Christ for justification — their own practice is the refutation of the Judaizers' position.",s:"1611 margin, Gal 2:16"}]},
+{v:17,t:"But if, while we seek to be justified by Christ, we ourselves also are found sinners, <em>is</em> therefore Christ the minister of sin? God forbid.",n:[{tag:"note",a:"God forbid",t:"Me genoito — may it never be, the strongest negation in Greek. If seeking justification by Christ apart from law made one a sinner, then Christ would be promoting sin — a blasphemous conclusion that refutes itself.",s:"1611 margin, Gal 2:17"}]},
+{v:18,t:"For if I build again the things which I destroyed, I make myself a transgressor.",n:[{tag:"note",a:"if I build again the things which I destroyed",t:"To return to law-keeping as a means of justification after having renounced it in Christ is to confess that the renunciation was the transgression. It makes the abandonment of law the sin rather than the solution.",s:"1611 margin, Gal 2:18"}]},
+{v:19,t:"For I through the law am dead to the law, that I might live unto God.",n:[{tag:"note",a:"through the law am dead to the law",t:"The law itself, properly understood, drives the sinner to Christ — and thus to the end of law as a means of justification. The law kills; the death it produces is the death to law. Paul did not escape the law by ignoring it but by letting it do its full work.",s:"1611 margin, Gal 2:19"}]},
+{v:20,t:"I am crucified with Christ: nevertheless I live; yet not I, but Christ liveth in me: and the life which I now live in the flesh I live by the faith of the Son of God, who loved me, and gave himself for me.",n:[{tag:"note",a:"I am crucified with Christ",t:"Co-crucifixion — the believer's union with Christ in his death means the old self under law and under sin has been executed. The new life is Christ's life lived through the believer. The I that remains is not the old I — it is a new I animated by indwelling Christ.",s:"1611 margin, Gal 2:20"},{tag:"note",a:"who loved me, and gave himself for me",t:"The most personal statement of the atonement in Paul's writings. Not merely for the world, not merely for the elect — but for me. The love is particular; the giving is specific. Paul never loses the personal in the doctrinal.",s:"1611 margin, Gal 2:20"}]},
+{v:21,t:"I do not frustrate the grace of God: for if righteousness <em>come</em> by the law, then Christ is dead in vain.",n:[{tag:"note",a:"Christ is dead in vain",t:"The logical conclusion of law-righteousness: if a man could be righteous before God by keeping the law, the incarnation and crucifixion of the Son of God were unnecessary. To add law to grace is not merely error — it is to render the cross pointless.",s:"1611 margin, Gal 2:21"}]}
+]},
+3:{heading:"Chapter III",running:"The Galatians bewitched — Abraham justified by faith — the law a schoolmaster to bring us to Christ",sections:{1:"The Foolish Galatians",6:"Abraham Justified by Faith",19:"The Purpose of the Law"},verses:[
+{v:1,t:"O foolish Galatians, who hath bewitched you, that ye should not obey the truth, before whose eyes Jesus Christ hath been evidently set forth, crucified among you?",n:[{tag:"note",a:"who hath bewitched you",t:"Baskiano — to cast the evil eye upon, to bewitch. Paul does not call them wicked but stupid — they have been put under a spell. The question implies an external agent of deception. The cross was so clearly preached that only some kind of spiritual enchantment explains their desertion of it.",s:"1611 margin, Gal 3:1"}]},
+{v:2,t:"This only would I learn of you, Received ye the Spirit by the works of the law, or by the hearing of faith?",n:[{tag:"note",a:"Received ye the Spirit by the works of the law, or by the hearing of faith?",t:"Paul's argument from experience: the Galatians had received the Holy Spirit — with accompanying signs (v.5) — before any question of circumcision arose. Their own conversion refutes the Judaizers. The Spirit was received through faith, not law-works.",s:"1611 margin, Gal 3:2"}]},
+{v:3,t:"Are ye so foolish? having begun in the Spirit, are ye now made perfect by the flesh?",n:[{tag:"note",a:"begun in the Spirit ... made perfect by the flesh?",t:"The absurdity of their position stated plainly: the beginning was supernatural (the Spirit); the proposed completion is natural (circumcision, a fleshly rite). To begin in the Spirit and finish in the flesh is not progress — it is regression.",s:"1611 margin, Gal 3:3"}]},
+{v:4,t:"Have ye suffered so many things in vain? if <em>it be</em> yet in vain.",n:[]},
+{v:5,t:"He therefore that ministereth to you the Spirit, and worketh miracles among you, <em>doeth he it</em> by the works of the law, or by the hearing of faith?",n:[]},
+{v:6,t:"Even as Abraham believed God, and it was accounted to him for righteousness.",n:[{tag:"note",a:"Abraham believed God, and it was accounted to him for righteousness",t:"Gen 15:6 — the foundational OT text for justification by faith, quoted also in Rom 4:3 and James 2:23. Abraham was justified four hundred and thirty years before the law was given (v.17) and before circumcision was instituted (Rom 4:10). Faith, not rite, was always God's way of reckoning righteousness.",s:"1611 margin, Gal 3:6"}]},
+{v:7,t:"Know ye therefore that they which are of faith, the same are the children of Abraham.",n:[{tag:"note",a:"children of Abraham",t:"Physical descent from Abraham is not the point — spiritual kinship through faith is. The true sons of Abraham are those who believe as Abraham believed, not those who merely bear his blood or undergo his rite.",s:"1611 margin, Gal 3:7"}]},
+{v:8,t:"And the scripture, foreseeing that God would justify the heathen through faith, preached before the gospel unto Abraham, saying, In thee shall all nations be blessed.",n:[{tag:"note",a:"the scripture, foreseeing",t:"A remarkable attribution: Scripture is personified as foreseeing and preaching. The gospel was not invented in the first century — it was announced to Abraham in Gen 12:3. The Abrahamic covenant was always a covenant of grace by faith, reaching to all nations.",s:"1611 margin, Gal 3:8"}]},
+{v:9,t:"So then they which be of faith are blessed with faithful Abraham.",n:[]},
+{v:10,t:"For as many as are of the works of the law are under the curse: for it is written, Cursed <em>is</em> every one that continueth not in all things which are written in the book of the law to do them.",n:[{tag:"note",a:"Cursed is every one that continueth not in all things",t:"Deut 27:26. The law's own standard condemns every person who attempts it — not because the standard is unfair but because no one meets it fully and continuously. The law offers no partial credit; the curse falls on any deficiency.",s:"1611 margin, Gal 3:10"}]},
+{v:11,t:"But that no man is justified by the law in the sight of God, <em>it is</em> evident: for, The just shall live by faith.",n:[{tag:"note",a:"The just shall live by faith",t:"Hab 2:4 — quoted here with emphasis on the just. In Hebrews 10:38 the emphasis is on live; in Romans 1:17 on faith. Together the three uses of Habakkuk cover the whole sentence: the person who is just, lives by faith.",s:"1611 margin, Gal 3:11"}]},
+{v:12,t:"And the law is not of faith: but, The man that doeth them shall live in them.",n:[{tag:"note",a:"the law is not of faith",t:"The law and faith operate on different principles. The law says do and live; faith says believe and receive. They cannot be merged. Adding law to faith does not strengthen it — it changes its character entirely.",s:"1611 margin, Gal 3:12"}]},
+{v:13,t:"Christ hath redeemed us from the curse of the law, being made a curse for us: for it is written, Cursed <em>is</em> every one that hangeth on a tree:",n:[{tag:"note",a:"being made a curse for us",t:"Deut 21:23. The one who hangs on a tree is cursed by God — and Christ was hung on a tree. He did not merely bear our punishment; he became the curse itself, taking our place under the law's condemnation so we could be freed from it entirely.",s:"1611 margin, Gal 3:13"}]},
+{v:14,t:"That the blessing of Abraham might come on the Gentiles through Jesus Christ; that we might receive the promise of the Spirit through faith.",n:[]},
+{v:15,t:"Brethren, I speak after the manner of men; Though <em>it be</em> but a man's covenant, yet <em>if it be</em> confirmed, no man disannulleth, or addeth thereto.",n:[]},
+{v:16,t:"Now to Abraham and his seed were the promises made. He saith not, And to seeds, as of many; but as of one, And to thy seed, which is Christ.",n:[{tag:"note",a:"to thy seed, which is Christ",t:"The singular seed — zera in Hebrew, sperma in Greek — is deliberate. Paul argues from the grammar of Genesis: the promise was made not to Abraham's descendants collectively but to one specific descendant. That seed is Christ, and all who are in Christ inherit the promise.",s:"1611 margin, Gal 3:16"}]},
+{v:17,t:"And this I say, <em>that</em> the covenant, that was confirmed before of God in Christ, the law, which was four hundred and thirty years after, cannot disannul, that it should make the promise of none effect.",n:[{tag:"note",a:"four hundred and thirty years after",t:"The Mosaic law came 430 years after the Abrahamic covenant. A later codicil cannot override a previously ratified covenant. God's promise to Abraham was a settled, unconditional grant — the Sinai law cannot cancel or modify what was already established.",s:"1611 margin, Gal 3:17"}]},
+{v:18,t:"For if the inheritance <em>be</em> of the law, it is no more of promise: but God gave <em>it</em> to Abraham by promise.",n:[]},
+{v:19,t:"Wherefore then <em>serveth</em> the law? It was added because of transgressions, till the seed should come to whom the promise was made; <em>and it was</em> ordained by angels in the hand of a mediator.",n:[{tag:"note",a:"added because of transgressions",t:"The law was not the covenant but an addition to it — temporary, purposeful, and limited. Its purpose was to expose and define transgression (Rom 3:20; 5:20), making sin visible and driving the sinner to the promise. It served until Christ, the promised Seed, arrived.",s:"1611 margin, Gal 3:19"}]},
+{v:20,t:"Now a mediator is not <em>a mediator</em> of one, but God is one.",n:[]},
+{v:21,t:"<em>Is</em> the law then against the promises of God? God forbid: for if there had been a law given which could have given life, verily righteousness should have been by the law.",n:[{tag:"note",a:"if there had been a law given which could have given life",t:"The law's inability to give life is not a design flaw — life was never what it was designed to give. The law was designed to reveal sin and shut every mouth (Rom 3:19). Life comes from promise; the law serves the promise by making the need for it undeniable.",s:"1611 margin, Gal 3:21"}]},
+{v:22,t:"But the scripture hath concluded all under sin, that the promise by faith of Jesus Christ might be given to them that believe.",n:[{tag:"note",a:"concluded all under sin",t:"Sunkleio — shut up together, confined. Scripture has locked everyone in the prison of sin so that the only exit is the promise — faith in Christ. The law is the jailer that makes the Saviour necessary.",s:"1611 margin, Gal 3:22"}]},
+{v:23,t:"But before faith came, we were kept under the law, shut up unto the faith which should afterwards be revealed.",n:[]},
+{v:24,t:"Wherefore the law was our schoolmaster <em>to bring us</em> unto Christ, that we might be justified by faith.",n:[{tag:"note",a:"schoolmaster",t:"Paidagogos — not the teacher but the slave who escorted the child to school, keeping him safe and disciplined until he arrived. The law's role was custodial and preparatory: it kept Israel until Christ came. Once the pupil has arrived at school, the escort's job is done.",s:"1611 margin, Gal 3:24"}]},
+{v:25,t:"But after that faith is come, we are no longer under a schoolmaster.",n:[]},
+{v:26,t:"For ye are all the children of God by faith in Christ Jesus.",n:[]},
+{v:27,t:"For as many of you as have been baptized into Christ have put on Christ.",n:[{tag:"note",a:"baptized into Christ ... put on Christ",t:"The language of complete identification. To be baptized into Christ is to be united with him in his death and resurrection (Rom 6:3-4). To put on Christ is to be clothed in him — as a garment covers the body, Christ covers the believer before God.",s:"1611 margin, Gal 3:27"}]},
+{v:28,t:"There is neither Jew nor Greek, there is neither bond nor free, there is neither male nor female: for ye are all one in Christ Jesus.",n:[{tag:"note",a:"neither Jew nor Greek ... bond nor free ... male nor female",t:"The three great divisions of ancient society — ethnic, social, and sexual — are all overcome in the unity of Christ. This does not abolish the distinctions but renders them irrelevant to standing before God. All are equally and fully in Christ.",s:"1611 margin, Gal 3:28"}]},
+{v:29,t:"And if ye <em>be</em> Christ's, then are ye Abraham's seed, and heirs according to the promise.",n:[{tag:"note",a:"heirs according to the promise",t:"The circle closes: the promise made to Abraham's seed (v.16) belongs to all who are in Christ — Jew and Gentile alike. Inheritance is through the promise, not through law, not through physical descent.",s:"1611 margin, Gal 3:29"}]}
+]},
+4:{heading:"Chapter IV",running:"Sons, not servants — the fullness of time, the adoption of sons, Paul's alarm for the Galatians; Hagar and Sarah",sections:{1:"From Servants to Sons",8:"Paul's Alarm",21:"Hagar and Sarah: Two Covenants"},verses:[
+{v:1,t:"Now I say, <em>That</em> the heir, as long as he is a child, differeth nothing from a servant, though he be lord of all;",n:[]},
+{v:2,t:"But is under tutors and governors until the time appointed of the father.",n:[]},
+{v:3,t:"Even so we, when we were children, were in bondage under the elements of the world:",n:[{tag:"note",a:"elements of the world",t:"Stoicheia — elementary principles, the ABCs of religious observance. Whether Jewish law or pagan religion, both were forms of bondage to external rules and rituals rather than the internal transformation of sonship.",s:"1611 margin, Gal 4:3"}]},
+{v:4,t:"But when the fulness of the time was come, God sent forth his Son, made of a woman, made under the law,",n:[{tag:"note",a:"the fulness of the time",t:"Pleroma tou chronou — the full measure of the appointed time. The incarnation was not a reaction to circumstances but the arrival of a moment God had set from eternity. Roman roads, Greek language, Jewish monotheism, and messianic expectation all converged at the precise moment God ordained.",s:"1611 margin, Gal 4:4"},{tag:"note",a:"made of a woman, made under the law",t:"Two crucial qualifications: made of a woman — fully human, born of a virgin, entering the human condition; made under the law — born a Jew, subject to the Mosaic system, in order to redeem those under it.",s:"1611 margin, Gal 4:4"}]},
+{v:5,t:"To redeem them that were under the law, that we might receive the adoption of sons.",n:[{tag:"note",a:"adoption of sons",t:"Huiothesia — placing as a son, the legal act of adoption. In Roman law, the adopted son received the full rights of a natural-born son and the debt of his former life was legally cancelled. This is what God does for the believing sinner.",s:"1611 margin, Gal 4:5"}]},
+{v:6,t:"And because ye are sons, God hath sent forth the Spirit of his Son into your hearts, crying, Abba, Father.",n:[{tag:"note",a:"Abba, Father",t:"The Aramaic term of intimate family address — roughly equivalent to Papa or Daddy. The Spirit of the Son, placed within the believer, reproduces the Son's own cry to the Father. The believer prays with the same intimacy of relationship that Christ himself has.",s:"1611 margin, Gal 4:6"}]},
+{v:7,t:"Wherefore thou art no more a servant, but a son; and if a son, then an heir of God through Christ.",n:[]},
+{v:8,t:"Howbeit then, when ye knew not God, ye did service unto them which by nature are no gods.",n:[]},
+{v:9,t:"But now, after that ye have known God, or rather are known of God, how turn ye again to the weak and beggarly elements, whereunto ye desire again to be in bondage?",n:[{tag:"note",a:"weak and beggarly elements",t:"The Judaizers' additions to the gospel — circumcision, feast days, dietary laws — are here called weak (unable to justify) and beggarly (poverty-producing, offering no inheritance). To trade sonship for these is the most ruinous of exchanges.",s:"1611 margin, Gal 4:9"}]},
+{v:10,t:"Ye observe days, and months, and times, and years.",n:[{tag:"note",a:"Ye observe days, and months, and times, and years",t:"The calendar-keeping of the Mosaic system — Sabbaths, new moons, annual feasts. These are not sinful in themselves but have no place as instruments of justification or sanctification for those who are in Christ.",s:"1611 margin, Gal 4:10"}]},
+{v:11,t:"I am afraid of you, lest I have bestowed upon you labour in vain.",n:[]},
+{v:12,t:"Brethren, I beseech you, be as I <em>am</em>; for I <em>am</em> as ye <em>are</em>: ye have not injured me at all.",n:[]},
+{v:13,t:"Ye know how through infirmity of the flesh I preached the gospel unto you at the first.",n:[{tag:"note",a:"through infirmity of the flesh",t:"Paul was detained in Galatia by illness — the very circumstance that brought the gospel to them was a physical affliction. What appeared a setback was God's occasion.",s:"1611 margin, Gal 4:13"}]},
+{v:14,t:"And my temptation which was in my flesh ye despised not, nor rejected; but received me as an angel of God, <em>even</em> as Christ Jesus.",n:[]},
+{v:15,t:"Where is then the blessedness ye spake of? for I bear you record, that, if <em>it had been</em> possible, ye would have plucked out your own eyes, and have given them to me.",n:[{tag:"note",a:"plucked out your own eyes",t:"Possibly a reference to Paul's eye trouble — the affliction of v.13 may have been an eye condition, which would explain why he wrote in large letters (6:11). The Galatians would have given him their own eyes. Now they were willing to make him an enemy.",s:"1611 margin, Gal 4:15"}]},
+{v:16,t:"Am I therefore become your enemy, because I tell you the truth?",n:[{tag:"note",a:"Am I therefore become your enemy",t:"The most painful inversion in pastoral ministry: honest love becomes perceived hostility. The Judaizers flattered the Galatians; Paul told them the truth. Flattery had won their affection; truth had cost him it.",s:"1611 margin, Gal 4:16"}]},
+{v:17,t:"They zealously affect you, <em>but</em> not well; yea, they would exclude you, that ye might affect them.",n:[{tag:"note",a:"they would exclude you, that ye might affect them",t:"The Judaizers' strategy: create an in-group and an out-group, exclude the Galatians from the in-group of the circumcised, and thereby make the Galatians eager to belong by submitting to circumcision.",s:"1611 margin, Gal 4:17"}]},
+{v:18,t:"But <em>it is</em> good to be zealously affected always in <em>a</em> good <em>thing</em>, and not only when I am present with you.",n:[]},
+{v:19,t:"My little children, of whom I travail in birth again until Christ be formed in you,",n:[{tag:"note",a:"travail in birth again",t:"Paul uses the language of a mother in labor — and applies it to himself. He had already borne them once in the gospel; now their defection requires a second travail. The goal of his anguish is not their compliance but Christ formed within them.",s:"1611 margin, Gal 4:19"}]},
+{v:20,t:"I desire to be present with you now, and to change my voice; for I stand in doubt of you.",n:[]},
+{v:21,t:"Tell me, ye that desire to be under the law, do ye not hear the law?",n:[]},
+{v:22,t:"For it is written, that Abraham had two sons, the one by a bondmaid, the other by a freewoman.",n:[]},
+{v:23,t:"But he <em>who was</em> of the bondwoman was born after the flesh; but he of the freewoman <em>was</em> by promise.",n:[]},
+{v:24,t:"Which things are an allegory: for these are the two covenants; the one from the mount Sinai, which gendereth to bondage, which is Agar.",n:[{tag:"note",a:"which things are an allegory",t:"Allegoreo — the historical account carries a deeper correspondence. Paul does not deny the historicity of Hagar and Sarah; he uses the historical account as a type of two covenants. Typological reading does not cancel literal history.",s:"1611 margin, Gal 4:24"}]},
+{v:25,t:"For this Agar is mount Sinai in Arabia, and answereth to Jerusalem which now is, and is in bondage with her children.",n:[]},
+{v:26,t:"But Jerusalem which is above is free, which is the mother of us all.",n:[{tag:"note",a:"Jerusalem which is above is free",t:"The heavenly Jerusalem — the city of the redeemed, the church of the living God (Heb 12:22). Contrasted with the earthly Jerusalem which remained in bondage to the law. The free woman corresponds to the covenant of grace; her children are free.",s:"1611 margin, Gal 4:26"}]},
+{v:27,t:"For it is written, Rejoice, thou barren that bearest not; break forth and cry, thou that travailest not: for the desolate hath many more children than she which hath an husband.",n:[{tag:"note",a:"Rejoice, thou barren",t:"Isa 54:1. Sarah the barren one had fewer children by natural reckoning — but her supernatural son became the father of a multitude exceeding Hagar's. So the new covenant, apparently weaker and without the apparatus of law, produces more spiritual children than the old.",s:"1611 margin, Gal 4:27"}]},
+{v:28,t:"Now we, brethren, as Isaac was, are the children of promise.",n:[]},
+{v:29,t:"But as then he that was born after the flesh persecuted him <em>that was born</em> after the Spirit, even so <em>it is</em> now.",n:[{tag:"note",a:"he that was born after the flesh persecuted him that was born after the Spirit",t:"Ishmael mocked Isaac (Gen 21:9). The pattern repeats: those who belong to the covenant of law persecute those who belong to the covenant of promise. The Judaizers' harassment of Paul's converts is not new — it is Ishmael mocking Isaac.",s:"1611 margin, Gal 4:29"}]},
+{v:30,t:"Nevertheless what saith the scripture? Cast out the bondwoman and her son: for the son of the bondwoman shall not be heir with the son of the freewoman.",n:[{tag:"note",a:"Cast out the bondwoman and her son",t:"Gen 21:10. The resolution of the conflict between law and grace is not compromise or synthesis — it is expulsion. The two cannot cohabit as co-heirs. The gospel demands that the law-as-justifier be cast out entirely.",s:"1611 margin, Gal 4:30"}]},
+{v:31,t:"So then, brethren, we are not children of the bondwoman, but of the free.",n:[]}
+]},
+5:{heading:"Chapter V",running:"Stand fast in liberty — faith working by love — the works of the flesh against the fruit of the Spirit",sections:{1:"Stand Fast in Liberty",13:"Love Fulfils the Law",16:"Flesh Against Spirit",19:"Works of the Flesh and Fruit of the Spirit"},verses:[
+{v:1,t:"Stand fast therefore in the liberty wherewith Christ hath made us free, and be not entangled again with the yoke of bondage.",n:[{tag:"note",a:"Stand fast ... be not entangled again",t:"Two military commands: stand fast — hold your position, do not retreat. Be not entangled — do not let yourself be caught like an animal in a trap. Liberty in Christ is not something automatically maintained; it must be actively defended.",s:"1611 margin, Gal 5:1"}]},
+{v:2,t:"Behold, I Paul say unto you, that if ye be circumcised, Christ shall profit you nothing.",n:[{tag:"note",a:"if ye be circumcised, Christ shall profit you nothing",t:"Not that circumcision is inherently damning but that submitting to it as necessary for justification is a rejection of Christ's sufficiency. It is a statement that his work alone is insufficient — and that statement cuts off all benefit from him.",s:"1611 margin, Gal 5:2"}]},
+{v:3,t:"For I testify again to every man that is circumcised, that he is a debtor to do the whole law.",n:[{tag:"note",a:"debtor to do the whole law",t:"The Judaizers proposed circumcision as an addition to Christ. Paul shows that it is not an addition but a replacement: to enter the system of law by circumcision is to accept the obligation of keeping all of it — every jot and tittle — as the condition of standing before God.",s:"1611 margin, Gal 5:3"}]},
+{v:4,t:"Christ is become of no effect unto you, whosoever of you are justified by the law; ye are fallen from grace.",n:[{tag:"note",a:"fallen from grace",t:"Not fallen from salvation but fallen from the principle of grace as the operating basis of the Christian life. To seek justification by law is to step off grace as the platform — to abandon the system of unmerited favor for the system of merit.",s:"1611 margin, Gal 5:4"}]},
+{v:5,t:"For we through the Spirit wait for the hope of righteousness by faith.",n:[]},
+{v:6,t:"For in Jesus Christ neither circumcision availeth any thing, nor uncircumcision; but faith which worketh by love.",n:[{tag:"note",a:"faith which worketh by love",t:"The only thing that counts — not the presence or absence of a physical rite, but faith operating through love. This answers the objection that grace produces antinomianism: true faith is not inert but energetically productive of love.",s:"1611 margin, Gal 5:6"}]},
+{v:7,t:"Ye did run well; who did hinder you that ye should not obey the truth?",n:[{tag:"note",a:"who did hinder you",t:"Anakoptein — to cut in on, to impede. The image is of a runner who is tripped or blocked mid-race. The Galatians were running well; someone cut across their path. Paul wants to know who — pointing to the Judaizers as the saboteurs.",s:"1611 margin, Gal 5:7"}]},
+{v:8,t:"This persuasion <em>cometh</em> not of him that calleth you.",n:[]},
+{v:9,t:"A little leaven leaveneth the whole lump.",n:[{tag:"note",a:"A little leaven leaveneth the whole lump",t:"The principle of doctrinal contamination. Error does not stay small — like leaven it permeates and transforms. The addition of law-righteousness to the gospel does not merely supplement it; it corrupts the whole.",s:"1611 margin, Gal 5:9"}]},
+{v:10,t:"I have confidence in you through the Lord, that ye will be none otherwise minded: but he that troubleth you shall bear his judgment, whosoever he be.",n:[]},
+{v:11,t:"And I, brethren, if I yet preach circumcision, why do I yet suffer persecution? then is the offence of the cross ceased.",n:[{tag:"note",a:"the offence of the cross",t:"Skandalon — the stumbling block, the scandal. The cross offends because it removes all human contribution to salvation. If Paul preached circumcision — human achievement alongside grace — the cross would no longer be offensive. The ongoing persecution proves he preaches the unadulterated cross.",s:"1611 margin, Gal 5:11"}]},
+{v:12,t:"I would they were even cut off which trouble you.",n:[{tag:"note",a:"I would they were even cut off",t:"A sharp irony: those who insist on circumcision — Paul wishes they would go all the way and emasculate themselves, as the pagan priests of Cybele did. The point is savage: if physical cutting brings one closer to God, let them be consistent about it.",s:"1611 margin, Gal 5:12"}]},
+{v:13,t:"For, brethren, ye have been called unto liberty; only <em>use</em> not liberty for an occasion to the flesh, but by love serve one another.",n:[{tag:"note",a:"not liberty for an occasion to the flesh",t:"The balance that answers the charge of antinomianism. Christian liberty is not licence — it is not freedom from all constraint but freedom from law as a means of justification. Its proper use is love-driven service, not self-indulgence.",s:"1611 margin, Gal 5:13"}]},
+{v:14,t:"For all the law is fulfilled in one word, <em>even</em> in this; Thou shalt love thy neighbour as thyself.",n:[{tag:"note",a:"all the law is fulfilled in one word",t:"Lev 19:18. The moral demand of the entire law is summed up in love-of-neighbour. The Spirit-filled believer, walking in love, fulfils what the law demanded — not by legal compulsion but by the nature of the new life within.",s:"1611 margin, Gal 5:14"}]},
+{v:15,t:"But if ye bite and devour one another, take heed that ye be not consumed one of another.",n:[{tag:"note",a:"bite and devour one another",t:"The result of legalism in the community: competition, judgment, pride in one's law-keeping, contempt for those who fall short. The Judaizers brought not only a false gospel but a community-destroying spirit.",s:"1611 margin, Gal 5:15"}]},
+{v:16,t:"<em>This</em> I say then, Walk in the Spirit, and ye shall not fulfil the lust of the flesh.",n:[{tag:"note",a:"Walk in the Spirit",t:"Peripateo en pneumati — conduct your life by the Spirit as your principle of motion. The command is not do not sin but walk in the Spirit — the positive replaces the negative. The way to overcome the flesh is not to fight it directly but to be so occupied with the Spirit that the flesh finds no foothold.",s:"1611 margin, Gal 5:16"}]},
+{v:17,t:"For the flesh lusteth against the Spirit, and the Spirit against the flesh: and these are contrary the one to the other: so that ye cannot do the things that ye would.",n:[{tag:"note",a:"these are contrary the one to the other",t:"The present conflict is real and unceasing. The two natures in the believer — the old flesh and the new Spirit-indwelt man — are in perpetual opposition. This conflict is not evidence of lost salvation but of genuine new birth; the unregenerate have no such war.",s:"1611 margin, Gal 5:17"}]},
+{v:18,t:"But if ye be led of the Spirit, ye are not under the law.",n:[]},
+{v:19,t:"Now the works of the flesh are manifest, which are <em>these</em>; Adultery, fornication, uncleanness, lasciviousness,",n:[{tag:"note",a:"works of the flesh are manifest",t:"Phanera — visible, evident, on display. The flesh does not need to be provoked; its productions are spontaneous and obvious. The list that follows covers sexual sins, religious sins, social sins, and sins of excess.",s:"1611 margin, Gal 5:19"}]},
+{v:20,t:"Idolatry, witchcraft, hatred, variance, emulations, wrath, strife, seditions, heresies,",n:[{tag:"grk",a:"witchcraft",t:"Pharmakeia — the use of drugs in occult practice, sorcery. The root word behind pharmacy. In its biblical context it refers consistently to drug-assisted manipulation of spiritual forces.",s:"1611 margin, Gal 5:20"}]},
+{v:21,t:"Envyings, murders, drunkenness, revellings, and such like: of the which I tell you before, as I have also told <em>you</em> in time past, that they which do such things shall not inherit the kingdom of God.",n:[{tag:"note",a:"shall not inherit the kingdom of God",t:"Not that a believer who falls into these sins loses salvation — but that a person whose life is characterised by these works gives no evidence of regeneration and will not inherit what belongs to the redeemed. Practice reveals nature.",s:"1611 margin, Gal 5:21"}]},
+{v:22,t:"But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith,",n:[{tag:"note",a:"fruit of the Spirit",t:"Singular — karpos, one fruit with nine qualities. Not fruits but fruit: an organic unity produced by one source. The works of the flesh are plural and diverse; the fruit of the Spirit is a single integrated character. No believer may claim some and disclaim others.",s:"1611 margin, Gal 5:22"}]},
+{v:23,t:"Meekness, temperance: against such there is no law.",n:[{tag:"note",a:"against such there is no law",t:"The Spirit's fruit needs no external regulation — law was designed to restrain the flesh, not the Spirit. Where love, joy, peace, and the rest reign, law has nothing to forbid and nothing to demand. The Spirit-led life fulfils and supersedes the law simultaneously.",s:"1611 margin, Gal 5:23"}]},
+{v:24,t:"And they that are Christ's have crucified the flesh with the affections and lusts.",n:[{tag:"note",a:"have crucified the flesh",t:"A decisive past act — the aorist tense. At conversion the believer co-crucified the flesh with Christ. The flesh still exists and still wars (v.17) but it has been judicially executed. The believer is to reckon on this reality (Rom 6:11) and walk accordingly.",s:"1611 margin, Gal 5:24"}]},
+{v:25,t:"If we live in the Spirit, let us also walk in the Spirit.",n:[{tag:"note",a:"If we live in the Spirit, let us also walk in the Spirit",t:"Two different words: live (zao) — possessing the life; walk (stoicheo) — to march in rank, to keep in step. If the Spirit is the source of our life, let us march in step with him daily. Life-in-the-Spirit is the foundation; walk-in-the-Spirit is the daily practice.",s:"1611 margin, Gal 5:25"}]},
+{v:26,t:"Let us not be desirous of vain glory, provoking one another, envying one another.",n:[]}
+]},
+6:{heading:"Chapter VI",running:"Bear one another's burdens — sowing and reaping — the new creature and the cross as the only boast",sections:{1:"Restore the Fallen; Bear One Another",6:"Sowing and Reaping",11:"The Cross: The Only Boast"},verses:[
+{v:1,t:"Brethren, if a man be overtaken in a fault, ye which are spiritual, restore such an one in the spirit of meekness; considering thyself, lest thou also be tempted.",n:[{tag:"note",a:"restore such an one",t:"Katartizo — to mend, to set a broken bone, to restore a dislocated joint. The word is surgical. The response to a fallen brother is not judgment or gossip but careful, gentle, expert restoration — the work of those who are themselves walking in the Spirit.",s:"1611 margin, Gal 6:1"}]},
+{v:2,t:"Bear ye one another's burdens, and so fulfil the law of Christ.",n:[{tag:"note",a:"the law of Christ",t:"Not the Mosaic law but the law of love — do unto others as you would have them do unto you (John 13:34; 15:12). This is how the community of grace fulfils what the Mosaic law demanded but could not produce.",s:"1611 margin, Gal 6:2"}]},
+{v:3,t:"For if a man think himself to be something, when he is nothing, he deceiveth himself.",n:[]},
+{v:4,t:"But let every man prove his own work, and then shall he have rejoicing in himself alone, and not in another.",n:[]},
+{v:5,t:"For every man shall bear his own burden.",n:[{tag:"note",a:"every man shall bear his own burden",t:"A different word from v.2: here phortion — the soldier's pack, personal responsibility and accountability. Both truths stand: we bear one another's crushing loads (v.2, baros) and each is personally responsible before God for his own life.",s:"1611 margin, Gal 6:5"}]},
+{v:6,t:"Let him that is taught in the word communicate unto him that teacheth in all good things.",n:[{tag:"note",a:"communicate unto him that teacheth",t:"Koinoneo — share, make common. The principle of financial support for those who give themselves to teaching the word. Those who receive the benefit of faithful ministry are to share material goods in return.",s:"1611 margin, Gal 6:6"}]},
+{v:7,t:"Be not deceived; God is not mocked: for whatsoever a man soweth, that shall he also reap.",n:[{tag:"note",a:"God is not mocked",t:"Mukterizo — to turn up the nose at, to sneer at. The law of sowing and reaping is a moral law as fixed as gravity. No one outsmarts it; no one escapes it. To sow to the flesh while expecting Spirit-fruit is to sneer at divine order.",s:"1611 margin, Gal 6:7"}]},
+{v:8,t:"For he that soweth to his flesh shall of the flesh reap corruption; but he that soweth to the Spirit shall of the Spirit reap life everlasting.",n:[{tag:"note",a:"soweth to his flesh shall ... reap corruption",t:"The harvest corresponds to the seed. Flesh-seed produces corruption — phthoran, decay, disintegration. Spirit-seed produces everlasting life. The law of the harvest is patient, certain, and proportional.",s:"1611 margin, Gal 6:8"}]},
+{v:9,t:"And let us not be weary in well doing: for in due season we shall reap, if we faint not.",n:[{tag:"note",a:"in due season we shall reap, if we faint not",t:"The harvest is certain but not immediate. The interval between sowing and reaping is the test of faith. Weariness comes in that interval. The promise is not if you sow a great deal but if you faint not — endurance is the condition.",s:"1611 margin, Gal 6:9"}]},
+{v:10,t:"As we have therefore opportunity, let us do good unto all <em>men</em>, especially unto them who are of the household of faith.",n:[]},
+{v:11,t:"Ye see how large a letter I have written unto you with mine own hand.",n:[{tag:"note",a:"how large a letter I have written with mine own hand",t:"Paul normally dictated to a secretary (Rom 16:22) and signed only a closing greeting. Here he wrote the entire letter himself — possibly because of poor eyesight (4:15) — in large characters. The physical effort underscores the urgency.",s:"1611 margin, Gal 6:11"}]},
+{v:12,t:"As many as desire to make a fair shew in the flesh, they constrain you to be circumcised; only lest they should suffer persecution for the cross of Christ.",n:[{tag:"note",a:"lest they should suffer persecution for the cross of Christ",t:"The Judaizers' real motive exposed: by requiring Gentile circumcision, they could present themselves to Jewish authorities as not having departed from Moses — and thus avoid the persecution that pure gospel preaching attracted. They used the Galatians to purchase their own safety.",s:"1611 margin, Gal 6:12"}]},
+{v:13,t:"For neither they themselves who are circumcised keep the law; but desire to have you circumcised, that they may glory in your flesh.",n:[{tag:"note",a:"neither they themselves ... keep the law",t:"The Judaizers' inconsistency: they demand circumcision but do not themselves keep the law fully. Their interest is not in law-keeping but in numbers — converts they can count as trophies of their mission.",s:"1611 margin, Gal 6:13"}]},
+{v:14,t:"But God forbid that I should glory, save in the cross of our Lord Jesus Christ, by whom the world is crucified unto me, and I unto the world.",n:[{tag:"note",a:"glory ... in the cross",t:"The final antithesis: the Judaizers glory in circumcised flesh; Paul glories in the cross. The cross was the ultimate shame in the ancient world — the death of criminals and slaves. Paul takes it as his only boast. What the world despises is what he exults in.",s:"1611 margin, Gal 6:14"},{tag:"note",a:"the world is crucified unto me, and I unto the world",t:"A mutual execution: the cross has put the world to death as an object of desire for Paul, and Paul to death as an object the world need reckon with. The cross severs both attachments simultaneously.",s:"1611 margin, Gal 6:14"}]},
+{v:15,t:"For in Christ Jesus neither circumcision availeth any thing, nor uncircumcision, but a new creature.",n:[{tag:"note",a:"a new creature",t:"Kaine ktisis — a new creation, something that did not exist before and belongs to a new order of existence. What matters before God is not the state of the body but the state of the soul — whether one has been recreated in Christ.",s:"1611 margin, Gal 6:15"}]},
+{v:16,t:"And as many as walk according to this rule, peace <em>be</em> on them, and mercy, and upon the Israel of God.",n:[{tag:"note",a:"the Israel of God",t:"The true Israel — those who are Abraham's seed by faith (3:29), the circumcision of the heart (Rom 2:29). Paul does not abandon the term Israel but fills it with its deepest meaning: all who are in Christ, both Jew and Gentile.",s:"1611 margin, Gal 6:16"}]},
+{v:17,t:"From henceforth let no man trouble me: for I bear in my body the marks of the Lord Jesus.",n:[{tag:"note",a:"the marks of the Lord Jesus",t:"Stigmata — brands, the marks of ownership. Slaves were branded by their masters; soldiers sometimes tattooed their general's name. Paul's body bore the scars of beatings, stonings, and sufferings received in Christ's service. These are his credentials — not circumcision.",s:"1611 margin, Gal 6:17"}]},
+{v:18,t:"Brethren, the grace of our Lord Jesus Christ <em>be</em> with your spirit. Amen.",n:[{tag:"note",a:"the grace of our Lord Jesus Christ be with your spirit",t:"The epistle that began with a double anathema on any who pervert the gospel of grace closes with a benediction of grace. After all the severity, the warmth returns. They are still brethren; grace is still the word.",s:"1611 margin, Gal 6:18"}]}
+]}
+};
+
+const CH_META = {
+  1:{label:"No other gospel; Paul's apostleship from Christ",verses:24},
+  2:{label:"Jerusalem confirms Paul; Peter rebuked; justified by faith",verses:21},
+  3:{label:"The Galatians bewitched; Abraham; the law as schoolmaster",verses:29},
+  4:{label:"Sons not servants; the fullness of time; Hagar and Sarah",verses:31},
+  5:{label:"Stand fast; faith working by love; flesh vs. Spirit",verses:26},
+  6:{label:"Bear burdens; sow and reap; glory in the cross",verses:18}
+};
+
+let currentChapter = 1;
+
+function buildIndex() {
+  const grid = document.getElementById('chapter-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  for (let c = 1; c <= 6; c++) {
+    const meta = CH_META[c];
+    const ch = GALATIANS[c];
+    const noteCount = ch.verses.filter(v => v.n && v.n.length > 0).length;
+    const card = document.createElement('div');
+    card.className = 'chapter-card';
+    card.onclick = () => openChapter(c);
+    card.innerHTML = `<span class="ch-num">Chapter ${toRoman(c)}</span><span class="ch-label">${meta.label}</span><span class="ch-notes">${noteCount > 0 ? noteCount + ' note' + (noteCount > 1 ? 's' : '') : ''}</span>`;
+    grid.appendChild(card);
+  }
+}
+
+function toRoman(n) {
+  const vals = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+  const syms = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+  let result = '';
+  for (let i = 0; i < vals.length; i++) {
+    while (n >= vals[i]) { result += syms[i]; n -= vals[i]; }
+  }
+  return result;
+}
+
+function openChapter(n) {
+  currentChapter = n;
+  const ch = GALATIANS[n];
+  const meta = CH_META[n];
+  document.getElementById('ch-heading').textContent = ch.heading;
+  document.getElementById('ch-running').textContent = ch.running;
+  document.getElementById('nav-label').textContent = 'Galatians · Chapter ' + toRoman(n);
+  const container = document.getElementById('verse-container');
+  container.innerHTML = '';
+  const sections = ch.sections || {};
+  ch.verses.forEach(vObj => {
+    if (sections[vObj.v]) {
+      const sb = document.createElement('div');
+      sb.className = 'section-break';
+      sb.textContent = sections[vObj.v];
+      container.appendChild(sb);
+    }
+    const hasNote = vObj.n && vObj.n.length > 0;
+    const block = document.createElement('div');
+    block.className = 'verse-block' + (hasNote ? ' has-note' : '');
+    block.id = 'v' + vObj.v;
+    if (hasNote) block.onclick = () => toggleNote('note' + vObj.v, block);
+    const numSpan = document.createElement('span');
+    numSpan.className = 'verse-num';
+    numSpan.textContent = vObj.v;
+    const textSpan = document.createElement('span');
+    textSpan.className = 'verse-text';
+    textSpan.innerHTML = vObj.t + (hasNote ? '<span class="note-dot"></span>' : '');
+    block.appendChild(numSpan);
+    block.appendChild(textSpan);
+    container.appendChild(block);
+    if (hasNote) {
+      const panel = document.createElement('div');
+      panel.className = 'note-panel';
+      panel.id = 'note' + vObj.v;
+      vObj.n.forEach(note => {
+        const tagClass = 'tag-' + (note.tag === 'alt' ? 'alt' : note.tag === 'heb' ? 'heb' : note.tag === 'grk' ? 'grk' : 'note');
+        const tagLabel = note.tag === 'alt' ? 'OR' : note.tag === 'heb' ? 'HEB' : note.tag === 'grk' ? 'GRK' : 'NOTE';
+        const entry = document.createElement('div');
+        entry.className = 'note-entry';
+        entry.innerHTML = `<span class="tag ${tagClass}">${tagLabel}</span><div class="note-content"><span class="anchor">${note.a}</span><span class="text">${note.t}</span><div class="source">${note.s}</div></div>`;
+        panel.appendChild(entry);
+      });
+      container.appendChild(panel);
+    }
+  });
+  const noteCount = ch.verses.filter(v => v.n && v.n.length > 0).length;
+  document.getElementById('ch-stats').innerHTML = `<span>${meta.verses}</span> verses &nbsp;·&nbsp; <span>${noteCount}</span> marginal notes &nbsp;·&nbsp; Galatians ${n}`;
+  document.getElementById('view-index').classList.remove('active');
+  document.getElementById('view-chapter').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function toggleNote(id, block) {
+  const panel = document.getElementById(id);
+  const isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.note-panel.open').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.verse-block.active').forEach(b => b.classList.remove('active'));
+  if (!isOpen) { panel.classList.add('open'); block.classList.add('active'); }
+}
+
+function showIndex() {
+  document.getElementById('view-chapter').classList.remove('active');
+  document.getElementById('view-index').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function prevChapter() {
+  if (currentChapter > 1) openChapter(currentChapter - 1);
+  else showIndex();
+}
+
+function nextChapter() {
+  if (currentChapter < 6) openChapter(currentChapter + 1);
+  else showIndex();
+}
+
+function expandAll() {
+  document.querySelectorAll('.note-panel').forEach(p => p.classList.add('open'));
+  document.querySelectorAll('.verse-block.has-note').forEach(b => b.classList.add('active'));
+}
+
+function collapseAll() {
+  document.querySelectorAll('.note-panel').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.verse-block').forEach(b => b.classList.remove('active'));
+}
+
+buildIndex();
+</script>
+</body>
+</html>

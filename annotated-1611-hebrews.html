@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Annotated 1611 — The Epistle to the Hebrews</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Cinzel:wght@400;600&display=swap');
+:root {
+  --parchment:#0d0b08;--ink:#e8dfc8;--ink-dim:#9e9278;--ink-faint:#4a4438;
+  --accent:#c8973a;--accent-dim:#8a6526;--accent-glow:rgba(200,151,58,0.15);
+  --margin-bg:#13110d;--margin-border:#2a2418;--note-bg:#1a1710;
+  --note-border:#c8973a;--highlight:rgba(200,151,58,0.18);--verse-hover:rgba(200,151,58,0.07);
+  --tag-alt:#7ab8d4;--tag-heb:#a8c87a;--tag-grk:#c87ab8;--tag-note:#c8973a;
+  --serif:'EB Garamond',Georgia,serif;--display:'Cinzel',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--parchment);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.85;min-height:100vh}
+.view{display:none}.view.active{display:block}
+header{border-bottom:1px solid var(--margin-border);padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#111009 0%,var(--parchment) 100%);position:sticky;top:0;z-index:100}
+.header-left{display:flex;flex-direction:column;gap:.15rem}.header-right{display:flex;gap:.5rem;align-items:center}
+header .eyebrow{font-family:var(--display);font-size:.6rem;letter-spacing:.25em;color:var(--accent);text-transform:uppercase}
+header h1{font-family:var(--display);font-size:clamp(1rem,3vw,1.4rem);font-weight:600;color:var(--ink);letter-spacing:.04em;cursor:pointer}
+header h1:hover{color:var(--accent)}
+button.nav-btn,a.nav-btn{font-family:var(--display);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--ink-dim);border:1px solid var(--ink-faint);padding:.35em .85em;border-radius:2px;cursor:pointer;transition:all .15s;text-decoration:none;display:inline-flex;align-items:center}
+button.nav-btn:hover,a.nav-btn:hover{color:var(--accent);border-color:var(--accent-dim)}
+.legend{display:flex;flex-wrap:wrap;gap:.6rem 1.25rem;padding:.65rem 2rem;border-bottom:1px solid var(--margin-border);background:var(--margin-bg)}
+.legend-item{display:flex;align-items:center;gap:.4rem;font-size:.7rem;color:var(--ink-dim)}
+.tag{display:inline-block;font-size:.58rem;font-family:var(--display);letter-spacing:.08em;padding:.1em .45em;border-radius:2px;font-weight:600;vertical-align:middle}
+.tag-alt{background:rgba(122,184,212,.15);color:var(--tag-alt);border:1px solid rgba(122,184,212,.3)}
+.tag-heb{background:rgba(168,200,122,.15);color:var(--tag-heb);border:1px solid rgba(168,200,122,.3)}
+.tag-grk{background:rgba(200,122,184,.15);color:var(--tag-grk);border:1px solid rgba(200,122,184,.3)}
+.tag-note{background:rgba(200,151,58,.12);color:var(--tag-note);border:1px solid rgba(200,151,58,.3)}
+#view-index{max-width:860px;margin:0 auto;padding:2.5rem 2rem 5rem}
+.index-hero{text-align:center;margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--margin-border)}
+.index-hero .kicker{font-family:var(--display);font-size:.62rem;letter-spacing:.25em;color:var(--accent);text-transform:uppercase;margin-bottom:.6rem}
+.index-hero h2{font-family:var(--display);font-size:clamp(1.4rem,4vw,2.4rem);color:var(--ink);font-weight:400;letter-spacing:.06em;margin-bottom:.75rem}
+.index-hero p{font-size:.9rem;color:var(--ink-dim);font-style:italic;max-width:500px;margin:0 auto;line-height:1.7}
+.index-stats{display:flex;justify-content:center;gap:2.5rem;margin-top:1.5rem;flex-wrap:wrap}
+.index-stat{text-align:center}
+.index-stat .num{font-family:var(--display);font-size:1.6rem;color:var(--accent);display:block}
+.index-stat .lbl{font-size:.68rem;color:var(--ink-dim);letter-spacing:.1em;text-transform:uppercase;font-family:var(--display)}
+.book-section{margin-bottom:2rem}
+.book-section h3{font-family:var(--display);font-size:.62rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--margin-border)}
+.chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.55rem}
+.chapter-card{background:var(--margin-bg);border:1px solid var(--margin-border);border-radius:3px;padding:.65rem .9rem;cursor:pointer;transition:all .15s}
+.chapter-card:hover{border-color:var(--accent-dim);background:var(--accent-glow)}
+.chapter-card .ch-num{font-family:var(--display);font-size:.95rem;color:var(--accent);display:block;margin-bottom:.15rem}
+.chapter-card .ch-label{font-size:.68rem;color:var(--ink-dim);font-style:italic;line-height:1.3;display:block}
+.chapter-card .ch-notes{font-size:.6rem;color:var(--ink-faint);font-family:var(--display);letter-spacing:.05em;margin-top:.25rem;display:block}
+#view-chapter{max-width:900px;margin:0 auto;padding:2rem 1.5rem 5rem}
+.chapter-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;gap:1rem}
+.chapter-nav-center{font-family:var(--display);font-size:.68rem;letter-spacing:.15em;color:var(--ink-dim);text-transform:uppercase;text-align:center}
+.chapter-heading{text-align:center;margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--margin-border)}
+.chapter-heading .book{font-family:var(--display);font-size:.62rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:.4rem}
+.chapter-heading h2{font-family:var(--display);font-size:clamp(1.1rem,3vw,1.7rem);color:var(--ink);font-weight:400;letter-spacing:.06em}
+.chapter-heading .running-head{font-size:.8rem;color:var(--ink-dim);font-style:italic;margin-top:.4rem}
+.controls{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
+button.ctrl{font-family:var(--display);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--accent);border:1px solid var(--accent-dim);padding:.35em .9em;border-radius:2px;cursor:pointer;transition:background .15s}
+button.ctrl:hover{background:var(--accent-glow)}
+.verse-block{display:flex;margin-bottom:.15rem;border-radius:4px;transition:background .15s;padding:.2rem .5rem .2rem 0}
+.verse-block:hover{background:var(--verse-hover)}
+.verse-block.has-note{cursor:pointer}
+.verse-block.active{background:var(--highlight)}
+.verse-num{font-family:var(--display);font-size:.58rem;color:var(--accent);min-width:2.8rem;padding-top:.55rem;text-align:right;padding-right:.75rem;letter-spacing:.05em;flex-shrink:0;user-select:none}
+.verse-text{flex:1;font-size:1rem;color:var(--ink);line-height:1.9}
+.verse-text em{font-style:italic;font-weight:600}
+.note-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-left:4px;opacity:.7;flex-shrink:0;align-self:flex-start;margin-top:.75rem}
+.note-panel{display:none;margin:.4rem 0 .8rem 2.8rem;background:var(--note-bg);border-left:3px solid var(--note-border);border-radius:0 4px 4px 0;padding:.9rem 1.1rem;font-size:.88rem;line-height:1.75;animation:slideIn .18s ease}
+.note-panel.open{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.note-entry{margin-bottom:.65rem;padding-bottom:.65rem;border-bottom:1px solid var(--margin-border);display:flex;gap:.6rem;align-items:flex-start}
+.note-entry:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.note-content{flex:1}
+.note-content .anchor{font-style:italic;color:var(--ink-dim);margin-right:.3rem;font-size:.83rem}
+.note-content .text{color:var(--ink)}
+.note-content .source{font-size:.7rem;color:var(--ink-faint);margin-top:.2rem;font-style:italic}
+.section-break{text-align:center;margin:1.5rem 0 1rem;font-family:var(--display);font-size:.62rem;letter-spacing:.18em;color:var(--ink);text-transform:uppercase}
+.section-break::before,.section-break::after{content:"— "}
+.ch-stats{margin-top:2.5rem;padding:1rem 1.5rem;background:var(--margin-bg);border:1px solid var(--margin-border);border-radius:4px;font-size:.78rem;color:var(--ink-dim);display:flex;flex-wrap:wrap;gap:.5rem 2rem}
+.ch-stats span{color:var(--accent)}
+@media(max-width:600px){header{padding:1rem}.legend{padding:.6rem 1rem}#view-index{padding:1.25rem 1rem 4rem}#view-chapter{padding:1.25rem .75rem 3rem}.verse-num{min-width:2.2rem;font-size:.52rem}.note-panel{margin-left:2.2rem}body{font-size:16px}.chapter-grid{grid-template-columns:repeat(auto-fill,minmax(95px,1fr))}}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--parchment)}::-webkit-scrollbar-thumb{background:var(--ink-faint);border-radius:3px}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <span class="eyebrow">King James Version · 1611</span>
+    <h1 onclick="showIndex()">The Annotated 1611</h1>
+  </div>
+  <div class="header-right">
+    <a class="nav-btn" href="index.html">← Bible</a>
+  </div>
+</header>
+<div class="legend">
+  <div class="legend-item"><span class="tag tag-alt">OR</span> Alternate rendering</div>
+  <div class="legend-item"><span class="tag tag-heb">HEB</span> Hebrew / Aramaic gloss</div>
+  <div class="legend-item"><span class="tag tag-grk">GRK</span> Greek gloss</div>
+  <div class="legend-item"><span class="tag tag-note">NOTE</span> Translators' annotation</div>
+</div>
+
+<div id="view-index" class="view active">
+  <div class="index-hero">
+    <div class="kicker">Epistle · New Testament</div>
+    <h2>The Epistle to the Hebrews</h2>
+    <p>The supremacy of Christ over angels, Moses, Aaron, and the Levitical priesthood — the new covenant sealed by better blood, and the great roll-call of faith.</p>
+    <div class="index-stats">
+      <div class="index-stat"><span class="num">13</span><span class="lbl">Chapters</span></div>
+      <div class="index-stat"><span class="num">303</span><span class="lbl">Verses</span></div>
+      <div class="index-stat"><span class="num">160+</span><span class="lbl">Marginal Notes</span></div>
+    </div>
+  </div>
+  <div class="book-section">
+    <h3>Chapters</h3>
+    <div class="chapter-grid" id="chapter-grid"></div>
+  </div>
+</div>
+
+<div id="view-chapter" class="view">
+  <div class="chapter-nav">
+    <button class="nav-btn" onclick="prevChapter()">← Prev</button>
+    <div class="chapter-nav-center" id="nav-label"></div>
+    <button class="nav-btn" onclick="nextChapter()">Next →</button>
+  </div>
+  <div class="chapter-heading">
+    <div class="book">Hebrews</div>
+    <h2 id="ch-heading"></h2>
+    <div class="running-head" id="ch-running"></div>
+  </div>
+  <div class="controls">
+    <button class="ctrl" onclick="expandAll()">Expand All Notes</button>
+    <button class="ctrl" onclick="collapseAll()">Collapse All</button>
+  </div>
+  <div id="verse-container"></div>
+  <div class="ch-stats" id="ch-stats"></div>
+</div>
+
+<script>
+const HEBREWS = {
+1:{heading:"Chapter I",running:"God's final word in his Son — Christ superior to the angels: his deity, his eternal throne, his worship",sections:{1:"God Hath Spoken in His Son",4:"Superior to Angels"},verses:[
+{v:1,t:"God, who at sundry times and in divers manners spake in time past unto the fathers by the prophets,",n:[{tag:"note",a:"sundry times and in divers manners",t:"The Greek polumeros kai polutropos — in many portions and many modes. God's revelation was progressive and varied: law, history, poetry, prophecy, vision, type, shadow. All of it pointed forward to what now arrives.",s:"1611 margin, Heb 1:1"}]},
+{v:2,t:"Hath in these last days spoken unto us by <em>his</em> Son, whom he hath appointed heir of all things, by whom also he made the worlds;",n:[{tag:"note",a:"these last days",t:"The era inaugurated by the incarnation of Christ. The last days began with his first coming and will culminate at his return. All subsequent history is the closing chapter of God's dealings with man.",s:"1611 margin, Heb 1:2"},{tag:"grk",a:"made the worlds",t:"Aionas — the ages. Not merely the physical universe but the ages of time themselves were made through the Son. He is both Creator and Lord of history.",s:"1611 margin, Heb 1:2"}]},
+{v:3,t:"Who being the brightness of <em>his</em> glory, and the express image of his person, and upholding all things by the word of his power, when he had by himself purged our sins, sat down on the right hand of the Majesty on high;",n:[{tag:"grk",a:"brightness",t:"Apaugasma — the outshining or effulgence of glory. As sunlight is the outbeaming of the sun itself, so the Son radiates the very glory of the Father — not a reflection but an emanation of the same essence.",s:"1611 margin, Heb 1:3"},{tag:"grk",a:"express image",t:"Charakter — the exact impress, as of a seal upon wax. Every attribute of the Father's person is reproduced precisely and completely in the Son. To see Christ is to see God (John 14:9).",s:"1611 margin, Heb 1:3"},{tag:"note",a:"sat down",t:"The posture of finished work. The Levitical priests never sat — there were no seats in the tabernacle, for the work was never done. Christ sat down because the sacrifice is complete and accepted.",s:"1611 margin, Heb 1:3"}]},
+{v:4,t:"Being made so much better than the angels, as he hath by inheritance obtained a more excellent name than they.",n:[{tag:"note",a:"better than the angels",t:"Better — kreitton — is the keynote of Hebrews, appearing thirteen times. The argument is addressed to Hebrew Christians tempted to revert to Judaism: everything in Christ is better than what preceded him.",s:"1611 margin, Heb 1:4"}]},
+{v:5,t:"For unto which of the angels said he at any time, Thou art my Son, this day have I begotten thee? And again, I will be to him a Father, and he shall be to me a Son?",n:[{tag:"note",a:"Thou art my Son, this day have I begotten thee",t:"Ps 2:7. The eternal generation of the Son, declared at his resurrection (Acts 13:33). No angel was ever addressed with this title — Sonship is unique to Christ.",s:"1611 margin, Heb 1:5"}]},
+{v:6,t:"And again, when he bringeth in the firstbegotten into the world, he saith, And let all the angels of God worship him.",n:[{tag:"note",a:"firstbegotten",t:"Prototokos — firstborn, denoting preeminence and heirship over all creation (Col 1:15). The command that angels worship him places him unambiguously above the entire angelic order.",s:"1611 margin, Heb 1:6"}]},
+{v:7,t:"And of the angels he saith, Who maketh his angels spirits, and his ministers a flame of fire.",n:[]},
+{v:8,t:"But unto the Son <em>he saith</em>, Thy throne, O God, <em>is</em> for ever and ever: a sceptre of righteousness <em>is</em> the sceptre of thy kingdom.",n:[{tag:"note",a:"Thy throne, O God",t:"Ps 45:6-7. The Father addresses the Son directly as God — one of the most explicit affirmations of Christ's deity in all of Scripture. The throne is eternal; the sceptre is righteous. Both apply to Christ alone.",s:"1611 margin, Heb 1:8"}]},
+{v:9,t:"Thou hast loved righteousness, and hated iniquity; therefore God, <em>even</em> thy God, hath anointed thee with the oil of gladness above thy fellows.",n:[]},
+{v:10,t:"And, Thou, Lord, in the beginning hast laid the foundation of the earth; and the heavens are the works of thine hands:",n:[{tag:"note",a:"Thou, Lord, in the beginning hast laid the foundation of the earth",t:"Ps 102:25-27, here applied by the Spirit directly to Christ. The psalmist addresses Jehovah; the writer of Hebrews identifies that Jehovah as the Son — a foundational proof of Christ's deity.",s:"1611 margin, Heb 1:10"}]},
+{v:11,t:"They shall perish; but thou remainest; and they all shall wax old as doth a garment;",n:[]},
+{v:12,t:"And as a vesture shalt thou fold them up, and they shall be changed: but thou art the same, and thy years shall not fail.",n:[{tag:"note",a:"thou art the same",t:"The immutability of Christ — he changes not. Creation ages and perishes; he remains. This is the same language used of Jehovah in Ps 102, confirming the identification.",s:"1611 margin, Heb 1:12"}]},
+{v:13,t:"But to which of the angels said he at any time, Sit on my right hand, until I make thine enemies thy footstool?",n:[{tag:"note",a:"Sit on my right hand",t:"Ps 110:1 — the most quoted OT verse in the NT. No angel was ever invited to share God's throne. Christ sits at the right hand of power, awaiting the full subjugation of all his enemies.",s:"1611 margin, Heb 1:13"}]},
+{v:14,t:"Are they not all ministering spirits, sent forth to minister for them who shall be heirs of salvation?",n:[{tag:"note",a:"ministering spirits",t:"Angels are servants — leitourgika pneumata, liturgical spirits. They serve the heirs of salvation. Christ, by contrast, sits enthroned. The contrast is complete: the Son reigns; the angels serve those who belong to him.",s:"1611 margin, Heb 1:14"}]}
+]},
+2:{heading:"Chapter II",running:"The danger of neglect — Christ made lower than angels to taste death for every man; the Captain of salvation",sections:{1:"The Warning: Neglect Not",5:"Christ Made Lower Than Angels",14:"The Captain of Salvation"},verses:[
+{v:1,t:"Therefore we ought to give the more earnest heed to the things which we have heard, lest at any time we should let <em>them</em> slip.",n:[{tag:"note",a:"let them slip",t:"Or drift past, as a ship past its harbour. The word prosecho — hold to — pictures a vessel that must be moored or it will be carried away by the current. Spiritual drifting is passive, not always dramatic.",s:"1611 margin, Heb 2:1"}]},
+{v:2,t:"For if the word spoken by angels was stedfast, and every transgression and disobedience received a just recompence of reward;",n:[{tag:"note",a:"word spoken by angels",t:"The Mosaic law, delivered through angelic mediation (Acts 7:53; Gal 3:19). If that word, delivered by servants, carried such binding authority and such severe penalties for violation, how much more the word delivered by the Son himself.",s:"1611 margin, Heb 2:2"}]},
+{v:3,t:"How shall we escape, if we neglect so great salvation; which at the first began to be spoken by the Lord, and was confirmed unto us by them that heard <em>him</em>;",n:[{tag:"note",a:"How shall we escape",t:"The first of five solemn warning passages in Hebrews (2:1-4; 3:7-4:13; 5:11-6:20; 10:19-39; 12:14-29). The warning is not of losing salvation but of never truly possessing it — of treating the gospel as negligible.",s:"1611 margin, Heb 2:3"}]},
+{v:4,t:"God also bearing <em>them</em> witness, both with signs and wonders, and with divers miracles, and gifts of the Holy Ghost, according to his own will?",n:[]},
+{v:5,t:"For unto the angels hath he not put in subjection the world to come, whereof we speak.",n:[]},
+{v:6,t:"But one in a certain place testified, saying, What is man, that thou art mindful of him? or the son of man, that thou visitest him?",n:[{tag:"note",a:"What is man",t:"Ps 8:4-6. The psalmist marvels at man's dignity within creation; the writer of Hebrews reads through it to its deeper fulfillment in Christ — the true Son of Man who is crowned with glory and honour after his humiliation.",s:"1611 margin, Heb 2:6"}]},
+{v:7,t:"Thou madest him a little lower than the angels; thou crownedst him with glory and honour, and didst set him over the works of thy hands:",n:[{tag:"note",a:"a little lower than the angels",t:"In the incarnation, the eternal Son voluntarily descended below the angels in rank and vulnerability — taking on flesh, mortality, and the capacity for suffering. This was not permanent diminishment but purposeful humiliation.",s:"1611 margin, Heb 2:7"}]},
+{v:8,t:"Thou hast put all things in subjection under his feet. For in that he put all in subjection under him, he left nothing <em>that is</em> not put under him. But now we see not yet all things put under him.",n:[{tag:"note",a:"now we see not yet all things put under him",t:"The subjection of all things is decreed but not yet fully displayed. We see Christ crowned (v.9) but not yet all enemies subdued (1 Cor 15:25). Faith sees what experience has not yet confirmed.",s:"1611 margin, Heb 2:8"}]},
+{v:9,t:"But we see Jesus, who was made a little lower than the angels for the suffering of death, crowned with glory and honour; that he by the grace of God should taste death for every man.",n:[{tag:"note",a:"taste death for every man",t:"The sufficiency of the atonement — Christ tasted the full bitterness of death on behalf of all. The word taste does not imply a small sip; it means to experience fully and personally. He drank it to the dregs.",s:"1611 margin, Heb 2:9"}]},
+{v:10,t:"For it became him, for whom <em>are</em> all things, and by whom <em>are</em> all things, in bringing many sons unto glory, to make the captain of their salvation perfect through sufferings.",n:[{tag:"grk",a:"captain",t:"Archegos — pioneer, author, leader. The one who goes first and opens the way for those who follow. Christ's suffering was not incidental but necessary to qualify him as the pioneer of our salvation.",s:"1611 margin, Heb 2:10"}]},
+{v:11,t:"For both he that sanctifieth and they who are sanctified <em>are</em> all of one: for which cause he is not ashamed to call them brethren,",n:[{tag:"note",a:"not ashamed to call them brethren",t:"The glorified Son of God is not embarrassed by his identification with redeemed sinners. He calls them brethren — family. This is the astonishing condescension of grace: he who is above all stoops to claim us as his own.",s:"1611 margin, Heb 2:11"}]},
+{v:12,t:"Saying, I will declare thy name unto my brethren, in the midst of the church will I sing praise unto thee.",n:[]},
+{v:13,t:"And again, I will put my trust in him. And again, Behold I and the children which God hath given me.",n:[]},
+{v:14,t:"Forasmuch then as the children are partakers of flesh and blood, he also himself likewise took part of the same; that through death he might destroy him that had the power of death, that is, the devil;",n:[{tag:"note",a:"destroy him that had the power of death",t:"Katargeo — to render powerless, to put out of operation. Satan's power over death was not absolute authority but a legal claim through sin (Rom 6:23). Christ cancelled that claim by bearing its full penalty.",s:"1611 margin, Heb 2:14"}]},
+{v:15,t:"And deliver them who through fear of death were all their lifetime subject to bondage.",n:[{tag:"note",a:"fear of death ... all their lifetime subject to bondage",t:"The universal human condition apart from Christ. Death is the horizon that colors every experience, every ambition, every loss. The gospel is the only message that removes the sting permanently.",s:"1611 margin, Heb 2:15"}]},
+{v:16,t:"For verily he took not on <em>him the nature of</em> angels; but he took on <em>him</em> the seed of Abraham.",n:[{tag:"note",a:"the seed of Abraham",t:"He did not become an angel to redeem angels — he became a man, specifically a descendant of Abraham, to redeem the sons of Abraham (both natural and spiritual). The incarnation was precisely targeted.",s:"1611 margin, Heb 2:16"}]},
+{v:17,t:"Wherefore in all things it behoved him to be made like unto <em>his</em> brethren, that he might be a merciful and faithful high priest in things <em>pertaining</em> to God, to make reconciliation for the sins of the people.",n:[{tag:"grk",a:"make reconciliation",t:"Hilaskomai — to propitiate, to satisfy divine justice by an offering that turns away wrath. The high priest's work on the Day of Atonement was propitiation; Christ's work on the cross is its permanent fulfillment.",s:"1611 margin, Heb 2:17"}]},
+{v:18,t:"For in that he himself hath suffered being tempted, he is able to succour them that are tempted.",n:[{tag:"note",a:"succour them that are tempted",t:"Boetheo — to run to the cry of, to aid. The word pictures one who hears a shout for help and runs. Christ's experience of temptation and suffering is not merely sympathetic knowledge but the basis of active, urgent help.",s:"1611 margin, Heb 2:18"}]}
+]},
+3:{heading:"Chapter III",running:"Christ greater than Moses — the warning of Kadesh-Barnea and the hardened heart",sections:{1:"Greater Than Moses",7:"The Warning from the Wilderness"},verses:[
+{v:1,t:"Wherefore, holy brethren, partakers of the heavenly calling, consider the Apostle and High Priest of our profession, Christ Jesus;",n:[{tag:"note",a:"Apostle and High Priest",t:"The only place in Scripture where Christ is called Apostle — the Sent One. He is both the one sent from God to man (Apostle) and the one who represents man before God (High Priest). Moses held the first office; Aaron the second. Christ holds both.",s:"1611 margin, Heb 3:1"}]},
+{v:2,t:"Who was faithful to him that appointed him, as also Moses <em>was faithful</em> in all his house.",n:[]},
+{v:3,t:"For this <em>man</em> was counted worthy of more glory than Moses, inasmuch as he who hath builded the house hath more honour than the house.",n:[{tag:"note",a:"he who hath builded the house hath more honour than the house",t:"Moses was the greatest servant in the house; Christ built the house. The builder is always greater than the building. Faithful though Moses was, he was part of what Christ constructed.",s:"1611 margin, Heb 3:3"}]},
+{v:4,t:"For every house is builded by some <em>man</em>; but he that built all things <em>is</em> God.",n:[]},
+{v:5,t:"And Moses verily <em>was</em> faithful in all his house, as a servant, for a testimony of those things which were to be spoken after;",n:[{tag:"note",a:"as a servant",t:"Therapon — an honored attendant, not a common slave. Moses was a servant of the highest dignity; but a servant still. Christ is the Son over his own house (v.6). The contrast is not between faithfulness but between office and nature.",s:"1611 margin, Heb 3:5"}]},
+{v:6,t:"But Christ as a son over his own house; whose house are we, if we hold fast the confidence and the rejoicing of the hope firm unto the end.",n:[]},
+{v:7,t:"Wherefore (as the Holy Ghost saith, To day if ye will hear his voice,",n:[{tag:"note",a:"as the Holy Ghost saith",t:"Ps 95:7-11 is attributed directly to the Holy Ghost — a clear apostolic affirmation of the divine inspiration of the Old Testament scriptures. The Spirit who spoke then speaks still.",s:"1611 margin, Heb 3:7"}]},
+{v:8,t:"Harden not your hearts, as in the provocation, in the day of temptation in the wilderness:",n:[{tag:"note",a:"Harden not your hearts",t:"The provocation is Meribah and Massah (Ex 17; Num 20). The generation that witnessed the plagues, crossed the Red Sea, ate manna, and saw the glory — still hardened their hearts. Privilege does not immunize against unbelief.",s:"1611 margin, Heb 3:8"}]},
+{v:9,t:"When your fathers tempted me, proved me, and saw my works forty years.",n:[]},
+{v:10,t:"Wherefore I was grieved with that generation, and said, They do alway err in <em>their</em> heart; and they have not known my ways.",n:[{tag:"note",a:"I was grieved",t:"Prosochthizo — to be provoked to disgust, to be nauseated by. The strongest expression of God's displeasure with persistent, wilful unbelief in the face of abundant evidence.",s:"1611 margin, Heb 3:10"}]},
+{v:11,t:"So I sware in my wrath, They shall not enter into my rest.)",n:[]},
+{v:12,t:"Take heed, brethren, lest there be in any of you an evil heart of unbelief, in departing from the living God.",n:[{tag:"note",a:"evil heart of unbelief",t:"The root of all apostasy is not moral failure but unbelief — a heart that refuses to take God at his word. From that root every other departure grows. The warning is addressed to brethren — those within the assembly.",s:"1611 margin, Heb 3:12"}]},
+{v:13,t:"But exhort one another daily, while it is called To day; lest any of you be hardened through the deceitfulness of sin.",n:[{tag:"note",a:"deceitfulness of sin",t:"Sin does not announce its hardening work — it deceives. Each act of disobedience desensitizes slightly more. The remedy is daily mutual exhortation — the assembly functioning as a conscience for its members.",s:"1611 margin, Heb 3:13"}]},
+{v:14,t:"For we are made partakers of Christ, if we hold the beginning of our confidence stedfast unto the end;",n:[]},
+{v:15,t:"While it is said, To day if ye will hear his voice, harden not your hearts, as in the provocation.",n:[]},
+{v:16,t:"For some, when they had heard, did provoke: howbeit not all that came out of Egypt by Moses.",n:[]},
+{v:17,t:"But with whom was he grieved forty years? <em>was it</em> not with them that had sinned, whose carcases fell in the wilderness?",n:[]},
+{v:18,t:"And to whom sware he that they should not enter into his rest, but to them that believed not?",n:[]},
+{v:19,t:"So we see that they could not enter in because of unbelief.",n:[{tag:"note",a:"could not enter in because of unbelief",t:"Not inability but unwillingness expressed as inability. The land was there, the promise was there, God was there — but unbelief closed the door from the inside. The same door stands open today; the same unbelief closes it.",s:"1611 margin, Heb 3:19"}]}
+]},
+4:{heading:"Chapter IV",running:"The rest that remaineth — the word of God as a discerner, and Christ our great high priest who understands our weakness",sections:{1:"The Rest That Remaineth",12:"The Living Word",14:"Our Great High Priest"},verses:[
+{v:1,t:"Let us therefore fear, lest, a promise being left <em>us</em> of entering into his rest, any of you should seem to come short of it.",n:[{tag:"note",a:"seem to come short",t:"The Greek dokeo — to appear, to give the impression of. The danger is not merely failing but failing while appearing to be on the way. Many go through the motions of faith without the substance.",s:"1611 margin, Heb 4:1"}]},
+{v:2,t:"For unto us was the gospel preached, as well as unto them: but the word preached did not profit them, not being mixed with faith in them that heard <em>it</em>.",n:[{tag:"note",a:"not being mixed with faith",t:"The word is the seed; faith is the soil. Without the mixture, the hearing is profitless. Israel at Kadesh heard the promise of Canaan — but did not combine faith with it, and so the word produced nothing.",s:"1611 margin, Heb 4:2"}]},
+{v:3,t:"For we which have believed do enter into rest, as he said, As I have sworn in my wrath, if they shall enter into my rest: although the works were finished from the foundation of the world.",n:[]},
+{v:4,t:"For he spake in a certain place of the seventh <em>day</em> on this wise, And God did rest the seventh day from all his works.",n:[{tag:"note",a:"God did rest the seventh day",t:"Gen 2:2. The Sabbath rest of creation was not God's cessation from weariness but the enjoyment of completed work. The rest offered to believers mirrors this — not idleness but the peace of finished redemption.",s:"1611 margin, Heb 4:4"}]},
+{v:5,t:"And in this <em>place</em> again, If they shall enter into my rest.",n:[]},
+{v:6,t:"Seeing therefore it remaineth that some must enter therein, and they to whom it was first preached entered not in because of unbelief:",n:[]},
+{v:7,t:"Again, he limiteth a certain day, saying in David, To day, after so long a time; as it is said, To day if ye will hear his voice, harden not your hearts.",n:[]},
+{v:8,t:"For if Jesus had given them rest, then would he not afterward have spoken of another day.",n:[{tag:"note",a:"For if Jesus had given them rest",t:"Jesus here is Joshua — the Greek transliteration of the Hebrew Yehoshua. Joshua brought Israel into Canaan, but that rest was only a type. The Spirit speaking through David centuries later still speaks of another rest — proof that Joshua's conquest was not the final fulfillment.",s:"1611 margin, Heb 4:8"}]},
+{v:9,t:"There remaineth therefore a rest to the people of God.",n:[{tag:"grk",a:"rest",t:"Sabbatismos — a Sabbath-keeping, a Sabbath rest. The word appears only here in the NT. The eternal rest that remains is a participation in God's own Sabbath — the enjoyment of his completed redemptive work.",s:"1611 margin, Heb 4:9"}]},
+{v:10,t:"For he that is entered into his rest, he also hath ceased from his own works, as God <em>did</em> from his.",n:[{tag:"note",a:"ceased from his own works",t:"The believer who enters God's rest stops laboring to earn acceptance. As God rested from creation when it was complete, so the soul rests from self-justifying effort when it receives the finished work of Christ.",s:"1611 margin, Heb 4:10"}]},
+{v:11,t:"Let us labour therefore to enter into that rest, lest any man fall after the same example of unbelief.",n:[]},
+{v:12,t:"For the word of God <em>is</em> quick, and powerful, and sharper than any twoedged sword, piercing even to the dividing asunder of soul and spirit, and of the joints and marrow, and <em>is</em> a discerner of the thoughts and intents of the heart.",n:[{tag:"grk",a:"quick",t:"Zon — living. The word of God is not a dead document but a living agent. It acts; it penetrates; it judges. No human writing does what Scripture does because no human writing is what Scripture is.",s:"1611 margin, Heb 4:12"},{tag:"note",a:"dividing asunder of soul and spirit",t:"Scripture reaches what no surgeon's blade can reach — the distinction between the immaterial parts of man. It exposes the difference between what a man feels (soul) and what his redeemed spirit knows. It performs spiritual surgery.",s:"1611 margin, Heb 4:12"}]},
+{v:13,t:"Neither is there any creature that is not manifest in his sight: but all things <em>are</em> naked and opened unto the eyes of him with whom we have to do.",n:[{tag:"note",a:"naked and opened",t:"Tetracheliamena — lit. with the neck bent back, as an animal laid open for sacrifice or a wrestler thrown down with face exposed. Nothing is hidden from the God whose word we hear. He sees through every self-deception.",s:"1611 margin, Heb 4:13"}]},
+{v:14,t:"Seeing then that we have a great high priest, that is passed into the heavens, Jesus the Son of God, let us hold fast <em>our</em> profession.",n:[{tag:"note",a:"passed into the heavens",t:"Not merely into the Holy of Holies on earth but through the visible heavens into the very presence of God. The Levitical high priest entered the earthly sanctuary once a year; our High Priest has entered the heavenly sanctuary permanently.",s:"1611 margin, Heb 4:14"}]},
+{v:15,t:"For we have not an high priest which cannot be touched with the feeling of our infirmities; but was in all points tempted like as <em>we are, yet</em> without sin.",n:[{tag:"note",a:"in all points tempted like as we are, yet without sin",t:"The two truths must be held together. He was genuinely tempted — not with a performance of temptation but with real pressure, real appeal, real assault — and he did not sin. His sympathy is therefore real; his help is therefore qualified.",s:"1611 margin, Heb 4:15"}]},
+{v:16,t:"Let us therefore come boldly unto the throne of grace, that we may obtain mercy, and find grace to help in time of need.",n:[{tag:"note",a:"boldly unto the throne of grace",t:"Parresia — with freedom of speech, with open confidence, without cowering. The throne that is holy is also a throne of grace. The same One before whom we cannot stand on our own merit invites us to approach without fear because of Christ.",s:"1611 margin, Heb 4:16"}]}
+]},
+5:{heading:"Chapter V",running:"The qualifications of a high priest — Christ designated by God, a priest after the order of Melchisedec",sections:{1:"The Office of High Priest",7:"Christ as High Priest",11:"Warning: Spiritual Immaturity"},verses:[
+{v:1,t:"For every high priest taken from among men is ordained for men in things <em>pertaining</em> to God, that he may offer both gifts and sacrifices for sins:",n:[]},
+{v:2,t:"Who can have compassion on the ignorant, and on them that are out of the way; for that he himself also is compassed with infirmity.",n:[{tag:"note",a:"compassion on the ignorant",t:"Metriopatheo — to moderate one's feelings, to deal gently. The high priest could not afford either hardness (he was a sinner himself) or excessive emotion that would impair his function. Balanced compassion fit for the office.",s:"1611 margin, Heb 5:2"}]},
+{v:3,t:"And by reason hereof he ought, as for the people, so also for himself, to offer for sins.",n:[]},
+{v:4,t:"And no man taketh this honour unto himself, but he that is called of God, as <em>was</em> Aaron.",n:[{tag:"note",a:"called of God, as was Aaron",t:"The Aaronic priesthood was by divine appointment, not human ambition. Korah's rebellion (Num 16) was the catastrophic example of one who seized priestly prerogatives without divine call.",s:"1611 margin, Heb 5:4"}]},
+{v:5,t:"So also Christ glorified not himself to be made an high priest; but he that said unto him, Thou art my Son, to day have I begotten thee.",n:[]},
+{v:6,t:"As he saith also in another <em>place</em>, Thou <em>art</em> a priest for ever after the order of Melchisedec.",n:[{tag:"note",a:"the order of Melchisedec",t:"Ps 110:4. A priesthood older than Aaron, superior to Levi, and unending. Melchisedec appears in Gen 14 without genealogy or recorded death — a type of the eternal priesthood of the Son.",s:"1611 margin, Heb 5:6"}]},
+{v:7,t:"Who in the days of his flesh, when he had offered up prayers and supplications with strong crying and tears unto him that was able to save him from death, and was heard in that he feared;",n:[{tag:"note",a:"strong crying and tears",t:"The agony of Gethsemane (Luke 22:44). The Son of God wept and cried in prayer — not weakness but the full weight of bearing the sins of the world in a human body. His prayers were heard: the cup came, and he drank it.",s:"1611 margin, Heb 5:7"}]},
+{v:8,t:"Though he were a Son, yet learned he obedience by the things which he suffered;",n:[{tag:"note",a:"learned he obedience by the things which he suffered",t:"Not that he was ever disobedient — but that obedience in the experiential, human sense was learned through the cost of it. There is no other way to know what it means to obey than to obey when it costs something.",s:"1611 margin, Heb 5:8"}]},
+{v:9,t:"And being made perfect, he became the author of eternal salvation unto all them that obey him;",n:[{tag:"note",a:"being made perfect",t:"Teleioo — brought to completeness, to the appointed end. His perfection through suffering did not add to his divine nature but completed his qualification as our High Priest in human experience. He is now fully fitted for the office.",s:"1611 margin, Heb 5:9"}]},
+{v:10,t:"Called of God an high priest after the order of Melchisedec.",n:[]},
+{v:11,t:"Of whom we have many things to say, and hard to be uttered, seeing ye are dull of hearing.",n:[{tag:"note",a:"dull of hearing",t:"Nothros — sluggish, slow, dull. The word describes not inability but lethargy — ears that could hear but have grown lazy. The problem is not the depth of the teaching but the shallowness of the listeners.",s:"1611 margin, Heb 5:11"}]},
+{v:12,t:"For when for the time ye ought to be teachers, ye have need that one teach you again which <em>be</em> the first principles of the oracles of God; and are become such as have need of milk, and not of strong meat.",n:[{tag:"note",a:"ought to be teachers",t:"Duration of discipleship should produce growth. These readers had been believers long enough to teach; instead they needed remedial instruction. Time in the faith does not automatically produce maturity — it must be cultivated.",s:"1611 margin, Heb 5:12"}]},
+{v:13,t:"For every one that useth milk <em>is</em> unskilful in the word of righteousness: for he is a babe.",n:[]},
+{v:14,t:"But strong meat belongeth to them that are of full age, <em>even</em> those who by reason of use have their senses exercised to discern both good and evil.",n:[{tag:"note",a:"senses exercised",t:"Gumnazein — to train, to exercise, from which gymnasium derives. Spiritual discernment is not a gift that arrives fully formed; it is a capacity developed through repeated, disciplined use of the word.",s:"1611 margin, Heb 5:14"}]}
+]},
+6:{heading:"Chapter VI",running:"The impossibility of second repentance for apostates — the anchor of hope and the oath of God",sections:{1:"The Warning Against Falling Away",9:"Better Things for the Genuine",13:"The Oath of God: Sure and Stedfast"},verses:[
+{v:1,t:"Therefore leaving the principles of the doctrine of Christ, let us go on unto perfection; not laying again the foundation of repentance from dead works, and of faith toward God,",n:[{tag:"note",a:"leaving ... let us go on",t:"The call is to advance, not to retreat. The foundational doctrines are not to be abandoned but assumed — the building does not perpetually re-pour its foundation. Maturity moves forward on what has been established.",s:"1611 margin, Heb 6:1"}]},
+{v:2,t:"Of the doctrine of baptisms, and of laying on of hands, and of resurrection of the dead, and of eternal judgment.",n:[]},
+{v:3,t:"And this will we do, if God permit.",n:[]},
+{v:4,t:"For <em>it is</em> impossible for those who were once enlightened, and have tasted of the heavenly gift, and were made partakers of the Holy Ghost,",n:[{tag:"note",a:"impossible for those who were once enlightened",t:"The most debated warning in Hebrews. The persons described have received great spiritual privilege — enlightenment, the heavenly gift, the Holy Ghost, the good word, the powers of the age to come. Whether these describe genuine believers or highly-privileged professors is the central exegetical question.",s:"1611 margin, Heb 6:4"}]},
+{v:5,t:"And have tasted the good word of God, and the powers of the world to come,",n:[]},
+{v:6,t:"If they shall fall away, to renew them again unto repentance; seeing they crucify to themselves the Son of God afresh, and put <em>him</em> to an open shame.",n:[{tag:"note",a:"crucify to themselves the Son of God afresh",t:"To apostatize — to publicly renounce Christ after such privilege — is to join the company of those who put him to death, declaring by one's defection that the crucifixion was justified. It is not merely rejecting Christ but endorsing his rejection.",s:"1611 margin, Heb 6:6"}]},
+{v:7,t:"For the earth which drinketh in the rain that cometh oft upon it, and bringeth forth herbs meet for them by whom it is dressed, receiveth blessing from God:",n:[]},
+{v:8,t:"But that which beareth thorns and briers <em>is</em> rejected, and <em>is</em> nigh unto cursing; whose end <em>is</em> to be burned.",n:[{tag:"note",a:"thorns and briers ... to be burned",t:"The same rain falls on both soils. The difference is not in the privilege received but in what the soil produces. Fruitlessness under great privilege is the mark of the apostate; fruitfulness under the same privilege is the mark of the genuine.",s:"1611 margin, Heb 6:8"}]},
+{v:9,t:"But, beloved, we are persuaded better things of you, and things that accompany salvation, though we thus speak.",n:[{tag:"note",a:"we are persuaded better things of you",t:"The tone shifts. The warning was for the wavering; now the writer expresses genuine confidence in his readers as possessing things that accompany salvation — fruit that distinguishes the real from the professor.",s:"1611 margin, Heb 6:9"}]},
+{v:10,t:"For God <em>is</em> not unrighteous to forget your work and labour of love, which ye have shewed toward his name, in that ye have ministered to the saints, and do minister.",n:[]},
+{v:11,t:"And we desire that every one of you do shew the same diligence to the full assurance of hope unto the end:",n:[]},
+{v:12,t:"That ye be not slothful, but followers of them who through faith and patience inherit the promises.",n:[]},
+{v:13,t:"For when God made promise to Abraham, because he could swear by no greater, he sware by himself,",n:[{tag:"note",a:"he sware by himself",t:"An oath requires a greater authority to guarantee the lesser. God, having no greater, swore by his own name — his own existence, character, and faithfulness became the surety of the promise. It cannot fail without God ceasing to be God.",s:"1611 margin, Heb 6:13"}]},
+{v:14,t:"Saying, Surely blessing I will bless thee, and multiplying I will multiply thee.",n:[]},
+{v:15,t:"And so, after he had patiently endured, he obtained the promise.",n:[]},
+{v:16,t:"For men verily swear by the greater: and an oath for confirmation <em>is</em> to them an end of all strife.",n:[]},
+{v:17,t:"Wherein God, willing more abundantly to shew unto the heirs of promise the immutability of his counsel, confirmed <em>it</em> by an oath:",n:[]},
+{v:18,t:"That by two immutable things, in which <em>it was</em> impossible for God to lie, we might have a strong consolation, who have fled for refuge to lay hold upon the hope set before us:",n:[{tag:"note",a:"two immutable things",t:"The promise and the oath — both guaranteed by the character of God who cannot lie. The double security is given not because God needed to prove himself but because we, in our weakness, need the double assurance.",s:"1611 margin, Heb 6:18"}]},
+{v:19,t:"Which <em>hope</em> we have as an anchor of the soul, both sure and stedfast, and which entereth into that within the veil;",n:[{tag:"note",a:"anchor of the soul",t:"An anchor holds in the storm by going down into what is unseen — the seabed. Our hope anchors in the unseen — the heavenly sanctuary where Christ has entered. The storm rages above; the anchor holds below, in the eternal.",s:"1611 margin, Heb 6:19"}]},
+{v:20,t:"Whither the forerunner is for us entered, <em>even</em> Jesus, made an high priest for ever after the order of Melchisedec.",n:[{tag:"note",a:"forerunner",t:"Prodromos — the one who goes ahead to prepare the way. A forerunner implies that others will follow. Christ has entered the heavenly sanctuary not only for himself but as the advance guard of those who will follow him there.",s:"1611 margin, Heb 6:20"}]}
+]},
+7:{heading:"Chapter VII",running:"Melchisedec the type — Christ the eternal priest, superior to Levi, perfecting what the law could not",sections:{1:"Melchisedec: King and Priest",11:"The Levitical Priesthood Superseded",20:"Christ's Eternal and Unchangeable Priesthood"},verses:[
+{v:1,t:"For this Melchisedec, king of Salem, priest of the most high God, who met Abraham returning from the slaughter of the kings, and blessed him;",n:[{tag:"note",a:"Melchisedec, king of Salem, priest of the most high God",t:"Gen 14:18-20. He holds two offices that were never combined in Israel: king and priest. In Salem (Jerusalem) he exercised both. This dual office made him a type of Christ, who is both King of kings and our eternal High Priest.",s:"1611 margin, Heb 7:1"}]},
+{v:2,t:"To whom also Abraham gave a tenth part of all; first being by interpretation King of righteousness, and after that also King of Salem, which is, King of peace;",n:[{tag:"heb",a:"King of righteousness ... King of peace",t:"Malki-tzedek — king of righteousness. Malki-shalem — king of peace (shalom). Both titles are fulfilled in Christ: he is our righteousness (1 Cor 1:30) and our peace (Eph 2:14). The names are prophetic of his person.",s:"1611 margin, Heb 7:2"}]},
+{v:3,t:"Without father, without mother, without descent, having neither beginning of days, nor end of life; but made like unto the Son of God; abideth a priest continually.",n:[{tag:"note",a:"Without father, without mother, without descent",t:"In the Genesis record, Melchisedec appears without genealogy, without birth, without death. This is not a statement about his actual biography but about what the text records — or does not record. As far as Scripture shows, he simply is. This makes him a type of the eternal Son.",s:"1611 margin, Heb 7:3"}]},
+{v:4,t:"Now consider how great this man <em>was</em>, unto whom even the patriarch Abraham gave the tenth of the spoils.",n:[]},
+{v:5,t:"And verily they that are of the sons of Levi, who receive the office of the priesthood, have a commandment to take tithes of the people according to the law, that is, of their brethren, though they come out of the loins of Abraham:",n:[]},
+{v:6,t:"But he whose descent is not counted from them received tithes of Abraham, and blessed him that had the promises.",n:[]},
+{v:7,t:"And without all contradiction the less is blessed of the better.",n:[{tag:"note",a:"the less is blessed of the better",t:"A self-evident principle: the one who blesses stands in the superior position. Abraham, the father of the faithful, received blessing from Melchisedec — demonstrating Melchisedec's superior standing, and by extension, the superiority of Christ's priesthood over the Levitical order descended from Abraham.",s:"1611 margin, Heb 7:7"}]},
+{v:8,t:"And here men that die receive tithes; but there he <em>receiveth them</em>, of whom it is witnessed that he liveth.",n:[]},
+{v:9,t:"And as I may so say, Levi also, who receiveth tithes, payed tithes in Abraham.",n:[{tag:"note",a:"Levi also ... payed tithes in Abraham",t:"Levi was not yet born; but he was in the loins of Abraham his great-grandfather. When Abraham paid tithes to Melchisedec, the entire Levitical priesthood was representatively doing the same — acknowledging a greater priesthood.",s:"1611 margin, Heb 7:9"}]},
+{v:10,t:"For he was yet in the loins of his father, when Melchisedec met him.",n:[]},
+{v:11,t:"If therefore perfection were by the Levitical priesthood, (for under it the people received the law,) what further need <em>was there</em> that another priest should rise after the order of Melchisedec, and not be called after the order of Aaron?",n:[{tag:"note",a:"If perfection were by the Levitical priesthood",t:"The key argument: if Aaron's priesthood could have brought men to God completely, there was no need for another. The prophecy of Ps 110:4 — a priest after Melchisedec's order — proves the Levitical system was insufficient and provisional.",s:"1611 margin, Heb 7:11"}]},
+{v:12,t:"For the priesthood being changed, there is made of necessity a change also of the law.",n:[]},
+{v:13,t:"For he of whom these things are spoken pertaineth to another tribe, of which no man gave attendance at the altar.",n:[]},
+{v:14,t:"For <em>it is</em> evident that our Lord sprang out of Juda; of which tribe Moses spake nothing concerning priesthood.",n:[{tag:"note",a:"sprang out of Juda",t:"Christ's genealogy is of Judah, the royal tribe — not Levi, the priestly tribe. His priesthood therefore cannot rest on Mosaic law or tribal descent. It rests on an entirely different principle.",s:"1611 margin, Heb 7:14"}]},
+{v:15,t:"And it is yet far more evident: for that after the similitude of Melchisedec there ariseth another priest,",n:[]},
+{v:16,t:"Who is made, not after the law of a carnal commandment, but after the power of an endless life.",n:[{tag:"note",a:"power of an endless life",t:"The Levitical priests qualified by lineage — a physical, fleshly standard. Christ qualifies by the power of a life that cannot end. His priesthood is indestructible because he is indestructible.",s:"1611 margin, Heb 7:16"}]},
+{v:17,t:"For he testifieth, Thou <em>art</em> a priest for ever after the order of Melchisedec.",n:[]},
+{v:18,t:"For there is verily a disannulling of the commandment going before for the weakness and unprofitableness thereof.",n:[{tag:"note",a:"weakness and unprofitableness",t:"Not a flaw in God's design — the law served its purpose as tutor (Gal 3:24) and shadow (Heb 10:1). But it could not justify; it could not make the offerer perfect. It was never meant to. Christ is what it pointed to.",s:"1611 margin, Heb 7:18"}]},
+{v:19,t:"For the law made nothing perfect, but the bringing in of a better hope <em>did</em>; by the which we draw nigh unto God.",n:[]},
+{v:20,t:"And inasmuch as not without an oath <em>he was made priest</em>:",n:[]},
+{v:21,t:"(For those priests were made without an oath; but this with an oath by him that said unto him, The Lord sware and will not repent, Thou <em>art</em> a priest for ever after the order of Melchisedec:)",n:[]},
+{v:22,t:"By so much was Jesus made a surety of a better testament.",n:[{tag:"note",a:"surety of a better testament",t:"Enguos — guarantor, the one who personally secures a covenant. Christ is not merely the mediator who arranges the new covenant; he is its personal guarantor — with his own life as the bond.",s:"1611 margin, Heb 7:22"}]},
+{v:23,t:"And they truly were many priests, because they were not suffered to continue by reason of death:",n:[]},
+{v:24,t:"But this <em>man</em>, because he continueth ever, hath an unchangeable priesthood.",n:[{tag:"grk",a:"unchangeable",t:"Aparabatos — not passing to another, not transferable. Every Aaronic priest eventually died and handed off to a successor. Christ's priesthood passes to no one because he never dies. The ministry is unbroken and perpetual.",s:"1611 margin, Heb 7:24"}]},
+{v:25,t:"Wherefore he is able also to save them to the uttermost that come unto God by him, seeing he ever liveth to make intercession for them.",n:[{tag:"note",a:"save them to the uttermost",t:"Eis to panteles — completely, finally, forever. The scope of his saving work is total. And the ground of that total salvation is his endless intercession — he is always before the Father on behalf of those who come to God through him.",s:"1611 margin, Heb 7:25"}]},
+{v:26,t:"For such an high priest became us, <em>who is</em> holy, harmless, undefiled, separate from sinners, and made higher than the heavens;",n:[]},
+{v:27,t:"Who needeth not daily, as those high priests, to offer up sacrifice, first for his own sins, and then for the people's: for this he did once, when he offered up himself.",n:[{tag:"note",a:"offered up himself",t:"The Aaronic high priest offered an animal. Christ offered himself — priest and victim in one. He was not a man who happened to be crucified; he was the priest deliberately laying down his own life as the appointed sacrifice.",s:"1611 margin, Heb 7:27"}]},
+{v:28,t:"For the law maketh men high priests which have infirmity; but the word of the oath, which was since the law, maketh the Son, who is consecrated for evermore.",n:[]}
+]},
+8:{heading:"Chapter VIII",running:"The better covenant — Christ the minister of the true tabernacle, mediator of the new covenant promised in Jeremiah",sections:{1:"The True Tabernacle",6:"The Better Covenant"},verses:[
+{v:1,t:"Now of the things which we have spoken <em>this is</em> the sum: We have such an high priest, who is set on the right hand of the throne of the Majesty in the heavens;",n:[{tag:"note",a:"this is the sum",t:"Kephalaion — the main point, the crowning summary. After all the argument about priesthood and Melchisedec, this is what it comes to: we have a High Priest enthroned in heaven. Everything else is commentary on that fact.",s:"1611 margin, Heb 8:1"}]},
+{v:2,t:"A minister of the sanctuary, and of the true tabernacle, which the Lord pitched, and not man.",n:[{tag:"note",a:"the true tabernacle, which the Lord pitched, and not man",t:"The earthly tabernacle Moses built was a copy of the heavenly original shown to him on Sinai (Ex 25:9,40). The heavenly sanctuary is the reality; the earthly was the shadow. Christ ministers in the reality.",s:"1611 margin, Heb 8:2"}]},
+{v:3,t:"For every high priest is ordained to offer gifts and sacrifices: wherefore <em>it is</em> of necessity that this man have somewhat also to offer.",n:[]},
+{v:4,t:"For if he were on earth, he should not be a priest, seeing that there are priests that offer gifts according to the law:",n:[]},
+{v:5,t:"Who serve unto the example and shadow of heavenly things, as Moses was admonished of God when he was about to make the tabernacle: for, See, saith he, <em>that</em> thou make all things according to the pattern shewed to thee in the mount.",n:[{tag:"note",a:"example and shadow",t:"The Levitical system was deliberately designed as a shadow — hupodeigma and skia — a sketch of the real. Shadows are caused by something solid standing in the light; remove the shadow and the solid remains. The old covenant is gone; Christ, who cast the shadow, remains.",s:"1611 margin, Heb 8:5"}]},
+{v:6,t:"But now hath he obtained a more excellent ministry, by how much also he is the mediator of a better covenant, which was established upon better promises.",n:[{tag:"note",a:"better covenant ... better promises",t:"The first covenant promised earthly blessings conditioned on obedience. The new covenant promises complete forgiveness, internal transformation, and an unbreakable relationship — grounded not in Israel's faithfulness but in God's own oath.",s:"1611 margin, Heb 8:6"}]},
+{v:7,t:"For if that first <em>covenant</em> had been faultless, then should no place have been sought for the second.",n:[]},
+{v:8,t:"For finding fault with them, he saith, Behold, the days come, saith the Lord, when I will make a new covenant with the house of Israel and with the house of Judah:",n:[{tag:"note",a:"finding fault with them",t:"The fault was not in the covenant's terms but in the people who broke it. God's new covenant remedy addresses not the terms but the heart — he writes the law inwardly rather than presenting it externally.",s:"1611 margin, Heb 8:8"}]},
+{v:9,t:"Not according to the covenant that I made with their fathers in the day when I took them by the hand to lead them out of the land of Egypt; because they continued not in my covenant, and I regarded them not, saith the Lord.",n:[]},
+{v:10,t:"For this <em>is</em> the covenant that I will make with the house of Israel after those days, saith the Lord; I will put my laws into their mind, and write them in their hearts: and I will be to them a God, and they shall be to me a people:",n:[{tag:"note",a:"write them in their hearts",t:"The Mosaic law was written on stone tablets — external, confronting man from the outside. The new covenant law is written on the heart — internal, transforming desire and motive. Obedience becomes natural rather than coerced.",s:"1611 margin, Heb 8:10"}]},
+{v:11,t:"And they shall not teach every man his neighbour, and every man his brother, saying, Know the Lord: for all shall know me, from the least to the greatest.",n:[]},
+{v:12,t:"For I will be merciful to their unrighteousness, and their sins and their iniquities will I remember no more.",n:[{tag:"note",a:"will I remember no more",t:"Not that God lacks the capacity to recall — but that he chooses never to bring the forgiven sin into account again. The legal record is expunged. This is the heart of the new covenant: total and permanent forgiveness.",s:"1611 margin, Heb 8:12"}]},
+{v:13,t:"In that he saith, A new <em>covenant</em>, he hath made the first old. Now that which decayeth and waxeth old <em>is</em> ready to vanish away.",n:[{tag:"note",a:"ready to vanish away",t:"Written ca. A.D. 67-69, just before the destruction of the temple in A.D. 70. The writer sees the Levitical system on the brink of physical dissolution — the old covenant vanishing in history as it had already vanished theologically in Christ.",s:"1611 margin, Heb 8:13"}]}
+]},
+9:{heading:"Chapter IX",running:"The earthly tabernacle and its service — then the heavenly sanctuary, the better blood, and the one offering",sections:{1:"The Earthly Tabernacle",11:"The Heavenly Sanctuary and Better Blood",23:"The Once-for-All Offering"},verses:[
+{v:1,t:"Then verily the first <em>covenant</em> had also ordinances of divine service, and a worldly sanctuary.",n:[]},
+{v:2,t:"For there was a tabernacle made; the first, wherein <em>was</em> the candlestick, and the table, and the shewbread; which is called the sanctuary.",n:[]},
+{v:3,t:"And after the second veil, the tabernacle which is called the Holiest of all;",n:[{tag:"note",a:"Holiest of all",t:"The Most Holy Place — hagia hagion — where the ark of the covenant rested and where God's presence dwelt between the cherubim. Entered once a year by the high priest alone, on the Day of Atonement.",s:"1611 margin, Heb 9:3"}]},
+{v:4,t:"Which had the golden censer, and the ark of the covenant overlaid round about with gold, wherein <em>was</em> the golden pot that had manna, and Aaron's rod that budded, and the tables of the covenant;",n:[{tag:"note",a:"the golden pot ... Aaron's rod ... tables of the covenant",t:"Three items within the ark: the manna (God's supernatural provision), Aaron's budded rod (God's vindicated priesthood), and the tablets (God's moral law). Together they witness to provision, priesthood, and law — all fulfilled in Christ.",s:"1611 margin, Heb 9:4"}]},
+{v:5,t:"And over it the cherubims of glory shadowing the mercyseat; of which we cannot now speak particularly.",n:[{tag:"note",a:"mercyseat",t:"Hilasterion — the place of propitiation. The same word used in Rom 3:25 for Christ himself. The mercy seat was the lid of the ark — the place where the blood was sprinkled on the Day of Atonement, covering the broken law beneath. Christ is our mercy seat.",s:"1611 margin, Heb 9:5"}]},
+{v:6,t:"Now when these things were thus ordained, the priests went always into the first tabernacle, accomplishing the service <em>of God</em>.",n:[]},
+{v:7,t:"But into the second <em>went</em> the high priest alone once every year, not without blood, which he offered for himself, and <em>for</em> the errors of the people:",n:[{tag:"note",a:"once every year, not without blood",t:"Three facts about the Day of Atonement that the Spirit uses to prove its inadequacy: (1) once per year — repetition implies incompleteness; (2) the priest alone — access was restricted; (3) not without blood — death was required each time.",s:"1611 margin, Heb 9:7"}]},
+{v:8,t:"The Holy Ghost this signifying, that the way into the holiest of all was not yet made manifest, while as the first tabernacle was yet standing:",n:[{tag:"note",a:"the way into the holiest ... not yet made manifest",t:"The veil itself was the statement. As long as the veil stood, it said: access is restricted. When Christ died, the veil was torn from top to bottom (Matt 27:51) — God himself opening what had been closed. The way into his presence is now open.",s:"1611 margin, Heb 9:8"}]},
+{v:9,t:"Which <em>was</em> a figure for the time then present, in which were offered both gifts and sacrifices, that could not make him that did the service perfect, as pertaining to the conscience:",n:[{tag:"note",a:"could not make him that did the service perfect, as pertaining to the conscience",t:"The critical failure of the Levitical system: it could cleanse the flesh ceremonially but could not cleanse the conscience. A guilty conscience remained even after the ritual. Only the blood of Christ can do what the blood of bulls and goats could not.",s:"1611 margin, Heb 9:9"}]},
+{v:10,t:"<em>Which stood</em> only in meats and drinks, and divers washings, and carnal ordinances, imposed <em>on them</em> until the time of reformation.",n:[]},
+{v:11,t:"But Christ being come an high priest of good things to come, by a greater and more perfect tabernacle, not made with hands, that is to say, not of this building;",n:[]},
+{v:12,t:"Neither by the blood of goats and calves, but by his own blood he entered in once into the holy place, having obtained eternal redemption <em>for us</em>.",n:[{tag:"note",a:"by his own blood ... once ... eternal redemption",t:"Three contrasts with the Levitical system: his own blood (not animal blood), once (not annually), eternal redemption (not temporary covering). The superiority is total. What the law repeated year after year, Christ accomplished in a single offering, forever.",s:"1611 margin, Heb 9:12"}]},
+{v:13,t:"For if the blood of bulls and of goats, and the ashes of an heifer sprinkling the unclean, sanctifieth to the purifying of the flesh:",n:[]},
+{v:14,t:"How much more shall the blood of Christ, who through the eternal Spirit offered himself without spot to God, purge your conscience from dead works to serve the living God?",n:[{tag:"note",a:"purge your conscience from dead works",t:"The blood of animals could not reach the conscience — the innermost sense of guilt before God. The blood of Christ, offered through the eternal Spirit, can. This is what makes the new covenant better: it deals with what the old could only cover.",s:"1611 margin, Heb 9:14"}]},
+{v:15,t:"And for this cause he is the mediator of the new testament, that by means of death, for the redemption of the transgressions <em>that were</em> under the first testament, they which are called might receive the promise of eternal inheritance.",n:[{tag:"note",a:"redemption of the transgressions that were under the first testament",t:"The OT saints were saved on the basis of a death that had not yet occurred. God held their sins in suspension, passing over them (Rom 3:25) until the cross could retroactively settle the debt for all who looked forward in faith.",s:"1611 margin, Heb 9:15"}]},
+{v:16,t:"For where a testament <em>is</em>, there must also of necessity be the death of the testator.",n:[{tag:"note",a:"death of the testator",t:"A will (testament) takes effect only at the testator's death. The new covenant becomes operative through Christ's death. This is why the incarnation was necessary: God himself had to die to put the will into force.",s:"1611 margin, Heb 9:16"}]},
+{v:17,t:"For a testament <em>is</em> of force after men are dead: otherwise it is of no strength at all while the testator liveth.",n:[]},
+{v:18,t:"Whereupon neither the first <em>testament</em> was dedicated without blood.",n:[]},
+{v:19,t:"For when Moses had spoken every precept to all the people according to the law, he took the blood of calves and of goats, with water, and scarlet wool, and hyssop, and sprinkled both the book, and all the people,",n:[]},
+{v:20,t:"Saying, This <em>is</em> the blood of the testament which God hath enjoined unto you.",n:[]},
+{v:21,t:"Moreover he sprinkled with blood both the tabernacle, and all the vessels of the ministry.",n:[]},
+{v:22,t:"And almost all things are by the law purged with blood; and without shedding of blood is no remission.",n:[{tag:"note",a:"without shedding of blood is no remission",t:"The axiom of atonement — aphesis, remission, release from the debt of sin, requires haimatekchusia, the outpouring of blood. This is not an arbitrary legal technicality but the expression of the deepest moral reality: sin costs life.",s:"1611 margin, Heb 9:22"}]},
+{v:23,t:"<em>It was</em> therefore necessary that the patterns of things in the heavens should be purified with these; but the heavenly things themselves with better sacrifices than these.",n:[]},
+{v:24,t:"For Christ is not entered into the holy places made with hands, <em>which are</em> the figures of the true; but into heaven itself, now to appear in the presence of God for us:",n:[]},
+{v:25,t:"Nor yet that he should offer himself often, as the high priest entereth into the holy place every year with blood of others;",n:[]},
+{v:26,t:"For then must he often have suffered since the foundation of the world: but now once in the end of the world hath he appeared to put away sin by the sacrifice of himself.",n:[{tag:"note",a:"once in the end of the world",t:"Hapax — once for all. The repeated sacrifices of the law were its confession of inadequacy. The single sacrifice of Christ is his declaration of completeness. He does not need to die again; to die again would mean the first death failed.",s:"1611 margin, Heb 9:26"}]},
+{v:27,t:"And as it is appointed unto men once to die, but after this the judgment:",n:[{tag:"note",a:"appointed unto men once to die ... the judgment",t:"The parallel to Christ's one sacrifice (v.28) is the one death appointed to men. As human death is once and final, so Christ's death is once and final. And as human death leads to judgment, Christ's return leads to salvation for those who await him.",s:"1611 margin, Heb 9:27"}]},
+{v:28,t:"So Christ was once offered to bear the sins of many; and unto them that look for him shall he appear the second time without sin unto salvation.",n:[{tag:"note",a:"the second time without sin unto salvation",t:"His first appearing took on sin — bearing it as our substitute. His second appearing is without reference to sin — it is settled. Those who look for him receive not judgment but the completion of their salvation.",s:"1611 margin, Heb 9:28"}]}
+]},
+10:{heading:"Chapter X",running:"The one offering of Christ perfects forever — the warning of wilful sin, the call to hold fast and not draw back",sections:{1:"The One Offering Perfects",19:"The New and Living Way",26:"The Warning: Wilful Sin",32:"Hold Fast: Do Not Cast Away Your Confidence"},verses:[
+{v:1,t:"For the law having a shadow of good things to come, <em>and</em> not the very image of the things, can never with those sacrifices which they offered year by year continually make the comers thereunto perfect.",n:[{tag:"note",a:"a shadow ... not the very image",t:"A shadow resembles but does not reproduce. The law's sacrifices were shadows cast by the substance that was coming. Now that the substance has arrived, to cling to the shadow is to prefer a silhouette over the person himself.",s:"1611 margin, Heb 10:1"}]},
+{v:2,t:"For then would they not have ceased to be offered? because that the worshippers once purged should have had no more conscience of sins.",n:[]},
+{v:3,t:"But in those <em>sacrifices there is</em> a remembrance again <em>made</em> of sins every year.",n:[{tag:"note",a:"a remembrance again made of sins every year",t:"The annual repetition was itself the indictment. Each Day of Atonement said: last year's atonement was insufficient. Christ's once-for-all offering says: it is finished. The difference between a receipt and a bill.",s:"1611 margin, Heb 10:3"}]},
+{v:4,t:"For <em>it is</em> not possible that the blood of bulls and of goats should take away sins.",n:[{tag:"note",a:"not possible that the blood of bulls and of goats should take away sins",t:"The impossibility is moral and ontological: an animal's life cannot be the equivalent of a human soul's guilt before an infinite God. The Levitical blood covered and delayed; only the blood of the God-man could actually remove.",s:"1611 margin, Heb 10:4"}]},
+{v:5,t:"Wherefore when he cometh into the world, he saith, Sacrifice and offering thou wouldest not, but a body hast thou prepared me:",n:[{tag:"note",a:"a body hast thou prepared me",t:"Ps 40:6-8 — the Son speaking to the Father at the incarnation. The body prepared was the instrument of the sacrifice. The incarnation was purposed for the cross.",s:"1611 margin, Heb 10:5"}]},
+{v:6,t:"In burnt offerings and <em>sacrifices</em> for sin thou hast had no pleasure.",n:[]},
+{v:7,t:"Then said I, Lo, I come (in the volume of the book it is written of me,) to do thy will, O God.",n:[{tag:"note",a:"in the volume of the book it is written of me",t:"The entire Old Testament — every type, shadow, prophecy, and ceremony — is centered on Christ. He reads the scroll of Scripture and recognizes himself on every page.",s:"1611 margin, Heb 10:7"}]},
+{v:8,t:"Above when he said, Sacrifice and offering and burnt offerings and <em>offering</em> for sin thou wouldest not, neither hadst pleasure <em>therein</em>; which are offered by the law;",n:[]},
+{v:9,t:"Then said he, Lo, I come to do thy will, O God. He taketh away the first, that he may establish the second.",n:[]},
+{v:10,t:"By the which will we are sanctified through the offering of the body of Jesus Christ once <em>for all</em>.",n:[]},
+{v:11,t:"And every priest standeth daily ministering and offering oftentimes the same sacrifices, which can never take away sins:",n:[{tag:"note",a:"standeth daily",t:"The Levitical priest's standing posture marks his work as unfinished — no seats in the tabernacle because the work was never done. Christ sat down (v.12; 1:3) — the posture of finished work.",s:"1611 margin, Heb 10:11"}]},
+{v:12,t:"But this man, after he had offered one sacrifice for sins for ever, sat down on the right hand of God;",n:[]},
+{v:13,t:"From henceforth expecting till his enemies be made his footstool.",n:[]},
+{v:14,t:"For by one offering he hath perfected for ever them that are sanctified.",n:[{tag:"note",a:"perfected for ever",t:"Teteleioken — perfect tense: has perfected, with continuing effect. The believer is not in process of being perfected by accumulating sacrifices; he stands permanently perfected before God on the basis of the one offering.",s:"1611 margin, Heb 10:14"}]},
+{v:15,t:"<em>Whereof</em> the Holy Ghost also is a witness to us: for after that he had said before,",n:[]},
+{v:16,t:"This <em>is</em> the covenant that I will make with them after those days, saith the Lord, I will put my laws into their hearts, and in their minds will I write them;",n:[]},
+{v:17,t:"And their sins and iniquities will I remember no more.",n:[]},
+{v:18,t:"Now where remission of these <em>is, there is</em> no more offering for sin.",n:[{tag:"note",a:"no more offering for sin",t:"The logic is irrefutable: if sins are fully and permanently forgiven, there is nothing left to sacrifice for. Every Mass, every repetition of the sacrifice, denies the completeness of Calvary.",s:"1611 margin, Heb 10:18"}]},
+{v:19,t:"Having therefore, brethren, boldness to enter into the holiest by the blood of Jesus,",n:[{tag:"note",a:"boldness to enter into the holiest",t:"What the high priest could do once a year, trembling, with borrowed blood, the believer now does continually, with confidence, by the blood of Christ. The veil is gone; the way is open; we are invited.",s:"1611 margin, Heb 10:19"}]},
+{v:20,t:"By a new and living way, which he hath consecrated for us, through the veil, that is to say, his flesh;",n:[{tag:"note",a:"through the veil, that is to say, his flesh",t:"His body was the veil — and its tearing at the cross opened the way into God's presence. The torn veil of the temple (Matt 27:51) was the visible sign of what the torn body of Christ accomplished spiritually.",s:"1611 margin, Heb 10:20"}]},
+{v:21,t:"And <em>having</em> an high priest over the house of God;",n:[]},
+{v:22,t:"Let us draw near with a true heart in full assurance of faith, having our hearts sprinkled from an evil conscience, and our bodies washed with pure water.",n:[]},
+{v:23,t:"Let us hold fast the profession of <em>our</em> faith without wavering; (for he <em>is</em> faithful that promised;)",n:[]},
+{v:24,t:"And let us consider one another to provoke unto love and to good works:",n:[{tag:"note",a:"provoke unto love",t:"Paroxusmos — a sharpening, a stimulating. The same word used of the sharp contention between Paul and Barnabas (Acts 15:39). The assembly is to provoke one another to love as flint provokes fire from steel — with intentional friction.",s:"1611 margin, Heb 10:24"}]},
+{v:25,t:"Not forsaking the assembling of ourselves together, as the manner of some <em>is</em>; but exhorting <em>one another</em>: and so much the more, as ye see the day approaching.",n:[{tag:"note",a:"not forsaking the assembling",t:"The warning was not merely hypothetical — some were already abandoning the assembly, drifting back toward the synagogue. The remedy is mutual exhortation within the gathered church, with urgency proportional to the nearness of the day.",s:"1611 margin, Heb 10:25"}]},
+{v:26,t:"For if we sin wilfully after that we have received the knowledge of the truth, there remaineth no more sacrifice for sins,",n:[{tag:"note",a:"sin wilfully",t:"Not sins of weakness or surprise — but deliberate, sustained rejection of the truth already received. The wilful sinner who turns from Christ has no other sacrifice to turn to; he has spurned the only one.",s:"1611 margin, Heb 10:26"}]},
+{v:27,t:"But a certain fearful looking for of judgment and fiery indignation, which shall devour the adversaries.",n:[]},
+{v:28,t:"He that despised Moses' law died without mercy under two or three witnesses:",n:[]},
+{v:29,t:"Of how much sorer punishment, suppose ye, shall he be thought worthy, who hath trodden under foot the Son of God, and hath counted the blood of the covenant, wherewith he was sanctified, an unholy thing, and hath done despite unto the Spirit of grace?",n:[{tag:"note",a:"trodden under foot the Son of God",t:"Three descriptions of apostasy's enormity: trampling the Son, treating his blood as common, insulting the Spirit. Each offense is greater than the last. The punishment must therefore exceed anything the Mosaic order inflicted.",s:"1611 margin, Heb 10:29"}]},
+{v:30,t:"For we know him that hath said, Vengeance belongeth unto me, I will recompense, saith the Lord. And again, The Lord shall judge his people.",n:[]},
+{v:31,t:"<em>It is</em> a fearful thing to fall into the hands of the living God.",n:[{tag:"note",a:"fearful thing to fall into the hands of the living God",t:"David chose to fall into God's hands rather than man's (2 Sam 24:14) because God's mercies are great. But for the impenitent apostate, those same hands hold not mercy but judgment. The living God is not safe to presume upon.",s:"1611 margin, Heb 10:31"}]},
+{v:32,t:"But call to remembrance the former days, in which, after ye were illuminated, ye endured a great fight of afflictions;",n:[]},
+{v:33,t:"Partly, whilst ye were made a gazingstock both by reproaches and afflictions; and partly, whilst ye became companions of them that were so used.",n:[]},
+{v:34,t:"For ye had compassion of me in my bonds, and took joyfully the spoiling of your goods, knowing in yourselves that ye have in heaven a better and an enduring substance.",n:[]},
+{v:35,t:"Cast not away therefore your confidence, which hath great recompence of reward.",n:[]},
+{v:36,t:"For ye have need of patience, that, after ye have done the will of God, ye might receive the promise.",n:[]},
+{v:37,t:"For yet a little while, and he that shall come will come, and will not tarry.",n:[]},
+{v:38,t:"Now the just shall live by faith: but if <em>any man</em> draw back, my soul shall have no pleasure in him.",n:[{tag:"note",a:"the just shall live by faith",t:"Hab 2:4 — quoted three times in the NT (Rom 1:17; Gal 3:11; here). Romans emphasizes the just; Galatians emphasizes faith; Hebrews emphasizes live — the enduring quality of faith that keeps the soul through suffering to the end.",s:"1611 margin, Heb 10:38"}]},
+{v:39,t:"But we are not of them who draw back unto perdition; but of them that believe to the saving of the soul.",n:[]}
+]},
+11:{heading:"Chapter XI",running:"The great cloud of witnesses — faith defined and demonstrated from Abel to the prophets",sections:{1:"Faith Defined",4:"The Patriarchs",20:"The Prophets and Martyrs"},verses:[
+{v:1,t:"Now faith is the substance of things hoped for, the evidence of things not seen.",n:[{tag:"note",a:"substance ... evidence",t:"Hupostasis — substance, the underlying reality, the title-deed. Elenchos — evidence, proof, conviction. Faith is not wishful thinking — it is the present possession of what is promised and the certain proof of what is invisible. It treats the future as if it were already grasped.",s:"1611 margin, Heb 11:1"}]},
+{v:2,t:"For by it the elders obtained a good report.",n:[]},
+{v:3,t:"Through faith we understand that the worlds were framed by the word of God, so that things which are seen were not made of things which do appear.",n:[{tag:"note",a:"not made of things which do appear",t:"Creation ex nihilo — out of nothing. The visible universe did not emerge from pre-existing matter. God spoke, and what had no existence came to be. This is received by faith, not deduced from observation.",s:"1611 margin, Heb 11:3"}]},
+{v:4,t:"By faith Abel offered unto God a more excellent sacrifice than Cain, by which he obtained witness that he was righteous, God testifying of his gifts: and by it he being dead yet speaketh.",n:[{tag:"note",a:"a more excellent sacrifice than Cain",t:"Abel brought of the firstlings of his flock — blood sacrifice (Gen 4:4). The difference was not mere form but faith: Abel came by the appointed way, acknowledging that sin requires blood. Cain came on his own terms. The distinction is as old as humanity.",s:"1611 margin, Heb 11:4"}]},
+{v:5,t:"By faith Enoch was translated that he should not see death; and was not found, because God had translated him: for before his translation he had this testimony, that he pleased God.",n:[{tag:"note",a:"translated that he should not see death",t:"Gen 5:24 — Enoch walked with God and was not, for God took him. A type of the rapture: removed from the earth without dying. His translation was the reward of a life of faith-driven fellowship.",s:"1611 margin, Heb 11:5"}]},
+{v:6,t:"But without faith <em>it is</em> impossible to please <em>him</em>: for he that cometh to God must believe that he is, and <em>that</em> he is a rewarder of them that diligently seek him.",n:[{tag:"note",a:"without faith it is impossible to please him",t:"Not difficult — impossible. The most moral, generous, and sincere person who does not come to God through faith does not please him. The basis of all acceptable approach to God is faith in who he is and what he rewards.",s:"1611 margin, Heb 11:6"}]},
+{v:7,t:"By faith Noah, being warned of God of things not seen as yet, moved with fear, prepared an ark to the saving of his house; by the which he condemned the world, and became heir of the righteousness which is by faith.",n:[{tag:"note",a:"things not seen as yet",t:"There had been no rain (Gen 2:5-6 suggests). Noah built an ark for a flood that had never existed. He acted on God's word against all visible evidence to the contrary — the definition of faith in action.",s:"1611 margin, Heb 11:7"}]},
+{v:8,t:"By faith Abraham, when he was called to go out into a place which he should after receive for an inheritance, obeyed; and he went out, not knowing whither he went.",n:[{tag:"note",a:"not knowing whither he went",t:"The essence of Abraham's faith-obedience: he moved before he knew the destination. God said go; Abraham went. The details would follow. Faith acts on the word before the map is provided.",s:"1611 margin, Heb 11:8"}]},
+{v:9,t:"By faith he sojourned in the land of promise, as <em>in</em> a strange country, dwelling in tabernacles with Isaac and Jacob, the heirs with him of the same promise:",n:[]},
+{v:10,t:"For he looked for a city which hath foundations, whose builder and maker <em>is</em> God.",n:[{tag:"note",a:"a city which hath foundations",t:"Earthly cities could be razed; the tents of the patriarchs were temporary by design. Abraham looked past the real estate to the eternal city — the new Jerusalem of Rev 21. He died without it; he died toward it.",s:"1611 margin, Heb 11:10"}]},
+{v:11,t:"Through faith also Sara herself received strength to conceive seed, and was delivered of a child when she was past age, because she judged him faithful who had promised.",n:[]},
+{v:12,t:"Therefore sprang there even of one, and him as good as dead, so many as the stars of the sky in multitude, and as the sand which is by the sea shore innumerable.",n:[]},
+{v:13,t:"These all died in faith, not having received the promises, but having seen them afar off, and were persuaded of <em>them</em>, and embraced <em>them</em>, and confessed that they were strangers and pilgrims on the earth.",n:[{tag:"note",a:"died in faith, not having received the promises",t:"The patriarchs never possessed what God promised — not in full. They saw it at a distance, like a traveler who sees the city before he reaches it, and embraced it by faith. They died facing the right direction.",s:"1611 margin, Heb 11:13"}]},
+{v:14,t:"For they that say such things declare plainly that they seek a country.",n:[]},
+{v:15,t:"And truly, if they had been mindful of that country from whence they came out, they might have had opportunity to have returned.",n:[]},
+{v:16,t:"But now they desire a better <em>country</em>, that is, an heavenly: wherefore God is not ashamed to be called their God: for he hath prepared for them a city.",n:[{tag:"note",a:"God is not ashamed to be called their God",t:"Three times God calls himself the God of Abraham, Isaac, and Jacob — identifying himself by these pilgrim patriarchs. Their faith was so real to him that he wears their names as a title. He is not ashamed of those who are not ashamed of him.",s:"1611 margin, Heb 11:16"}]},
+{v:17,t:"By faith Abraham, when he was tried, offered up Isaac: and he that had received the promises offered up his only begotten <em>son</em>,",n:[{tag:"note",a:"offered up Isaac",t:"Gen 22. Abraham raised the knife in full intention to kill. The offering was real — completed in the will before God intervened. This is why James says it was counted for righteousness (James 2:21): the act demonstrated the faith.",s:"1611 margin, Heb 11:17"}]},
+{v:18,t:"Of whom it was said, That in Isaac shall thy seed be called:",n:[]},
+{v:19,t:"Accounting that God <em>was</em> able to raise <em>him</em> up, even from the dead; from whence also he received him in a figure.",n:[{tag:"note",a:"able to raise him up, even from the dead",t:"Abraham reasoned his way through the command: God promised that the seed would come through Isaac; God commanded that Isaac die; therefore God must raise him from the dead. This is the logic of faith — deducing what God must do from what God has said.",s:"1611 margin, Heb 11:19"}]},
+{v:20,t:"By faith Isaac blessed Jacob and Esau concerning things to come.",n:[]},
+{v:21,t:"By faith Jacob, when he was a dying, blessed both the sons of Joseph; and worshipped, <em>leaning</em> upon the top of his staff.",n:[]},
+{v:22,t:"By faith Joseph, when he died, made mention of the departing of the children of Israel; and gave commandment concerning his bones.",n:[{tag:"note",a:"gave commandment concerning his bones",t:"Gen 50:25. Joseph dying in Egypt commanded that his bones be carried to Canaan — an act of faith that the exodus would happen. His bones made the journey four hundred years later (Ex 13:19). Faith bets its remains on the promise.",s:"1611 margin, Heb 11:22"}]},
+{v:23,t:"By faith Moses, when he was born, was hid three months of his parents, because they saw <em>he was</em> a proper child; and they were not afraid of the king's commandment.",n:[]},
+{v:24,t:"By faith Moses, when he was come to years, refused to be called the son of Pharaoh's daughter;",n:[]},
+{v:25,t:"Choosing rather to suffer affliction with the people of God, than to enjoy the pleasures of sin for a season;",n:[{tag:"note",a:"pleasures of sin for a season",t:"Sin has pleasures — Hebrews does not deny it. But faith calculates differently: the pleasures are real but temporary; the consequences are real and eternal; the reward of faith is real and exceeds both. Moses did the math.",s:"1611 margin, Heb 11:25"}]},
+{v:26,t:"Esteeming the reproach of Christ greater riches than the treasures in Egypt: for he had respect unto the recompence of the reward.",n:[{tag:"note",a:"the reproach of Christ",t:"Moses lived 1,500 years before the incarnation — yet he suffered reproach for the Messiah. The Christ who would come was already the standard by which Moses measured his choices. Faith identifies with the coming One.",s:"1611 margin, Heb 11:26"}]},
+{v:27,t:"By faith he forsook Egypt, not fearing the wrath of the king: for he endured, as seeing him who is invisible.",n:[{tag:"note",a:"seeing him who is invisible",t:"The defining mark of Moses' endurance: he saw what could not be seen. The invisible God was more real to him than the visible Pharaoh. All courageous obedience is grounded in this kind of sight.",s:"1611 margin, Heb 11:27"}]},
+{v:28,t:"Through faith he kept the passover, and the sprinkling of blood, lest he that destroyed the firstborn should touch them.",n:[]},
+{v:29,t:"By faith they passed through the Red sea as by dry <em>land</em>: which the Egyptians assaying to do were drowned.",n:[]},
+{v:30,t:"By faith the walls of Jericho fell down, after they were compassed about seven days.",n:[]},
+{v:31,t:"By faith the harlot Rahab perished not with them that believed not, when she had received the spies with peace.",n:[{tag:"note",a:"the harlot Rahab",t:"Her occupation is named — not to shame her but to magnify grace. From the greatest patriarchs to a Canaanite prostitute, faith is the great leveler. The scarlet cord in her window (Josh 2:18) was her confession and her salvation.",s:"1611 margin, Heb 11:31"}]},
+{v:32,t:"And what shall I more say? for the time would fail me to tell of Gedeon, and of Barak, and of Samson, and of Jephthae; of David also, and Samuel, and <em>of</em> the prophets:",n:[]},
+{v:33,t:"Who through faith subdued kingdoms, wrought righteousness, obtained promises, stopped the mouths of lions,",n:[]},
+{v:34,t:"Quenched the violence of fire, escaped the edge of the sword, out of weakness were made strong, waxed valiant in fight, turned to flight the armies of the aliens.",n:[]},
+{v:35,t:"Women received their dead raised to life again: and others were tortured, not accepting deliverance; that they might obtain a better resurrection:",n:[{tag:"note",a:"not accepting deliverance; that they might obtain a better resurrection",t:"Some were delivered by faith; others were tortured to death by faith. Both are faith. The better resurrection they sought was worth more than the earthly life they could have preserved by compromise.",s:"1611 margin, Heb 11:35"}]},
+{v:36,t:"And others had trial of <em>cruel</em> mockings and scourgings, yea, moreover of bonds and imprisonment:",n:[]},
+{v:37,t:"They were stoned, they were sawn asunder, were tempted, were slain with the sword: they wandered about in sheepskins and goatskins; being destitute, afflicted, tormented;",n:[{tag:"note",a:"sawn asunder",t:"Tradition holds this refers to the prophet Isaiah, killed by Manasseh. These were the ones of whom the world was not worthy — their suffering is not evidence of faith's failure but of the world's unworthiness.",s:"1611 margin, Heb 11:37"}]},
+{v:38,t:"(Of whom the world was not worthy:) they wandered in deserts, and <em>in</em> mountains, and <em>in</em> dens and caves of the earth.",n:[]},
+{v:39,t:"And these all, having obtained a good report through faith, received not the promise:",n:[]},
+{v:40,t:"God having provided some better thing for us, that they without us should not be made perfect.",n:[{tag:"note",a:"that they without us should not be made perfect",t:"The OT saints died looking forward; we look back on the accomplished cross. The better thing God provided is the completed redemption they anticipated. They cannot receive the fullness of their inheritance until the full number of the redeemed is gathered.",s:"1611 margin, Heb 11:40"}]}
+]},
+12:{heading:"Chapter XII",running:"Run with endurance looking unto Jesus — the discipline of sonship, the warning of Esau, the unshakeable kingdom",sections:{1:"Looking Unto Jesus",5:"The Discipline of Sonship",14:"Warning: See to It",18:"Mount Sinai and Mount Zion"},verses:[
+{v:1,t:"Wherefore seeing we also are compassed about with so great a cloud of witnesses, let us lay aside every weight, and the sin which doth so easily beset <em>us</em>, and let us run with patience the race that is set before us,",n:[{tag:"note",a:"cloud of witnesses",t:"Not spectators watching from the stands, but witnesses in the sense of those who have testified — the entire roll-call of chapter 11. Their lives are the testimony that faith runs the distance. We run in the company of their example.",s:"1611 margin, Heb 12:1"},{tag:"note",a:"sin which doth so easily beset us",t:"Euperistatos — well-circumstanced, that which surrounds and entangles. Every runner strips off excess clothing; the soul strips off whatever entangles — including the specific sin that most persistently clings to each individual.",s:"1611 margin, Heb 12:1"}]},
+{v:2,t:"Looking unto Jesus the author and finisher of our faith; who for the joy that was set before him endured the cross, despising the shame, and is set down at the right hand of the throne of God.",n:[{tag:"note",a:"Looking unto Jesus",t:"Aphorao — to look away from everything else in order to fix the gaze on one object. The runner does not look at the crowd or at the ground but at the finish line. Jesus is both the author who began our faith and the finisher who will complete it.",s:"1611 margin, Heb 12:2"},{tag:"note",a:"for the joy that was set before him endured the cross",t:"The cross was endured, not enjoyed — but he saw past it to what it would accomplish: the redemption of the many sons he would bring to glory (2:10). Joy on the far side of suffering sustained him through it.",s:"1611 margin, Heb 12:2"}]},
+{v:3,t:"For consider him that endured such contradiction of sinners against himself, lest ye be wearied and faint in your minds.",n:[]},
+{v:4,t:"Ye have not yet resisted unto blood, striving against sin.",n:[]},
+{v:5,t:"And ye have forgotten the exhortation which speaketh unto you as unto children, My son, despise not thou the chastening of the Lord, nor faint when thou art rebuked of him:",n:[{tag:"note",a:"chastening of the Lord",t:"Prov 3:11-12. Paideia — discipline, training, the education of a child. The word covers everything from reproof to physical suffering used by a Father to develop his children. It is evidence of sonship, not of rejection.",s:"1611 margin, Heb 12:5"}]},
+{v:6,t:"For whom the Lord loveth he chasteneth, and scourgeth every son whom he receiveth.",n:[]},
+{v:7,t:"If ye endure chastening, God dealeth with you as with sons; for what son is he whom the father chasteneth not?",n:[]},
+{v:8,t:"But if ye be without chastisement, whereof all are partakers, then are ye bastards, and not sons.",n:[{tag:"note",a:"bastards, and not sons",t:"Nothoi — illegitimate children who do not share in the father's discipline because they are not truly his. Absence of divine discipline is not comfort — it is the most alarming possible sign.",s:"1611 margin, Heb 12:8"}]},
+{v:9,t:"Furthermore we have had fathers of our flesh which corrected <em>us</em>, and we gave <em>them</em> reverence: shall we not much rather be in subjection unto the Father of spirits, and live?",n:[]},
+{v:10,t:"For they verily for a few days chastened <em>us</em> after their own pleasure; but he for <em>our</em> profit, that <em>we</em> might be partakers of his holiness.",n:[]},
+{v:11,t:"Now no chastening for the present seemeth to be joyous, but grievous: nevertheless afterward it yieldeth the peaceable fruit of righteousness unto them which are exercised thereby.",n:[{tag:"note",a:"afterward it yieldeth the peaceable fruit of righteousness",t:"The harvest of discipline is not immediate. The grievousness is present; the fruit is afterward. Endurance in suffering is cultivated by keeping the eyes on the afterward rather than the present.",s:"1611 margin, Heb 12:11"}]},
+{v:12,t:"Wherefore lift up the hands which hang down, and the feeble knees;",n:[]},
+{v:13,t:"And make straight paths for your feet, lest that which is lame be turned out of the way; but let it rather be healed.",n:[]},
+{v:14,t:"Follow peace with all <em>men</em>, and holiness, without which no man shall see the Lord:",n:[{tag:"note",a:"holiness, without which no man shall see the Lord",t:"Not sinless perfection as the condition of salvation — but the pursuit of holiness as the evidence of it. The one who has no appetite for holiness gives no evidence of new birth. The trajectory of the genuine believer is toward God.",s:"1611 margin, Heb 12:14"}]},
+{v:15,t:"Looking diligently lest any man fail of the grace of God; lest any root of bitterness springing up trouble <em>you</em>, and thereby many be defiled;",n:[{tag:"note",a:"root of bitterness",t:"Deut 29:18. Bitterness in the assembly is not a private matter — it springs up and defiles many. The assembly is responsible to watch over one another, digging out roots before they grow.",s:"1611 margin, Heb 12:15"}]},
+{v:16,t:"Lest there <em>be</em> any fornicator, or profane person, as Esau, who for one morsel of meat sold his birthright.",n:[{tag:"note",a:"Esau, who for one morsel of meat sold his birthright",t:"Esau is the type of the profane person — one who treats the sacred as disposable for the sake of present appetite. He did not hate the blessing; he simply valued his hunger more. The profane man is defined by what he trades the eternal for.",s:"1611 margin, Heb 12:16"}]},
+{v:17,t:"For ye know how that afterward, when he would have inherited the blessing, he was rejected: for he found no place of repentance, though he sought it carefully with tears.",n:[{tag:"note",a:"he found no place of repentance",t:"He sought the blessing with tears — but the time for repentance had passed. Not that God was unmerciful, but that Esau's sorrow was for the lost blessing, not for the sin. There are tears that come too late, and tears that never produced genuine repentance.",s:"1611 margin, Heb 12:17"}]},
+{v:18,t:"For ye are not come unto the mount that might be touched, and that burned with fire, nor unto blackness, and darkness, and tempest,",n:[{tag:"note",a:"the mount that might be touched",t:"Sinai — tangible, physical, terrifying. The law came with thunder, fire, and the threat of death for any who touched the mountain (Ex 19:12). The old covenant began in terror.",s:"1611 margin, Heb 12:18"}]},
+{v:19,t:"And the sound of a trumpet, and the voice of words; which <em>voice</em> they that heard intreated that the word should not be spoken to them any more:",n:[]},
+{v:20,t:"(For they could not endure that which was commanded, And if so much as a beast touch the mountain, it shall be stoned, or thrust through with a dart:",n:[]},
+{v:21,t:"And so terrible was the sight, <em>that</em> Moses said, I exceedingly fear and quake:)",n:[]},
+{v:22,t:"But ye are come unto mount Sion, and unto the city of the living God, the heavenly Jerusalem, and to an innumerable company of angels,",n:[{tag:"note",a:"ye are come unto mount Sion",t:"Sinai versus Zion — law versus grace, terror versus welcome, distance versus access. The believer has already arrived at the heavenly assembly in principle and in standing, even before the body goes there.",s:"1611 margin, Heb 12:22"}]},
+{v:23,t:"To the general assembly and church of the firstborn, which are written in heaven, and to God the Judge of all, and to the spirits of just men made perfect,",n:[]},
+{v:24,t:"And to Jesus the mediator of the new covenant, and to the blood of sprinkling, that speaketh better things than <em>that of</em> Abel.",n:[{tag:"note",a:"speaketh better things than that of Abel",t:"Abel's blood cried from the ground for vengeance (Gen 4:10). Christ's blood speaks better — it cries for forgiveness (Luke 23:34). The same act of murder (innocent blood shed) produces opposite cries from the two bloods.",s:"1611 margin, Heb 12:24"}]},
+{v:25,t:"See that ye refuse not him that speaketh. For if they escaped not who refused him that spake on earth, much more <em>shall not</em> we <em>escape</em>, if we turn away from him that <em>speaketh</em> from heaven:",n:[]},
+{v:26,t:"Whose voice then shook the earth: but now he hath promised, saying, Yet once more I shake not the earth only, but also heaven.",n:[{tag:"note",a:"Yet once more I shake not the earth only, but also heaven",t:"Hag 2:6. The final shaking at the end of the age will be more comprehensive than Sinai — not just the earth but the heavens. Everything shakeable will be shaken; only what is of God will remain.",s:"1611 margin, Heb 12:26"}]},
+{v:27,t:"And this <em>word</em>, Yet once more, signifieth the removing of those things that are shaken, as of things that are made, that those things which cannot be shaken may remain.",n:[]},
+{v:28,t:"Wherefore we receiving a kingdom which cannot be moved, let us have grace, whereby we may serve God acceptably with reverence and godly fear:",n:[{tag:"note",a:"a kingdom which cannot be moved",t:"Everything the believer possesses in Christ is unshakeable — his justification, his standing, his inheritance. The kingdoms of this world will be shaken to pieces; the kingdom of God stands forever.",s:"1611 margin, Heb 12:28"}]},
+{v:29,t:"For our God <em>is</em> a consuming fire.",n:[{tag:"note",a:"our God is a consuming fire",t:"Deut 4:24. The closing note of the warning section. He is our God — the covenant relationship is real. He is a consuming fire — the holiness is absolute. Both truths must be held. The grace that invites us boldly is the grace of the God who consumes all that is impure.",s:"1611 margin, Heb 12:29"}]}
+]},
+13:{heading:"Chapter XIII",running:"Practical exhortations — the altar we have, the reproach outside the camp, and the final benediction",sections:{1:"Christian Duties",9:"Our Altar and the Camp",15:"Sacrifice, Obedience, and Benediction"},verses:[
+{v:1,t:"Let brotherly love continue.",n:[{tag:"note",a:"Let brotherly love continue",t:"Philadelphia — love of the brethren. The simplest command in the epistle, placed first. After thirteen chapters of high theology, the application begins here: keep loving each other. Doctrine that does not produce brotherly love has not yet done its work.",s:"1611 margin, Heb 13:1"}]},
+{v:2,t:"Be not forgetful to entertain strangers: for thereby some have entertained angels unawares.",n:[{tag:"note",a:"entertained angels unawares",t:"Abraham (Gen 18) and Lot (Gen 19) received divine messengers without recognizing them. The hospitality of the early church was its witness to the world and the channel of unexpected blessing.",s:"1611 margin, Heb 13:2"}]},
+{v:3,t:"Remember them that are in bonds, as bound with them; <em>and</em> them which suffer adversity, as being yourselves also in the body.",n:[]},
+{v:4,t:"Marriage <em>is</em> honourable in all, and the bed undefiled: but whoremongers and adulterers God will judge.",n:[{tag:"note",a:"Marriage is honourable in all",t:"Against any ascetic teaching that elevated celibacy over marriage or regarded marriage as spiritually inferior. The marriage bed is undefiled — sexual union within marriage is honorable before God. Outside it, God judges.",s:"1611 margin, Heb 13:4"}]},
+{v:5,t:"<em>Let your</em> conversation <em>be</em> without covetousness; <em>and be</em> content with such things as ye have: for he hath said, I will never leave thee, nor forsake thee.",n:[{tag:"note",a:"I will never leave thee, nor forsake thee",t:"The promise to Joshua (Josh 1:5), now applied to every believer. The Greek uses five negatives for absolute emphasis: I will in no way, never, under any circumstances leave or forsake thee. Contentment rests on this promise.",s:"1611 margin, Heb 13:5"}]},
+{v:6,t:"So that we may boldly say, The Lord <em>is</em> my helper, and I will not fear what man shall do unto me.",n:[]},
+{v:7,t:"Remember them which have the rule over you, who have spoken unto you the word of God: whose faith follow, considering the end of their conversation.",n:[{tag:"note",a:"Remember them which have the rule over you",t:"The first of three references to church leaders in this chapter (vv.7,17,24). They are to be remembered (their example), obeyed (their authority), and greeted (their fellowship). The assembly's relationship to its leaders is not optional.",s:"1611 margin, Heb 13:7"}]},
+{v:8,t:"Jesus Christ the same yesterday, and to day, and for ever.",n:[{tag:"note",a:"the same yesterday, and to day, and for ever",t:"In the context of remembering faithful leaders who have died, this verse stands as the anchor: leaders change, but Christ does not. The faith they preached rested on one who is immutable. He cannot be improved upon, superseded, or replaced.",s:"1611 margin, Heb 13:8"}]},
+{v:9,t:"Be not carried about with divers and strange doctrines. For <em>it is</em> a good thing that the heart be established with grace; not with meats, which have not profited them that have been occupied therein.",n:[{tag:"note",a:"divers and strange doctrines",t:"The specific danger was a return to the Levitical dietary laws and ceremonial distinctions, as if they still had spiritual efficacy. The heart is established by grace — the finished work of Christ — not by religious observances.",s:"1611 margin, Heb 13:9"}]},
+{v:10,t:"We have an altar, whereof they have no right to eat which serve the tabernacle.",n:[{tag:"note",a:"We have an altar",t:"The cross is our altar. Those who still operate within the Levitical system — as if Christ had not come — have no right to eat from it. The two systems are mutually exclusive. You cannot embrace the shadow and the reality simultaneously.",s:"1611 margin, Heb 13:10"}]},
+{v:11,t:"For the bodies of those beasts, whose blood is brought into the sanctuary by the high priest for sin, are burned without the camp.",n:[]},
+{v:12,t:"Wherefore Jesus also, that he might sanctify the people with his own blood, suffered without the gate.",n:[{tag:"note",a:"suffered without the gate",t:"As the sin offering was burned outside the camp (Lev 4:12), so Christ was crucified outside the city walls. He took the place of the refuse — the unclean, the rejected, the outcast — to sanctify those who were likewise outside.",s:"1611 margin, Heb 13:12"}]},
+{v:13,t:"Let us go forth therefore unto him without the camp, bearing his reproach.",n:[{tag:"note",a:"go forth ... without the camp, bearing his reproach",t:"The practical application of the entire epistle: leave the system that rejects him. Go to where he was crucified — outside, in the place of shame. The reproach of Christ is the privilege of those who identify with him fully.",s:"1611 margin, Heb 13:13"}]},
+{v:14,t:"For here have we no continuing city, but we seek one to come.",n:[{tag:"note",a:"no continuing city",t:"Jerusalem, Rome, every earthly city — all will pass. The Christian is a pilgrim by definition, not because the world is evil but because his citizenship is elsewhere. Abraham understood this; so must we.",s:"1611 margin, Heb 13:14"}]},
+{v:15,t:"By him therefore let us offer the sacrifice of praise to God continually, that is, the fruit of <em>our</em> lips giving thanks to his name.",n:[{tag:"note",a:"sacrifice of praise ... the fruit of our lips",t:"With no more animal sacrifice, the new covenant worship is verbal and spiritual — the continual offering of thanksgiving and confession of his name. This is what pleases God from those who have been justified by faith.",s:"1611 margin, Heb 13:15"}]},
+{v:16,t:"But to do good and to communicate forget not: for with such sacrifices God is well pleased.",n:[{tag:"alt",a:"communicate",t:"Or, share, distribute. The Greek koinonia — fellowship, sharing of material goods. Praise with the lips and generosity with the hand are the two sacrifices of the new covenant worshipper.",s:"1611 margin, Heb 13:16"}]},
+{v:17,t:"Obey them that have the rule over you, and submit yourselves: for they watch for your souls, as they that must give account, that they may do it with joy, and not with grief: for that <em>is</em> unprofitable for you.",n:[{tag:"note",a:"they watch for your souls, as they that must give account",t:"The pastor's accountability before God is the ground of the church's submission to pastoral authority. He will answer for the souls under his care; that weight of accountability is itself the reason the congregation should make his work a joy rather than a grief.",s:"1611 margin, Heb 13:17"}]},
+{v:18,t:"Pray for us: for we trust we have a good conscience, in all things willing to live honestly.",n:[]},
+{v:19,t:"But I beseech <em>you</em> the rather to do this, that I may be restored to you the sooner.",n:[]},
+{v:20,t:"Now the God of peace, that brought again from the dead our Lord Jesus, that great shepherd of the sheep, through the blood of the everlasting covenant,",n:[{tag:"note",a:"the everlasting covenant",t:"The new covenant sealed by Christ's blood is everlasting — diatheke aionios. The Mosaic covenant was temporary by design; the new covenant has no expiration. Every blessing flowing from it is as permanent as the God who established it.",s:"1611 margin, Heb 13:20"}]},
+{v:21,t:"Make you perfect in every good work to do his will, working in you that which is wellpleasing in his sight, through Jesus Christ; to whom <em>be</em> glory for ever and ever. Amen.",n:[{tag:"note",a:"working in you that which is wellpleasing",t:"The benediction reveals the nature of sanctification: God himself is the worker. He works in us — katartizo, to equip, to mend, to complete — producing what is pleasing to him. Human effort responds to divine enabling.",s:"1611 margin, Heb 13:21"}]},
+{v:22,t:"And I beseech you, brethren, suffer the word of exhortation: for I have written a letter unto you in few words.",n:[]},
+{v:23,t:"Know ye that <em>our</em> brother Timothy is set at liberty; with whom, if he come shortly, I will see you.",n:[]},
+{v:24,t:"Salute all them that have the rule over you, and all the saints. They of Italy salute you.",n:[]},
+{v:25,t:"Grace <em>be</em> with you all. Amen.",n:[{tag:"note",a:"Grace be with you all. Amen.",t:"As the epistle opens with the supreme revelation of grace — God speaking in his Son — so it closes with grace. The word that began with the brightness of Christ's glory ends with a one-word summary of all he came to bring.",s:"1611 margin, Heb 13:25"}]}
+]}
+};
+
+const CH_META = {
+  1:{label:"Christ superior to angels: his deity and throne",verses:14},
+  2:{label:"The danger of neglect; the Captain of salvation",verses:18},
+  3:{label:"Greater than Moses; the warning of Kadesh",verses:19},
+  4:{label:"The rest that remaineth; the great high priest",verses:16},
+  5:{label:"The qualifications of a priest; Melchisedec",verses:14},
+  6:{label:"Going on to maturity; the anchor of hope",verses:20},
+  7:{label:"Melchisedec the type; Christ's eternal priesthood",verses:28},
+  8:{label:"The true tabernacle; the better covenant",verses:13},
+  9:{label:"The earthly sanctuary and the better blood",verses:28},
+  10:{label:"One offering perfects; hold fast; do not draw back",verses:39},
+  11:{label:"The great roll-call of faith",verses:40},
+  12:{label:"Run looking unto Jesus; discipline of sonship",verses:29},
+  13:{label:"Practical duties; our altar; final benediction",verses:25}
+};
+
+let currentChapter = 1;
+
+function buildIndex() {
+  const grid = document.getElementById('chapter-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  for (let c = 1; c <= 13; c++) {
+    const meta = CH_META[c];
+    const ch = HEBREWS[c];
+    const noteCount = ch.verses.filter(v => v.n && v.n.length > 0).length;
+    const card = document.createElement('div');
+    card.className = 'chapter-card';
+    card.onclick = () => openChapter(c);
+    card.innerHTML = `<span class="ch-num">Chapter ${toRoman(c)}</span><span class="ch-label">${meta.label}</span><span class="ch-notes">${noteCount > 0 ? noteCount + ' note' + (noteCount > 1 ? 's' : '') : ''}</span>`;
+    grid.appendChild(card);
+  }
+}
+
+function toRoman(n) {
+  const vals = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+  const syms = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+  let result = '';
+  for (let i = 0; i < vals.length; i++) {
+    while (n >= vals[i]) { result += syms[i]; n -= vals[i]; }
+  }
+  return result;
+}
+
+function openChapter(n) {
+  currentChapter = n;
+  const ch = HEBREWS[n];
+  const meta = CH_META[n];
+  document.getElementById('ch-heading').textContent = ch.heading;
+  document.getElementById('ch-running').textContent = ch.running;
+  document.getElementById('nav-label').textContent = 'Hebrews · Chapter ' + toRoman(n);
+  const container = document.getElementById('verse-container');
+  container.innerHTML = '';
+  const sections = ch.sections || {};
+  ch.verses.forEach(vObj => {
+    if (sections[vObj.v]) {
+      const sb = document.createElement('div');
+      sb.className = 'section-break';
+      sb.textContent = sections[vObj.v];
+      container.appendChild(sb);
+    }
+    const hasNote = vObj.n && vObj.n.length > 0;
+    const block = document.createElement('div');
+    block.className = 'verse-block' + (hasNote ? ' has-note' : '');
+    block.id = 'v' + vObj.v;
+    if (hasNote) block.onclick = () => toggleNote('note' + vObj.v, block);
+    const numSpan = document.createElement('span');
+    numSpan.className = 'verse-num';
+    numSpan.textContent = vObj.v;
+    const textSpan = document.createElement('span');
+    textSpan.className = 'verse-text';
+    textSpan.innerHTML = vObj.t + (hasNote ? '<span class="note-dot"></span>' : '');
+    block.appendChild(numSpan);
+    block.appendChild(textSpan);
+    container.appendChild(block);
+    if (hasNote) {
+      const panel = document.createElement('div');
+      panel.className = 'note-panel';
+      panel.id = 'note' + vObj.v;
+      vObj.n.forEach(note => {
+        const tagClass = 'tag-' + (note.tag === 'alt' ? 'alt' : note.tag === 'heb' ? 'heb' : note.tag === 'grk' ? 'grk' : 'note');
+        const tagLabel = note.tag === 'alt' ? 'OR' : note.tag === 'heb' ? 'HEB' : note.tag === 'grk' ? 'GRK' : 'NOTE';
+        const entry = document.createElement('div');
+        entry.className = 'note-entry';
+        entry.innerHTML = `<span class="tag ${tagClass}">${tagLabel}</span><div class="note-content"><span class="anchor">${note.a}</span><span class="text">${note.t}</span><div class="source">${note.s}</div></div>`;
+        panel.appendChild(entry);
+      });
+      container.appendChild(panel);
+    }
+  });
+  const noteCount = ch.verses.filter(v => v.n && v.n.length > 0).length;
+  document.getElementById('ch-stats').innerHTML = `<span>${meta.verses}</span> verses &nbsp;·&nbsp; <span>${noteCount}</span> marginal notes &nbsp;·&nbsp; Hebrews ${n}`;
+  document.getElementById('view-index').classList.remove('active');
+  document.getElementById('view-chapter').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function toggleNote(id, block) {
+  const panel = document.getElementById(id);
+  const isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.note-panel.open').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.verse-block.active').forEach(b => b.classList.remove('active'));
+  if (!isOpen) { panel.classList.add('open'); block.classList.add('active'); }
+}
+
+function showIndex() {
+  document.getElementById('view-chapter').classList.remove('active');
+  document.getElementById('view-index').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function prevChapter() {
+  if (currentChapter > 1) openChapter(currentChapter - 1);
+  else showIndex();
+}
+
+function nextChapter() {
+  if (currentChapter < 13) openChapter(currentChapter + 1);
+  else showIndex();
+}
+
+function expandAll() {
+  document.querySelectorAll('.note-panel').forEach(p => p.classList.add('open'));
+  document.querySelectorAll('.verse-block.has-note').forEach(b => b.classList.add('active'));
+}
+
+function collapseAll() {
+  document.querySelectorAll('.note-panel').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.verse-block').forEach(b => b.classList.remove('active'));
+}
+
+buildIndex();
+</script>
+</body>
+</html>

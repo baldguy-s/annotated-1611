@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Annotated 1611 — The Revelation of Saint John the Divine</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Cinzel:wght@400;600&display=swap');
+:root {
+  --parchment:#0d0b08;--ink:#e8dfc8;--ink-dim:#9e9278;--ink-faint:#4a4438;
+  --accent:#c8973a;--accent-dim:#8a6526;--accent-glow:rgba(200,151,58,0.15);
+  --margin-bg:#13110d;--margin-border:#2a2418;--note-bg:#1a1710;
+  --note-border:#c8973a;--highlight:rgba(200,151,58,0.18);--verse-hover:rgba(200,151,58,0.07);
+  --tag-alt:#7ab8d4;--tag-heb:#a8c87a;--tag-grk:#c87ab8;--tag-note:#c8973a;
+  --serif:'EB Garamond',Georgia,serif;--display:'Cinzel',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--parchment);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.85;min-height:100vh}
+.view{display:none}.view.active{display:block}
+header{border-bottom:1px solid var(--margin-border);padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#111009 0%,var(--parchment) 100%);position:sticky;top:0;z-index:100}
+.header-left{display:flex;flex-direction:column;gap:.15rem}.header-right{display:flex;gap:.5rem;align-items:center}
+header .eyebrow{font-family:var(--display);font-size:.6rem;letter-spacing:.25em;color:var(--accent);text-transform:uppercase}
+header h1{font-family:var(--display);font-size:clamp(1rem,3vw,1.4rem);font-weight:600;color:var(--ink);letter-spacing:.04em;cursor:pointer}
+header h1:hover{color:var(--accent)}
+button.nav-btn,a.nav-btn{font-family:var(--display);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--ink-dim);border:1px solid var(--ink-faint);padding:.35em .85em;border-radius:2px;cursor:pointer;transition:all .15s;text-decoration:none;display:inline-flex;align-items:center}
+button.nav-btn:hover,a.nav-btn:hover{color:var(--accent);border-color:var(--accent-dim)}
+.legend{display:flex;flex-wrap:wrap;gap:.6rem 1.25rem;padding:.65rem 2rem;border-bottom:1px solid var(--margin-border);background:var(--margin-bg)}
+.legend-item{display:flex;align-items:center;gap:.4rem;font-size:.7rem;color:var(--ink-dim)}
+.tag{display:inline-block;font-size:.58rem;font-family:var(--display);letter-spacing:.08em;padding:.1em .45em;border-radius:2px;font-weight:600;vertical-align:middle}
+.tag-alt{background:rgba(122,184,212,.15);color:var(--tag-alt);border:1px solid rgba(122,184,212,.3)}
+.tag-heb{background:rgba(168,200,122,.15);color:var(--tag-heb);border:1px solid rgba(168,200,122,.3)}
+.tag-grk{background:rgba(200,122,184,.15);color:var(--tag-grk);border:1px solid rgba(200,122,184,.3)}
+.tag-note{background:rgba(200,151,58,.12);color:var(--tag-note);border:1px solid rgba(200,151,58,.3)}
+#view-index{max-width:860px;margin:0 auto;padding:2.5rem 2rem 5rem}
+.index-hero{text-align:center;margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--margin-border)}
+.index-hero .kicker{font-family:var(--display);font-size:.62rem;letter-spacing:.25em;color:var(--accent);text-transform:uppercase;margin-bottom:.6rem}
+.index-hero h2{font-family:var(--display);font-size:clamp(1.4rem,4vw,2.4rem);color:var(--ink);font-weight:400;letter-spacing:.06em;margin-bottom:.75rem}
+.index-hero p{font-size:.9rem;color:var(--ink-dim);font-style:italic;max-width:500px;margin:0 auto;line-height:1.7}
+.index-stats{display:flex;justify-content:center;gap:2.5rem;margin-top:1.5rem;flex-wrap:wrap}
+.index-stat{text-align:center}
+.index-stat .num{font-family:var(--display);font-size:1.6rem;color:var(--accent);display:block}
+.index-stat .lbl{font-size:.68rem;color:var(--ink-dim);letter-spacing:.1em;text-transform:uppercase;font-family:var(--display)}
+.book-section{margin-bottom:2rem}
+.book-section h3{font-family:var(--display);font-size:.62rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--margin-border)}
+.chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.55rem}
+.chapter-card{background:var(--margin-bg);border:1px solid var(--margin-border);border-radius:3px;padding:.65rem .9rem;cursor:pointer;transition:all .15s}
+.chapter-card:hover{border-color:var(--accent-dim);background:var(--accent-glow)}
+.chapter-card .ch-num{font-family:var(--display);font-size:.95rem;color:var(--accent);display:block;margin-bottom:.15rem}
+.chapter-card .ch-label{font-size:.68rem;color:var(--ink-dim);font-style:italic;line-height:1.3;display:block}
+.chapter-card .ch-notes{font-size:.6rem;color:var(--ink-faint);font-family:var(--display);letter-spacing:.05em;margin-top:.25rem;display:block}
+#view-chapter{max-width:900px;margin:0 auto;padding:2rem 1.5rem 5rem}
+.chapter-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;gap:1rem}
+.chapter-nav-center{font-family:var(--display);font-size:.68rem;letter-spacing:.15em;color:var(--ink-dim);text-transform:uppercase;text-align:center}
+.chapter-heading{text-align:center;margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--margin-border)}
+.chapter-heading .book{font-family:var(--display);font-size:.62rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:.4rem}
+.chapter-heading h2{font-family:var(--display);font-size:clamp(1.1rem,3vw,1.7rem);color:var(--ink);font-weight:400;letter-spacing:.06em}
+.chapter-heading .running-head{font-size:.8rem;color:var(--ink-dim);font-style:italic;margin-top:.4rem}
+.controls{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
+button.ctrl{font-family:var(--display);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--accent);border:1px solid var(--accent-dim);padding:.35em .9em;border-radius:2px;cursor:pointer;transition:background .15s}
+button.ctrl:hover{background:var(--accent-glow)}
+.verse-block{display:flex;margin-bottom:.15rem;border-radius:4px;transition:background .15s;padding:.2rem .5rem .2rem 0}
+.verse-block:hover{background:var(--verse-hover)}
+.verse-block.has-note{cursor:pointer}
+.verse-block.active{background:var(--highlight)}
+.verse-num{font-family:var(--display);font-size:.58rem;color:var(--accent);min-width:2.8rem;padding-top:.55rem;text-align:right;padding-right:.75rem;letter-spacing:.05em;flex-shrink:0;user-select:none}
+.verse-text{flex:1;font-size:1rem;color:var(--ink);line-height:1.9}
+.verse-text em{font-style:italic;font-weight:600}
+.note-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-left:4px;opacity:.7;flex-shrink:0;align-self:flex-start;margin-top:.75rem}
+.note-panel{display:none;margin:.4rem 0 .8rem 2.8rem;background:var(--note-bg);border-left:3px solid var(--note-border);border-radius:0 4px 4px 0;padding:.9rem 1.1rem;font-size:.88rem;line-height:1.75;animation:slideIn .18s ease}
+.note-panel.open{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.note-entry{margin-bottom:.65rem;padding-bottom:.65rem;border-bottom:1px solid var(--margin-border);display:flex;gap:.6rem;align-items:flex-start}
+.note-entry:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.note-content{flex:1}
+.note-content .anchor{font-style:italic;color:var(--ink-dim);margin-right:.3rem;font-size:.83rem}
+.note-content .text{color:var(--ink)}
+.note-content .source{font-size:.7rem;color:var(--ink-faint);margin-top:.2rem;font-style:italic}
+.section-break{text-align:center;margin:1.5rem 0 1rem;font-family:var(--display);font-size:.62rem;letter-spacing:.18em;color:var(--ink);text-transform:uppercase}
+.section-break::before,.section-break::after{content:"— "}
+.ch-stats{margin-top:2.5rem;padding:1rem 1.5rem;background:var(--margin-bg);border:1px solid var(--margin-border);border-radius:4px;font-size:.78rem;color:var(--ink-dim);display:flex;flex-wrap:wrap;gap:.5rem 2rem}
+.ch-stats span{color:var(--accent)}
+@media(max-width:600px){header{padding:1rem}.legend{padding:.6rem 1rem}#view-index{padding:1.25rem 1rem 4rem}#view-chapter{padding:1.25rem .75rem 3rem}.verse-num{min-width:2.2rem;font-size:.52rem}.note-panel{margin-left:2.2rem}body{font-size:16px}.chapter-grid{grid-template-columns:repeat(auto-fill,minmax(95px,1fr))}}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--parchment)}::-webkit-scrollbar-thumb{background:var(--ink-faint);border-radius:3px}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <span class="eyebrow">King James Version · 1611</span>
+    <h1 onclick="showIndex()">The Annotated 1611</h1>
+  </div>
+  <div class="header-right">
+    <a class="nav-btn" href="index.html">← Bible</a>
+  </div>
+</header>
+<div class="legend">
+  <div class="legend-item"><span class="tag tag-alt">OR</span> Alternate rendering</div>
+  <div class="legend-item"><span class="tag tag-heb">HEB</span> Hebrew / Aramaic gloss</div>
+  <div class="legend-item"><span class="tag tag-grk">GRK</span> Greek gloss</div>
+  <div class="legend-item"><span class="tag tag-note">NOTE</span> Translators' annotation</div>
+</div>
+
+<div id="view-index" class="view active">
+  <div class="index-hero">
+    <div class="kicker">Prophecy · New Testament</div>
+    <h2>The Revelation of Saint John the Divine</h2>
+    <p>The unveiling of Jesus Christ — the seven churches, the sealed book, the tribulation, the fall of Babylon, the thousand-year reign, and the new heaven and earth.</p>
+    <div class="index-stats">
+      <div class="index-stat"><span class="num">22</span><span class="lbl">Chapters</span></div>
+      <div class="index-stat"><span class="num">404</span><span class="lbl">Verses</span></div>
+      <div class="index-stat"><span class="num">175+</span><span class="lbl">Marginal Notes</span></div>
+    </div>
+  </div>
+  <div class="book-section">
+    <h3>Chapters</h3>
+    <div class="chapter-grid" id="chapter-grid"></div>
+  </div>
+</div>
+
+<div id="view-chapter" class="view">
+  <div class="chapter-nav">
+    <button class="nav-btn" onclick="prevChapter()">← Prev</button>
+    <div class="chapter-nav-center" id="nav-label"></div>
+    <button class="nav-btn" onclick="nextChapter()">Next →</button>
+  </div>
+  <div class="chapter-heading">
+    <div class="book">Revelation</div>
+    <h2 id="ch-heading"></h2>
+    <div class="running-head" id="ch-running"></div>
+  </div>
+  <div class="controls">
+    <button class="ctrl" onclick="expandAll()">Expand All Notes</button>
+    <button class="ctrl" onclick="collapseAll()">Collapse All</button>
+  </div>
+  <div id="verse-container"></div>
+  <div class="ch-stats" id="ch-stats"></div>
+</div>
+
+<script>
+const REVELATION = {
+1:{heading:"Chapter I",running:"The Revelation of Jesus Christ — John's vision on Patmos, the voice of the Son of Man among the seven candlesticks",sections:{1:"The Prologue",9:"The Vision on Patmos",12:"The Son of Man Appears"},verses:[
+{v:1,t:"The Revelation of Jesus Christ, which God gave unto him, to shew unto his servants things which must shortly come to pass; and he sent and signified <em>it</em> by his angel unto his servant John:",n:[{tag:"grk",a:"Revelation",t:"Apokalupsis — an uncovering, an unveiling. The translators retained the Latin title Apocalypsis yet noted the Greek root sense of disclosure.",s:"1611 margin, Rev 1:1"},{tag:"alt",a:"signified",t:"Or, made known by signs. The Greek esemanen points to communication through symbolic signs and visions, not merely verbal report.",s:"1611 margin, Rev 1:1"}]},
+{v:2,t:"Who bare record of the word of God, and of the testimony of Jesus Christ, and of all things that he saw.",n:[]},
+{v:3,t:"Blessed <em>is</em> he that readeth, and they that hear the words of this prophecy, and keep those things which are written therein: for the time <em>is</em> at hand.",n:[{tag:"note",a:"Blessed is he that readeth",t:"The first of seven beatitudes in Revelation. This one presupposes public reading in the assembly, as was the apostolic custom (Col 4:16).",s:"1611 margin, Rev 1:3"}]},
+{v:4,t:"John to the seven churches which are in Asia: Grace <em>be</em> unto you, and peace, from him which is, and which was, and which is to come; and from the seven Spirits which are before his throne;",n:[{tag:"note",a:"seven Spirits",t:"Or, the sevenfold Spirit, signifying the Holy Ghost in the fulness of his operations. Some take this as seven angelic ministers; the better reading applies it to the Holy Spirit in complete power.",s:"1611 margin, Rev 1:4"}]},
+{v:5,t:"And from Jesus Christ, <em>who is</em> the faithful witness, and the first begotten of the dead, and the prince of the kings of the earth. Unto him that loved us, and washed us from our sins in his own blood,",n:[{tag:"grk",a:"first begotten of the dead",t:"Prototokos — firstborn, denoting preeminence and the right of inheritance, not merely chronological order. Christ is the first of the resurrection harvest.",s:"1611 margin, Rev 1:5"}]},
+{v:6,t:"And hath made us kings and priests unto God and his Father; to him <em>be</em> glory and dominion for ever and ever. Amen.",n:[{tag:"alt",a:"kings and priests",t:"Or, a kingdom, priests. The Gk basileia may be read as the abstract kingdom rather than individual kings. Both point to royal-priestly standing before God.",s:"1611 margin, Rev 1:6"}]},
+{v:7,t:"Behold, he cometh with clouds; and every eye shall see him, and they <em>also</em> which pierced him: and all kindreds of the earth shall wail because of him. Even so, Amen.",n:[{tag:"note",a:"they also which pierced him",t:"An echo of Zech 12:10. The nation that crucified Christ shall behold him at his return to the earth in glory.",s:"1611 margin, Rev 1:7"}]},
+{v:8,t:"I am Alpha and Omega, the beginning and the ending, saith the Lord, which is, and which was, and which is to come, the Almighty.",n:[{tag:"grk",a:"Alpha and Omega",t:"The first and last letters of the Greek alphabet, denoting absolute completeness — he encompasses all of time and existence.",s:"1611 margin, Rev 1:8"}]},
+{v:9,t:"I John, who also am your brother, and companion in tribulation, and in the kingdom and patience of Jesus Christ, was in the isle that is called Patmos, for the word of God, and for the testimony of Jesus Christ.",n:[{tag:"note",a:"Patmos",t:"A small rocky isle in the Aegean Sea, used by Rome as a place of banishment for criminals and political prisoners. John was exiled here under Domitian.",s:"1611 margin, Rev 1:9"}]},
+{v:10,t:"I was in the Spirit on the Lord's day, and heard behind me a great voice, as of a trumpet,",n:[{tag:"note",a:"in the Spirit",t:"A state of prophetic ecstasy or rapture, in which the human senses are suspended and divine revelation is received. Compare Ezek 1:1; Acts 10:10.",s:"1611 margin, Rev 1:10"}]},
+{v:11,t:"Saying, I am Alpha and Omega, the first and the last: and, What thou seest, write in a book, and send <em>it</em> unto the seven churches which are in Asia; unto Ephesus, and unto Smyrna, and unto Pergamos, and unto Thyatira, and unto Sardis, and unto Philadelphia, and unto Laodicea.",n:[]},
+{v:12,t:"And I turned to see the voice that spake with me. And being turned, I saw seven golden candlesticks;",n:[{tag:"alt",a:"candlesticks",t:"Or, lampstands. The Greek luchnia is a stand bearing a lamp. The seven lampstands represent the seven churches (v.20).",s:"1611 margin, Rev 1:12"}]},
+{v:13,t:"And in the midst of the seven candlesticks <em>one</em> like unto the Son of man, clothed with a garment down to the foot, and girt about the paps with a golden girdle.",n:[{tag:"note",a:"Son of man",t:"The title Christ most often used of himself in the Gospels, drawn from Dan 7:13. Here he appears in priestly and kingly garments, walking among his churches.",s:"1611 margin, Rev 1:13"}]},
+{v:14,t:"His head and <em>his</em> hairs <em>were</em> white like wool, as white as snow; and his eyes <em>were</em> as a flame of fire;",n:[{tag:"note",a:"white like wool, as white as snow",t:"An echo of the Ancient of Days in Dan 7:9, identifying Christ with the eternal God. The whiteness signifies absolute purity and eternity.",s:"1611 margin, Rev 1:14"}]},
+{v:15,t:"And his feet like unto fine brass, as if they burned in a furnace; and his voice as the sound of many waters.",n:[{tag:"grk",a:"fine brass",t:"Chalkolibanos — a term found only here and at Rev 2:18, possibly an alloy of great brilliance and strength. Some suggest orichalcum or refined bronze.",s:"1611 margin, Rev 1:15"}]},
+{v:16,t:"And he had in his right hand seven stars: and out of his mouth went a sharp twoedged sword: and his countenance <em>was</em> as the sun shineth in his strength.",n:[{tag:"note",a:"sharp twoedged sword",t:"The word of God (Heb 4:12). Proceeding from his mouth, it is his instrument of judgment and of conquest. Compare Rev 19:15.",s:"1611 margin, Rev 1:16"}]},
+{v:17,t:"And when I saw him, I fell at his feet as dead. And he laid his right hand upon me, saying unto me, Fear not; I am the first and the last:",n:[]},
+{v:18,t:"I <em>am</em> he that liveth, and was dead; and, behold, I am alive for evermore, Amen; and have the keys of hell and of death.",n:[{tag:"grk",a:"hell",t:"Hades — the realm of departed spirits. Christ holds authority over both death (the act) and Hades (the state), having conquered them in his resurrection.",s:"1611 margin, Rev 1:18"}]},
+{v:19,t:"Write the things which thou hast seen, and the things which are, and the things which shall be hereafter;",n:[{tag:"note",a:"the things which thou hast seen ... are ... shall be",t:"A threefold outline of the book: ch.1 (things seen), ch.2-3 (things which are, the churches), ch.4-22 (things hereafter).",s:"1611 margin, Rev 1:19"}]},
+{v:20,t:"The mystery of the seven stars which thou sawest in my right hand, and the seven golden candlesticks. The seven stars are the angels of the seven churches: and the seven candlesticks which thou sawest are the seven churches.",n:[{tag:"alt",a:"angels",t:"Or, messengers. The Greek aggelos may denote the pastor or presiding elder of each congregation, or literally angelic guardians over each church.",s:"1611 margin, Rev 1:20"}]}
+]},
+2:{heading:"Chapter II",running:"Letters to Ephesus, Smyrna, Pergamos, and Thyatira — commendation, rebuke, and promise to the overcomer",sections:{1:"To Ephesus",8:"To Smyrna",12:"To Pergamos",18:"To Thyatira"},verses:[
+{v:1,t:"Unto the angel of the church of Ephesus write; These things saith he that holdeth the seven stars in his right hand, who walketh in the midst of the seven golden candlesticks;",n:[]},
+{v:2,t:"I know thy works, and thy labour, and thy patience, and how thou canst not bear them which are evil: and thou hast tried them which say they are apostles, and are not, and hast found them liars:",n:[]},
+{v:3,t:"And hast borne, and hast patience, and for my name's sake hast laboured, and hast not fainted.",n:[]},
+{v:4,t:"Nevertheless I have <em>somewhat</em> against thee, because thou hast left thy first love.",n:[{tag:"note",a:"left thy first love",t:"Not lost but left — a deliberate departure from the warmth and devotion that marked their early faith. Orthodoxy without affection is a dangerous condition.",s:"1611 margin, Rev 2:4"}]},
+{v:5,t:"Remember therefore from whence thou art fallen, and repent, and do the first works; or else I will come unto thee quickly, and will remove thy candlestick out of his place, except thou repent.",n:[]},
+{v:6,t:"But this thou hast, that thou hatest the deeds of the Nicolaitans, which I also hate.",n:[{tag:"note",a:"Nicolaitans",t:"A sect whose works Christ condemns here and whose doctrine he condemns at Pergamos (v.15). Their exact practice is disputed; early fathers connect them with licentiousness and compromise with idolatry.",s:"1611 margin, Rev 2:6"}]},
+{v:7,t:"He that hath an ear, let him hear what the Spirit saith unto the churches; To him that overcometh will I give to eat of the tree of life, which is in the midst of the paradise of God.",n:[{tag:"grk",a:"paradise",t:"Paradeisos — a Persian loan-word meaning an enclosed garden or park of a king. Used in the LXX of the Garden of Eden. Here it denotes the heavenly Eden restored.",s:"1611 margin, Rev 2:7"}]},
+{v:8,t:"And unto the angel of the church in Smyrna write; These things saith the first and the last, which was dead, and is alive;",n:[]},
+{v:9,t:"I know thy works, and tribulation, and poverty, (but thou art rich) and <em>I know</em> the blasphemy of them which say they are Jews, and are not, but <em>are</em> the synagogue of Satan.",n:[{tag:"note",a:"synagogue of Satan",t:"Those who bore the outward name of Israel but had rejected Messiah and were actively persecuting the church. The title is not antisemitic but theological — they had allied themselves with God's adversary.",s:"1611 margin, Rev 2:9"}]},
+{v:10,t:"Fear none of those things which thou shalt suffer: behold, the devil shall cast <em>some</em> of you into prison, that ye may be tried; and ye shall have tribulation ten days: be thou faithful unto death, and I will give thee a crown of life.",n:[{tag:"alt",a:"ten days",t:"Either a literal brief period of concentrated persecution, or a symbolic number denoting a complete but limited trial. Ten is the number of human completeness in Scripture.",s:"1611 margin, Rev 2:10"}]},
+{v:11,t:"He that hath an ear, let him hear what the Spirit saith unto the churches; He that overcometh shall not be hurt of the second death.",n:[{tag:"note",a:"second death",t:"Defined at Rev 20:14 as the lake of fire — the final, eternal separation from God. The first death is physical; the second is the eternal consequence of dying without Christ.",s:"1611 margin, Rev 2:11"}]},
+{v:12,t:"And to the angel of the church in Pergamos write; These things saith he which hath the sharp sword with two edges;",n:[]},
+{v:13,t:"I know thy works, and where thou dwellest, <em>even</em> where Satan's seat <em>is</em>: and thou holdest fast my name, and hast not denied my faith, even in those days wherein Antipas <em>was</em> my faithful martyr, who was slain among you, where Satan dwelleth.",n:[{tag:"note",a:"Satan's seat",t:"Pergamos was home to the great altar of Zeus, the imperial cult of Rome, and the worship of Asclepius. It was a seat of pagan religious and civic power.",s:"1611 margin, Rev 2:13"}]},
+{v:14,t:"But I have a few things against thee, because thou hast there them that hold the doctrine of Balaam, who taught Balac to cast a stumblingblock before the children of Israel, to eat things sacrificed unto idols, and to commit fornication.",n:[{tag:"note",a:"doctrine of Balaam",t:"See Num 22-25; 31:16. Balaam counselled Balak to corrupt Israel through intermarriage and idolatrous feasting when he could not curse them directly. A type of those who compromise the church from within.",s:"1611 margin, Rev 2:14"}]},
+{v:15,t:"So hast thou also them that hold the doctrine of the Nicolaitans, which thing I hate.",n:[]},
+{v:16,t:"Repent; or else I will come unto thee quickly, and will fight against them with the sword of my mouth.",n:[]},
+{v:17,t:"He that hath an ear, let him hear what the Spirit saith unto the churches; To him that overcometh will I give to eat of the hidden manna, and will give him a white stone, and in the stone a new name written, which no man knoweth saving he that receiveth <em>it</em>.",n:[{tag:"note",a:"white stone",t:"In the ancient world a white stone could signify acquittal in a court of law, an invitation to a feast, or a token of personal friendship. All three senses apply to the believer's standing before God.",s:"1611 margin, Rev 2:17"}]},
+{v:18,t:"And unto the angel of the church in Thyatira write; These things saith the Son of God, who hath his eyes like unto a flame of fire, and his feet are like fine brass;",n:[]},
+{v:19,t:"I know thy works, and charity, and service, and faith, and thy patience, and thy works; and the last <em>to be</em> more than the first.",n:[]},
+{v:20,t:"Notwithstanding I have a few things against thee, because thou sufferest that woman Jezebel, which calleth herself a prophetess, to teach and to seduce my servants to commit fornication, and to eat things sacrificed unto idols.",n:[{tag:"note",a:"Jezebel",t:"A symbolic name recalling Ahab's idolatrous queen (1 Kings 16:31; 21:25). This woman in Thyatira claimed prophetic authority while leading the church into moral and spiritual compromise.",s:"1611 margin, Rev 2:20"}]},
+{v:21,t:"And I gave her space to repent of her fornication; and she repented not.",n:[]},
+{v:22,t:"Behold, I will cast her into a bed, and them that commit adultery with her into great tribulation, except they repent of their deeds.",n:[]},
+{v:23,t:"And I will kill her children with death; and all the churches shall know that I am he which searcheth the reins and hearts: and I will give unto every one of you according to your works.",n:[{tag:"grk",a:"reins",t:"Nephrous — the kidneys, regarded in Hebrew idiom as the seat of the deepest emotions and secret thoughts. The phrase reins and hearts covers the totality of the inner life.",s:"1611 margin, Rev 2:23"}]},
+{v:24,t:"But unto you I say, and unto the rest in Thyatira, as many as have not this doctrine, and which have not known the depths of Satan, as they speak; I will put upon you none other burden.",n:[]},
+{v:25,t:"But that which ye have <em>already</em> hold fast till I come.",n:[]},
+{v:26,t:"And he that overcometh, and keepeth my works unto the end, to him will I give power over the nations:",n:[]},
+{v:27,t:"And he shall rule them with a rod of iron; as the vessels of a potter shall they be broken to shivers: even as I received of my Father.",n:[{tag:"note",a:"rod of iron",t:"An echo of Ps 2:9, the Messianic psalm of worldwide dominion. The promise to overcomers is co-regency with Christ in his millennial kingdom.",s:"1611 margin, Rev 2:27"}]},
+{v:28,t:"And I will give him the morning star.",n:[{tag:"note",a:"morning star",t:"Christ himself (Rev 22:16). The overcomer receives Christ in the fullness of his glory — he who gives the morning star is himself that star.",s:"1611 margin, Rev 2:28"}]},
+{v:29,t:"He that hath an ear, let him hear what the Spirit saith unto the churches.",n:[]}
+]},
+3:{heading:"Chapter III",running:"Letters to Sardis, Philadelphia, and Laodicea — the dead church, the faithful church, the lukewarm church",sections:{1:"To Sardis",7:"To Philadelphia",14:"To Laodicea"},verses:[
+{v:1,t:"And unto the angel of the church in Sardis write; These things saith he that hath the seven Spirits of God, and the seven stars; I know thy works, that thou hast a name that thou livest, and art dead.",n:[{tag:"note",a:"a name that thou livest, and art dead",t:"Sardis had a reputation for vitality but was spiritually lifeless — the most solemn condition a church can be in: outward profession without inward reality.",s:"1611 margin, Rev 3:1"}]},
+{v:2,t:"Be watchful, and strengthen the things which remain, that are ready to die: for I have not found thy works perfect before God.",n:[]},
+{v:3,t:"Remember therefore how thou hast received and heard, and hold fast, and repent. If therefore thou shalt not watch, I will come on thee as a thief, and thou shalt not know what hour I will come upon thee.",n:[]},
+{v:4,t:"Thou hast a few names even in Sardis which have not defiled their garments; and they shall walk with me in white: for they are worthy.",n:[]},
+{v:5,t:"He that overcometh, the same shall be clothed in white raiment; and I will not blot out his name out of the book of life, but I will confess his name before my Father, and before his angels.",n:[{tag:"note",a:"book of life",t:"The register of the living — those whose names are written therein are assured of eternal life (Rev 20:15; 21:27). The promise here is of assurance, not of warning: Christ will not blot out what he has written.",s:"1611 margin, Rev 3:5"}]},
+{v:6,t:"He that hath an ear, let him hear what the Spirit saith unto the churches.",n:[]},
+{v:7,t:"And to the angel of the church in Philadelphia write; These things saith he that is holy, he that is true, he that hath the key of David, he that openeth, and no man shutteth; and shutteth, and no man openeth;",n:[{tag:"note",a:"key of David",t:"An allusion to Isa 22:22. The key of David signifies absolute authority over the house of David — here applied to Christ's authority over access to the kingdom of God.",s:"1611 margin, Rev 3:7"}]},
+{v:8,t:"I know thy works: behold, I have set before thee an open door, and no man can shut it: for thou hast a little strength, and hast kept my word, and hast not denied my name.",n:[]},
+{v:9,t:"Behold, I will make them of the synagogue of Satan, which say they are Jews, and are not, but do lie; behold, I will make them to come and worship before thy feet, and to know that I have loved thee.",n:[]},
+{v:10,t:"Because thou hast kept the word of my patience, I also will keep thee from the hour of temptation, which shall come upon all the world, to try them that dwell upon the earth.",n:[{tag:"note",a:"keep thee from the hour of temptation",t:"The Greek ek (out of, from within) the hour — not merely through it but removed from its sphere entirely. A strong support for the pre-tribulational rapture of the church.",s:"1611 margin, Rev 3:10"}]},
+{v:11,t:"Behold, I come quickly: hold that fast which thou hast, that no man take thy crown.",n:[]},
+{v:12,t:"Him that overcometh will I make a pillar in the temple of my God, and he shall go no more out: and I will write upon him the name of my God, and the name of the city of my God, <em>which is</em> new Jerusalem, which cometh down out of heaven from my God: and <em>I will write upon him</em> my new name.",n:[]},
+{v:13,t:"He that hath an ear, let him hear what the Spirit saith unto the churches.",n:[]},
+{v:14,t:"And unto the angel of the church of the Laodiceans write; These things saith the Amen, the faithful and true witness, the beginning of the creation of God;",n:[{tag:"grk",a:"beginning of the creation",t:"Arche — origin, source, first cause. Christ is not the first creature created but the originating source and ruler of all creation (Col 1:15-18).",s:"1611 margin, Rev 3:14"}]},
+{v:15,t:"I know thy works, that thou art neither cold nor hot: I would thou wert cold or hot.",n:[]},
+{v:16,t:"So then because thou art lukewarm, and neither cold nor hot, I will spue thee out of my mouth.",n:[{tag:"note",a:"spue thee out of my mouth",t:"Laodicea's water came by aqueduct from warm mineral springs and arrived tepid and nauseating. Christ uses their notorious water supply as a picture of their spiritual condition.",s:"1611 margin, Rev 3:16"}]},
+{v:17,t:"Because thou sayest, I am rich, and increased with goods, and have need of nothing; and knowest not that thou art wretched, and miserable, and poor, and blind, and naked:",n:[{tag:"note",a:"I am rich ... wretched ... poor",t:"Laodicea was one of the wealthiest cities of Asia Minor, famous for banking, black wool, and a medical school renowned for eye salve. Each of Christ's charges strikes directly at their civic pride.",s:"1611 margin, Rev 3:17"}]},
+{v:18,t:"I counsel thee to buy of me gold tried in the fire, that thou mayest be rich; and white raiment, that thou mayest be clothed, and <em>that</em> the shame of thy nakedness do not appear; and anoint thine eyes with eyesalve, that thou mayest see.",n:[]},
+{v:19,t:"As many as I love, I rebuke and chasten: be zealous therefore, and repent.",n:[]},
+{v:20,t:"Behold, I stand at the door, and knock: if any man hear my voice, and open the door, I will come in to him, and will sup with him, and he with me.",n:[{tag:"note",a:"I stand at the door, and knock",t:"Addressed to a church, not the world — Christ on the outside of a congregation that bore his name. The latch is on the inside; the individual must open it.",s:"1611 margin, Rev 3:20"}]},
+{v:21,t:"To him that overcometh will I grant to sit with me in my throne, even as I also overcame, and am set down with my Father in his throne.",n:[]},
+{v:22,t:"He that hath an ear, let him hear what the Spirit saith unto the churches.",n:[]}
+]},
+4:{heading:"Chapter IV",running:"The throne room of heaven — the four living creatures, the four and twenty elders, and the worship of the Almighty",sections:{1:"The Open Door into Heaven",4:"The Throne and Its Worshippers"},verses:[
+{v:1,t:"After this I looked, and, behold, a door <em>was</em> opened in heaven: and the first voice which I heard <em>was</em> as it were of a trumpet talking with me; which said, Come up hither, and I will shew thee things which must be hereafter.",n:[{tag:"note",a:"Come up hither",t:"This call to John is widely regarded as a type of the rapture — the catching up of the church before the tribulation judgments that follow from ch.6 onward. The church is not mentioned again until ch.19.",s:"1611 margin, Rev 4:1"}]},
+{v:2,t:"And immediately I was in the spirit: and, behold, a throne was set in heaven, and <em>one</em> sat on the throne.",n:[]},
+{v:3,t:"And he that sat was to look upon like a jasper and a sardine stone: and <em>there was</em> a rainbow round about the throne, in sight like unto an emerald.",n:[{tag:"note",a:"jasper ... sardine ... emerald",t:"The jasper (clear crystal, Rev 21:11) and sardine (blood-red) may represent the glory and the atoning blood of God. The emerald rainbow speaks of the covenant of grace surrounding judgment.",s:"1611 margin, Rev 4:3"}]},
+{v:4,t:"And round about the throne <em>were</em> four and twenty seats: and upon the seats I saw four and twenty elders sitting, clothed in white raiment; and they had on their heads crowns of gold.",n:[{tag:"note",a:"four and twenty elders",t:"Most likely representative of the redeemed church — twelve patriarchs of Israel plus twelve apostles — or simply the full body of the redeemed before the throne. Their crowns (stephanoi) are victor's wreaths, not royal diadems.",s:"1611 margin, Rev 4:4"}]},
+{v:5,t:"And out of the throne proceeded lightnings and thunderings and voices: and <em>there were</em> seven lamps of fire burning before the throne, which are the seven Spirits of God.",n:[]},
+{v:6,t:"And before the throne <em>there was</em> a sea of glass like unto crystal: and in the midst of the throne, and round about the throne, <em>were</em> four beasts full of eyes before and behind.",n:[{tag:"alt",a:"beasts",t:"Or, living creatures. The Greek zoa — living ones — is distinct from the beast of ch.13 (therion). These are exalted angelic beings, not wild animals.",s:"1611 margin, Rev 4:6"}]},
+{v:7,t:"And the first beast <em>was</em> like a lion, and the second beast like a calf, and the third beast had a face as a man, and the fourth beast <em>was</em> like a flying eagle.",n:[{tag:"note",a:"lion ... calf ... man ... eagle",t:"The four faces of the cherubim (Ezek 1:10). Variously seen as symbols of Christ in the four Gospels (king, servant, man, God), or of creation's highest representatives — wild beasts, domestic beasts, man, and birds.",s:"1611 margin, Rev 4:7"}]},
+{v:8,t:"And the four beasts had each of them six wings about <em>him</em>; and <em>they were</em> full of eyes within: and they rest not day and night, saying, Holy, holy, holy, Lord God Almighty, which was, and is, and is to come.",n:[{tag:"note",a:"Holy, holy, holy",t:"The trisagion — threefold holiness as in Isa 6:3. The ceaseless repetition denotes not vain repetition but exhaustless adoration: they never reach the bottom of what they are praising.",s:"1611 margin, Rev 4:8"}]},
+{v:9,t:"And when those beasts give glory and honour and thanks to him that sat on the throne, who liveth for ever and ever,",n:[]},
+{v:10,t:"The four and twenty elders fall down before him that sat on the throne, and worship him that liveth for ever and ever, and cast their crowns before the throne, saying,",n:[{tag:"note",a:"cast their crowns before the throne",t:"The ultimate act of homage — surrendering the very tokens of their own achievement back to the One from whom all victory comes.",s:"1611 margin, Rev 4:10"}]},
+{v:11,t:"Thou art worthy, O Lord, to receive glory and honour and power: for thou hast created all things, and for thy pleasure they are and were created.",n:[{tag:"alt",a:"for thy pleasure",t:"Or, because of thy will. The Greek dia to thelema sou — all creation exists on account of and for the purpose of God's sovereign will.",s:"1611 margin, Rev 4:11"}]}
+]},
+5:{heading:"Chapter V",running:"The sealed book and the Lamb — none worthy but the Lion of Judah who was slain; the new song of redemption",sections:{1:"The Sealed Book",6:"The Lamb Takes the Book",9:"The New Song"},verses:[
+{v:1,t:"And I saw in the right hand of him that sat on the throne a book written within and on the backside, sealed with seven seals.",n:[{tag:"note",a:"sealed with seven seals",t:"A Roman will or testament was sealed seven times by seven witnesses. This scroll contains the title deed to the earth and the program of its reclamation.",s:"1611 margin, Rev 5:1"}]},
+{v:2,t:"And I saw a strong angel proclaiming with a loud voice, Who is worthy to open the book, and to loose the seals thereof?",n:[]},
+{v:3,t:"And no man in heaven, nor in earth, neither under the earth, was able to open the book, neither to look thereon.",n:[]},
+{v:4,t:"And I wept much, because no man was found worthy to open and to read the book, neither to look thereon.",n:[]},
+{v:5,t:"And one of the elders saith unto me, Weep not: behold, the Lion of the tribe of Juda, the Root of David, hath prevailed to open the book, and to loose the seven seals thereof.",n:[{tag:"note",a:"Lion of the tribe of Juda",t:"Gen 49:9-10. The Messianic title given to Christ as the heir of David's throne. He prevailed not by force but by his atoning death (v.9).",s:"1611 margin, Rev 5:5"}]},
+{v:6,t:"And I beheld, and, lo, in the midst of the throne and of the four beasts, and in the midst of the elders, stood a Lamb as it had been slain, having seven horns and seven eyes, which are the seven Spirits of God sent forth into all the earth.",n:[{tag:"note",a:"Lamb as it had been slain",t:"The marks of the crucifixion are eternal — the Lamb bears the evidence of his sacrifice forever. Seven horns = omnipotence; seven eyes = omniscience through the Spirit.",s:"1611 margin, Rev 5:6"}]},
+{v:7,t:"And he came and took the book out of the right hand of him that sat upon the throne.",n:[]},
+{v:8,t:"And when he had taken the book, the four beasts and four <em>and</em> twenty elders fell down before the Lamb, having every one of them harps, and golden vials full of odours, which are the prayers of saints.",n:[{tag:"note",a:"prayers of saints",t:"The accumulated prayers of God's people — including the cry of the martyrs (Rev 6:10) — are held before the throne as fragrant incense. No prayer is lost or forgotten.",s:"1611 margin, Rev 5:8"}]},
+{v:9,t:"And they sung a new song, saying, Thou art worthy to take the book, and to open the seals thereof: for thou wast slain, and hast redeemed us to God by thy blood out of every kindred, and tongue, and people, and nation;",n:[{tag:"note",a:"new song",t:"New in character — a song that could not be sung before the cross. The song of Moses was sung after redemption from Egypt (Ex 15); this is sung after redemption by blood from every nation.",s:"1611 margin, Rev 5:9"}]},
+{v:10,t:"And hast made us unto our God kings and priests: and we shall reign on the earth.",n:[]},
+{v:11,t:"And I beheld, and I heard the voice of many angels round about the throne and the beasts and the elders: and the number of them was ten thousand times ten thousand, and thousands of thousands;",n:[{tag:"note",a:"ten thousand times ten thousand",t:"Dan 7:10. The Greek murias — innumerable myriads. The precise calculation produces 100,000,000 plus thousands more — a number expressing the uncountable host of heaven.",s:"1611 margin, Rev 5:11"}]},
+{v:12,t:"Saying with a loud voice, Worthy is the Lamb that was slain to receive power, and riches, and wisdom, and strength, and honour, and glory, and blessing.",n:[{tag:"note",a:"seven ascriptions",t:"Power, riches, wisdom, strength, honour, glory, blessing — seven in number, the number of completeness: the Lamb is worthy of all that can be attributed.",s:"1611 margin, Rev 5:12"}]},
+{v:13,t:"And every creature which is in heaven, and on the earth, and under the earth, and such as are in the sea, and all that are in them, heard I saying, Blessing, and honour, and glory, and power, <em>be</em> unto him that sitteth upon the throne, and unto the Lamb for ever and ever.",n:[]},
+{v:14,t:"And the four beasts said, Amen. And the four <em>and</em> twenty elders fell down and worshipped him that liveth for ever and ever.",n:[]}
+]},
+6:{heading:"Chapter VI",running:"The six seals opened — conquest, war, famine, death, martyrs, and the great day of wrath",sections:{1:"The First Four Seals",9:"The Fifth Seal",12:"The Sixth Seal"},verses:[
+{v:1,t:"And I saw when the Lamb opened one of the seals, and I heard, as it were the noise of thunder, one of the four beasts saying, Come and see.",n:[]},
+{v:2,t:"And I saw, and behold a white horse: and he that sat on him had a bow; and a crown was given unto him: and he went forth conquering, and to conquer.",n:[{tag:"note",a:"white horse ... bow ... crown",t:"This rider is not Christ (who appears on a white horse in Rev 19 with a sword, not a bow). This is Antichrist — the counterfeit Christ who begins his rise to power at the tribulation's opening.",s:"1611 margin, Rev 6:2"}]},
+{v:3,t:"And when he had opened the second seal, I heard the second beast say, Come and see.",n:[]},
+{v:4,t:"And there went out another horse <em>that was</em> red: and <em>power</em> was given to him that sat thereon to take peace from the earth, and that they should kill one another: and there was given unto him a great sword.",n:[]},
+{v:5,t:"And when he had opened the third seal, I heard the third beast say, Come and see. And I beheld, and lo a black horse; and he that sat on him had a pair of balances in his hand.",n:[]},
+{v:6,t:"And I heard a voice in the midst of the four beasts say, A measure of wheat for a penny, and three measures of barley for a penny; and <em>see</em> thou hurt not the oil and the wine.",n:[{tag:"note",a:"A measure of wheat for a penny",t:"The Greek choinix — a quart — was a day's ration. A denarius was a day's wage. This describes a famine economy where a full day's labor buys only one man's food, with nothing left for family.",s:"1611 margin, Rev 6:6"}]},
+{v:7,t:"And when he had opened the fourth seal, I heard the voice of the fourth beast say, Come and see.",n:[]},
+{v:8,t:"And I looked, and behold a pale horse: and his name that sat on him was Death, and Hell followed with him. And power was given unto them over the fourth part of the earth, to kill with sword, and with hunger, and with death, and with the beasts of the earth.",n:[{tag:"grk",a:"pale",t:"Chloros — the sickly yellowish-green of a corpse. The color of death itself gives this rider his name. Hell (Hades) follows to collect what Death takes.",s:"1611 margin, Rev 6:8"}]},
+{v:9,t:"And when he had opened the fifth seal, I saw under the altar the souls of them that were slain for the word of God, and for the testimony which they held:",n:[{tag:"note",a:"under the altar",t:"As the blood of the sacrificial animal was poured at the base of the altar (Lev 4:7), so the souls of martyrs are represented as blood poured out in sacrifice. Their lives were offerings to God.",s:"1611 margin, Rev 6:9"}]},
+{v:10,t:"And they cried with a loud voice, saying, How long, O Lord, holy and true, dost thou not judge and avenge our blood on them that dwell on the earth?",n:[{tag:"note",a:"How long",t:"The prayer of the martyrs is not one of personal vengeance but of divine justice. They call upon God's holiness and truth — his very character demands that innocent blood not go unanswered.",s:"1611 margin, Rev 6:10"}]},
+{v:11,t:"And white robes were given unto every one of them; and it was said unto them, that they should rest yet for a little season, until their fellowservants also and their brethren, that should be killed as they <em>were</em>, should be fulfilled.",n:[]},
+{v:12,t:"And I beheld when he had opened the sixth seal, and, lo, there was a great earthquake; and the sun became black as sackcloth of hair, and the moon became as blood;",n:[]},
+{v:13,t:"And the stars of heaven fell unto the earth, even as a fig tree casteth her untimely figs, when she is shaken of a mighty wind.",n:[]},
+{v:14,t:"And the heaven departed as a scroll when it is rolled together; and every mountain and island were moved out of their places.",n:[]},
+{v:15,t:"And the kings of the earth, and the great men, and the rich men, and the chief captains, and the mighty men, and every bondman, and every free man, hid themselves in the dens and in the rocks of the mountains;",n:[]},
+{v:16,t:"And said to the mountains and rocks, Fall on us, and hide us from the face of him that sitteth on the throne, and from the wrath of the Lamb:",n:[{tag:"note",a:"wrath of the Lamb",t:"The most fearsome combination in Scripture — wrath from the one who is the embodiment of meekness and sacrifice. Men will prefer burial under mountains to facing it.",s:"1611 margin, Rev 6:16"}]},
+{v:17,t:"For the great day of his wrath is come; and who shall be able to stand?",n:[]}
+]},
+7:{heading:"Chapter VII",running:"The sealing of the 144,000 of Israel and the great multitude of the redeemed out of the tribulation",sections:{1:"The 144,000 Sealed",9:"The Great Multitude"},verses:[
+{v:1,t:"And after these things I saw four angels standing on the four corners of the earth, holding the four winds of the earth, that the wind should not blow on the earth, nor on the sea, nor on any tree.",n:[]},
+{v:2,t:"And I saw another angel ascending from the east, having the seal of the living God: and he cried with a loud voice to the four angels, to whom it was given to hurt the earth and the sea,",n:[]},
+{v:3,t:"Saying, Hurt not the earth, neither the sea, nor the trees, till we have sealed the servants of our God in their foreheads.",n:[{tag:"note",a:"sealed ... in their foreheads",t:"A divine mark of ownership and protection, contrasting with the mark of the beast (Rev 13:16). God seals his before judgment falls, as he marked the doorposts at Passover (Ex 12).",s:"1611 margin, Rev 7:3"}]},
+{v:4,t:"And I heard the number of them which were sealed: <em>and there were</em> sealed an hundred <em>and</em> forty <em>and</em> four thousand of all the tribes of the children of Israel.",n:[{tag:"note",a:"144,000 of all the tribes",t:"Twelve thousand from each of the twelve tribes of Israel — a literal number of Jewish believers commissioned as evangelists during the tribulation. The tribes listed are the genetic tribes of Israel, not the church.",s:"1611 margin, Rev 7:4"}]},
+{v:5,t:"Of the tribe of Juda <em>were</em> sealed twelve thousand. Of the tribe of Reuben <em>were</em> sealed twelve thousand. Of the tribe of Gad <em>were</em> sealed twelve thousand.",n:[]},
+{v:6,t:"Of the tribe of Aser <em>were</em> sealed twelve thousand. Of the tribe of Nepthalim <em>were</em> sealed twelve thousand. Of the tribe of Manasses <em>were</em> sealed twelve thousand.",n:[]},
+{v:7,t:"Of the tribe of Simeon <em>were</em> sealed twelve thousand. Of the tribe of Levi <em>were</em> sealed twelve thousand. Of the tribe of Issachar <em>were</em> sealed twelve thousand.",n:[]},
+{v:8,t:"Of the tribe of Zabulon <em>were</em> sealed twelve thousand. Of the tribe of Joseph <em>were</em> sealed twelve thousand. Of the tribe of Benjamin <em>were</em> sealed twelve thousand.",n:[{tag:"note",a:"Dan omitted",t:"The tribe of Dan is not listed; Manasses (half-tribe) takes its place. Dan was associated in the OT with idolatry (Judges 18). Some see significance in this omission for end-times identification.",s:"1611 margin, Rev 7:8"}]},
+{v:9,t:"After this I beheld, and, lo, a great multitude, which no man could number, of all nations, and kindreds, and people, and tongues, stood before the throne, and before the Lamb, clothed with white robes, and palms in their hands;",n:[{tag:"note",a:"great multitude, which no man could number",t:"A separate and distinct group from the 144,000. These are Gentile tribulation martyrs and converts — the harvest of the 144,000's witness — gathered from every nation.",s:"1611 margin, Rev 7:9"}]},
+{v:10,t:"And cried with a loud voice, saying, Salvation to our God which sitteth upon the throne, and unto the Lamb.",n:[]},
+{v:11,t:"And all the angels stood round about the throne, and <em>about</em> the elders and the four beasts, and fell before the throne on their faces, and worshipped God,",n:[]},
+{v:12,t:"Saying, Amen: Blessing, and glory, and wisdom, and thanksgiving, and honour, and power, and might, <em>be</em> unto our God for ever and ever. Amen.",n:[]},
+{v:13,t:"And one of the elders answered, saying unto me, What are these which are arrayed in white robes? and whence came they?",n:[]},
+{v:14,t:"And I said unto him, Sir, thou knowest. And he said to me, These are they which came out of great tribulation, and have washed their robes, and made them white in the blood of the Lamb.",n:[{tag:"note",a:"great tribulation",t:"With the definite article — the Great Tribulation, the unprecedented time of Jacob's trouble (Jer 30:7; Matt 24:21). This is not general Christian suffering but the specific seven-year period.",s:"1611 margin, Rev 7:14"}]},
+{v:15,t:"Therefore are they before the throne of God, and serve him day and night in his temple: and he that sitteth on the throne shall dwell among them.",n:[]},
+{v:16,t:"They shall hunger no more, neither thirst any more; neither shall the sun light on them, nor any heat.",n:[]},
+{v:17,t:"For the Lamb which is in the midst of the throne shall feed them, and shall lead them unto living fountains of waters: and God shall wipe away all tears from their eyes.",n:[{tag:"note",a:"God shall wipe away all tears",t:"The personal touch of a Father — God himself, not an angel, performs this act. Every cause of weeping — loss, pain, regret, persecution — is permanently removed by his hand.",s:"1611 margin, Rev 7:17"}]}
+]},
+8:{heading:"Chapter VIII",running:"The seventh seal and the golden censer — silence in heaven, then the first four trumpet judgments",sections:{1:"The Seventh Seal",6:"The Four Trumpets"},verses:[
+{v:1,t:"And when he had opened the seventh seal, there was silence in heaven about the space of half an hour.",n:[{tag:"note",a:"silence in heaven about the space of half an hour",t:"All the worship, thunder, and song of heaven is hushed. This is the dramatic pause before the most severe judgments yet — the ominous quiet before the storm of the trumpets.",s:"1611 margin, Rev 8:1"}]},
+{v:2,t:"And I saw the seven angels which stood before God; and to them were given seven trumpets.",n:[]},
+{v:3,t:"And another angel came and stood at the altar, having a golden censer; and there was given unto him much incense, that he should offer <em>it</em> with the prayers of all saints upon the golden altar which was before the throne.",n:[]},
+{v:4,t:"And the smoke of the incense, <em>which came</em> with the prayers of the saints, ascended up before God out of the angel's hand.",n:[]},
+{v:5,t:"And the angel took the censer, and filled it with fire of the altar, and cast <em>it</em> into the earth: and there were voices, and thunderings, and lightnings, and an earthquake.",n:[{tag:"note",a:"filled it with fire ... and cast it into the earth",t:"The prayers of the saints — long accumulated — are now answered in judgment upon the earth. Divine justice responds to the cry of the martyrs with fire from the altar.",s:"1611 margin, Rev 8:5"}]},
+{v:6,t:"And the seven angels which had the seven trumpets prepared themselves to sound.",n:[]},
+{v:7,t:"The first angel sounded, and there followed hail and fire mingled with blood, and they were cast upon the earth: and the third part of trees was burnt up, and all green grass was burnt up.",n:[{tag:"note",a:"hail and fire mingled with blood",t:"Echoes the seventh plague of Egypt (Ex 9:22-26), here amplified to global scale. Hail and fire mingled with blood — perhaps volcanic or supernatural in origin — destroy a third of vegetation.",s:"1611 margin, Rev 8:7"}]},
+{v:8,t:"And the second angel sounded, and as it were a great mountain burning with fire was cast into the sea: and the third part of the sea became blood;",n:[]},
+{v:9,t:"And the third part of the creatures which were in the sea, and had life, died; and the third part of the ships were destroyed.",n:[]},
+{v:10,t:"And the third angel sounded, and there fell a great star from heaven, burning as it were a lamp, and it fell upon the third part of the rivers, and upon the fountains of waters;",n:[]},
+{v:11,t:"And the name of the star is called Wormwood: and the third part of the waters became wormwood; and many men died of the waters, because they were made bitter.",n:[{tag:"note",a:"Wormwood",t:"A bitter, poisonous plant (Artemisia absinthium). The name given to the fallen star suggests a supernatural agent of corruption — the bitter contamination of fresh water sources.",s:"1611 margin, Rev 8:11"}]},
+{v:12,t:"And the fourth angel sounded, and the third part of the sun was smitten, and the third part of the moon, and the third part of the stars; so as the third part of them was darkened, and the day shone not for a third part of it, and the night likewise.",n:[]},
+{v:13,t:"And I beheld, and heard an angel flying through the midst of heaven, saying with a loud voice, Woe, woe, woe, to the inhabiters of the earth by reason of the other voices of the trumpet of the three angels, which are yet to sound!",n:[{tag:"note",a:"Woe, woe, woe",t:"Three woes correspond to the three remaining trumpets (5th, 6th, 7th). This angelic warning marks the transition to even more terrible judgments — the first four were upon nature; these will be upon men directly.",s:"1611 margin, Rev 8:13"}]}
+]},
+9:{heading:"Chapter IX",running:"The fifth and sixth trumpets — the bottomless pit opened, the locust army, and the 200,000,000 horsemen",sections:{1:"The Fifth Trumpet: The Pit Opened",13:"The Sixth Trumpet: The Great Army"},verses:[
+{v:1,t:"And the fifth angel sounded, and I saw a star fall from heaven unto the earth: and to him was given the key of the bottomless pit.",n:[{tag:"note",a:"star fall from heaven",t:"A personal being, not a meteorite — he is given a key, implying personality and authority. Most likely Satan (Luke 10:18; Rev 12:9) or a fallen angelic agent acting under divine permission.",s:"1611 margin, Rev 9:1"}]},
+{v:2,t:"And he opened the bottomless pit; and there arose a smoke out of the pit, as the smoke of a great furnace; and the sun and the air were darkened by reason of the smoke of the pit.",n:[{tag:"grk",a:"bottomless pit",t:"Abussos — the abyss, a prison for certain fallen angels (Luke 8:31; 2 Pet 2:4; Jude 6). Distinct from Hades and from the lake of fire; a place of temporary confinement.",s:"1611 margin, Rev 9:2"}]},
+{v:3,t:"And there came out of the smoke locusts upon the earth: and unto them was given power, as the scorpions of the earth have power.",n:[]},
+{v:4,t:"And it was commanded them that they should not hurt the grass of the earth, neither any green thing, neither any tree; but only those men which have not the seal of God in their foreheads.",n:[{tag:"note",a:"not hurt the grass ... but only those men",t:"Unlike natural locusts which destroy vegetation, these demonic creatures are directed specifically against unsaved men. God's sealed servants (ch.7) are exempt.",s:"1611 margin, Rev 9:4"}]},
+{v:5,t:"And to them it was given that they should not kill them, but that they should be tormented five months: and their torment <em>was</em> as the torment of a scorpion, when he striketh a man.",n:[]},
+{v:6,t:"And in those days shall men seek death, and shall not find it; and shall desire to die, and death shall flee from them.",n:[{tag:"note",a:"shall seek death, and shall not find it",t:"Divine restraint upon death — God does not permit escape from the judgment through self-destruction. Men are compelled to live through the torment and face it.",s:"1611 margin, Rev 9:6"}]},
+{v:7,t:"And the shapes of the locusts <em>were</em> like unto horses prepared unto battle; and on their heads <em>were</em> as it were crowns like gold, and their faces <em>were</em> as the faces of men.",n:[]},
+{v:8,t:"And they had hair as the hair of women, and their teeth were as <em>the teeth</em> of lions.",n:[]},
+{v:9,t:"And they had breastplates, as it were breastplates of iron; and the sound of their wings <em>was</em> as the sound of chariots of many horses running to battle.",n:[]},
+{v:10,t:"And they had tails like unto scorpions, and there were stings in their tails: and their power <em>was</em> to hurt men five months.",n:[]},
+{v:11,t:"And they had a king over them, <em>which is</em> the angel of the bottomless pit, whose name in the Hebrew tongue <em>is</em> Abaddon, but in the Greek tongue hath <em>his</em> name Apollyon.",n:[{tag:"heb",a:"Abaddon",t:"The Hebrew name meaning Destruction or Destroyer. The Greek equivalent Apollyon carries the same meaning. This is the ruling demon-prince over the abyss, not Satan himself.",s:"1611 margin, Rev 9:11"}]},
+{v:12,t:"One woe is past; <em>and</em>, behold, there come two woes more hereafter.",n:[]},
+{v:13,t:"And the sixth angel sounded, and I heard a voice from the four horns of the golden altar which is before God,",n:[]},
+{v:14,t:"Saying to the sixth angel which had the trumpet, Loose the four angels which are bound in the great river Euphrates.",n:[{tag:"note",a:"bound in the great river Euphrates",t:"These four angels have been restrained until this precise moment (prepared for the year, month, day, and hour — v.15). The Euphrates marks the ancient boundary between Israel and the eastern powers.",s:"1611 margin, Rev 9:14"}]},
+{v:15,t:"And the four angels were loosed, which were prepared for an hour, and a day, and a month, and a year, for to slay the third part of men.",n:[]},
+{v:16,t:"And the number of the army of the horsemen <em>were</em> two hundred thousand thousand: and I heard the number of them.",n:[{tag:"note",a:"two hundred thousand thousand",t:"200,000,000 — John heard the number, he did not estimate. Whether a literal army of this scale or a demonic horde, the magnitude of destruction is unprecedented — a third of mankind slain.",s:"1611 margin, Rev 9:16"}]},
+{v:17,t:"And thus I saw the horses in the vision, and them that sat on them, having breastplates of fire, and of jacinth, and brimstone: and the heads of the horses <em>were</em> as the heads of lions; and out of their mouths issued fire and smoke and brimstone.",n:[]},
+{v:18,t:"By these three was the third part of men killed, by the fire, and by the smoke, and by the brimstone, which issued out of their mouths.",n:[]},
+{v:19,t:"For their power is in their mouth, and in their tails: for their tails <em>were</em> like unto serpents, and had heads, and with them they do hurt.",n:[]},
+{v:20,t:"And the rest of the men which were not killed by these plagues yet repented not of the works of their hands, that they should not worship devils, and idols of gold, and silver, and brass, and stone, and of wood: which neither can see, nor hear, nor walk:",n:[{tag:"note",a:"repented not",t:"The most sobering verse in this chapter. After the death of a third of humanity, the survivors do not turn to God. Judgment alone does not produce repentance — only grace can do that.",s:"1611 margin, Rev 9:20"}]},
+{v:21,t:"Neither repented they of their murders, nor of their sorceries, nor of their fornication, nor of their thefts.",n:[{tag:"grk",a:"sorceries",t:"Pharmakeia — the use of drugs and potions in occult religious practice. The root of the English pharmacy. In context it refers to drug-assisted occult worship, not medical practice.",s:"1611 margin, Rev 9:21"}]}
+]},
+10:{heading:"Chapter X",running:"The mighty angel with the little book — John commanded to eat it and prophesy again",sections:{1:"The Angel and the Little Book",8:"John Eats the Book"},verses:[
+{v:1,t:"And I saw another mighty angel come down from heaven, clothed with a cloud: and a rainbow <em>was</em> upon his head, and his face <em>was</em> as it were the sun, and his feet as pillars of fire:",n:[{tag:"note",a:"mighty angel",t:"The description — cloud, rainbow, face as the sun, feet as fire — closely parallels Christ's appearance in ch.1 and 4. Many commentators identify this as a Christophany, a pre-incarnate or post-glorification appearance of the Lord.",s:"1611 margin, Rev 10:1"}]},
+{v:2,t:"And he had in his hand a little book open: and he set his right foot upon the sea, and <em>his</em> left <em>foot</em> on the earth,",n:[{tag:"note",a:"right foot upon the sea ... left foot on the earth",t:"A posture of universal dominion — planting himself across the whole earth. The little open book contrasts with the sealed scroll of ch.5; its contents are now to be revealed.",s:"1611 margin, Rev 10:2"}]},
+{v:3,t:"And cried with a loud voice, as <em>when</em> a lion roareth: and when he had cried, seven thunders uttered their voices.",n:[]},
+{v:4,t:"And when the seven thunders had uttered their voices, I was about to write: and I heard a voice from heaven saying unto me, Seal up those things which the seven thunders uttered, and write them not.",n:[{tag:"note",a:"Seal up those things ... write them not",t:"The only portion of John's vision deliberately withheld from Scripture. As in Dan 12:9, some divine counsel is reserved — there are things God has not seen fit to reveal in this age.",s:"1611 margin, Rev 10:4"}]},
+{v:5,t:"And the angel which I saw stand upon the sea and upon the earth lifted up his hand to heaven,",n:[]},
+{v:6,t:"And sware by him that liveth for ever and ever, who created heaven, and the things that therein are, and the earth, and the things that therein are, and the sea, and the things which are therein, that there should be time no longer:",n:[{tag:"alt",a:"time no longer",t:"Or, delay no longer. The Greek chronos here may mean a period of waiting or delay rather than time itself ceasing. The long-suffering of God in holding back full judgment is ending.",s:"1611 margin, Rev 10:6"}]},
+{v:7,t:"But in the days of the voice of the seventh angel, when he shall begin to sound, the mystery of God should be finished, as he hath declared to his servants the prophets.",n:[{tag:"note",a:"mystery of God should be finished",t:"The long-hidden purposes of God — why evil persists, why Israel was set aside, how all things work together for good — will be fully revealed and resolved at the seventh trumpet.",s:"1611 margin, Rev 10:7"}]},
+{v:8,t:"And the voice which I heard from heaven spake unto me again, and said, Go <em>and</em> take the little book which is open in the hand of the angel which standeth upon the sea and upon the earth.",n:[]},
+{v:9,t:"And I went unto the angel, and said unto him, Give me the little book. And he said unto me, Take <em>it</em>, and eat it up; and it shall make thy belly bitter, but it shall be in thy mouth sweet as honey.",n:[{tag:"note",a:"eat it up ... sweet as honey ... bitter",t:"An echo of Ezek 2:8-3:3. The word of God is sweet in receiving (Ps 119:103) but bitter in the weight of its judgments when proclaimed and experienced. John's commission was both privilege and burden.",s:"1611 margin, Rev 10:9"}]},
+{v:10,t:"And I took the little book out of the angel's hand, and ate it up; and it was in my mouth sweet as honey: and as soon as I had eaten it, my belly was bitter.",n:[]},
+{v:11,t:"And he said unto me, Thou must prophesy again before many peoples, and nations, and tongues, and kings.",n:[]}
+]},
+11:{heading:"Chapter XI",running:"The two witnesses, the seventh trumpet, and the kingdoms of this world becoming the kingdom of Christ",sections:{1:"The Two Witnesses",15:"The Seventh Trumpet"},verses:[
+{v:1,t:"And there was given me a reed like unto a rod: and the angel stood, saying, Rise, and measure the temple of God, and the altar, and them that worship therein.",n:[{tag:"note",a:"measure the temple of God",t:"The existence of a temple to be measured in the tribulation period confirms that the Jewish temple will be rebuilt before or during the tribulation. Compare Ezek 40-43 and Dan 9:27.",s:"1611 margin, Rev 11:1"}]},
+{v:2,t:"But the court which is without the temple leave out, and measure it not; for it is given unto the Gentiles: and the holy city shall they tread under foot forty <em>and</em> two months.",n:[{tag:"note",a:"forty and two months",t:"Three and a half years — the first half of the tribulation week (Dan 9:27). Forty-two months, 1,260 days, and time times and half a time all refer to this same 3.5-year period.",s:"1611 margin, Rev 11:2"}]},
+{v:3,t:"And I will give <em>power</em> unto my two witnesses, and they shall prophesy a thousand two hundred <em>and</em> threescore days, clothed in sackcloth.",n:[{tag:"note",a:"two witnesses",t:"Their powers (vv.5-6) match Moses (fire, turning water to blood, plagues) and Elijah (shutting heaven). Many identify them as these two, or as Enoch and Elijah — the two men who never died.",s:"1611 margin, Rev 11:3"}]},
+{v:4,t:"These are the two olive trees, and the two candlesticks standing before the God of the earth.",n:[{tag:"note",a:"two olive trees ... two candlesticks",t:"An allusion to Zech 4:3,14 — the two anointed ones who stand before the Lord. The olive trees supply oil for the candlesticks; the witnesses are the source and channel of God's light in that dark hour.",s:"1611 margin, Rev 11:4"}]},
+{v:5,t:"And if any man will hurt them, fire proceedeth out of their mouth, and devoureth their enemies: and if any man will hurt them, he must in this manner be killed.",n:[]},
+{v:6,t:"These have power to shut heaven, that it rain not in the days of their prophecy: and have power over waters to turn them to blood, and to smite the earth with all plagues, as often as they will.",n:[]},
+{v:7,t:"And when they shall have finished their testimony, the beast that ascendeth out of the bottomless pit shall make war against them, and shall overcome them, and kill them.",n:[{tag:"note",a:"when they shall have finished their testimony",t:"They cannot be touched until their work is complete. God's servants are immortal until their work is done. The beast's victory over them is only permitted after 1,260 days of testimony.",s:"1611 margin, Rev 11:7"}]},
+{v:8,t:"And their dead bodies <em>shall lie</em> in the street of the great city, which spiritually is called Sodom and Egypt, where also our Lord was crucified.",n:[{tag:"note",a:"spiritually is called Sodom and Egypt",t:"Jerusalem — identified by where our Lord was crucified — is here characterized by the moral corruption of Sodom and the bondage of Egypt. The city chosen by God has become the city that kills God's servants.",s:"1611 margin, Rev 11:8"}]},
+{v:9,t:"And they of the people and kindreds and tongues and nations shall see their dead bodies three days and an half, and shall not suffer their dead bodies to be put in graves.",n:[]},
+{v:10,t:"And they that dwell upon the earth shall rejoice over them, and make merry, and shall send gifts one to another; because these two prophets tormented them that dwelt on the earth.",n:[{tag:"note",a:"rejoice ... make merry ... send gifts",t:"The world celebrates the death of God's witnesses with the trappings of a holiday. The scene is grotesque — earth's only Christmas-like exchange of gifts marks the silencing of the gospel.",s:"1611 margin, Rev 11:10"}]},
+{v:11,t:"And after three days and an half the Spirit of life from God entered into them, and they stood upon their feet; and great fear fell upon them which saw them.",n:[]},
+{v:12,t:"And they heard a great voice from heaven saying unto them, Come up hither. And they ascended up to heaven in a cloud; and their enemies beheld them.",n:[]},
+{v:13,t:"And the same hour was there a great earthquake, and the tenth part of the city fell, and in the earthquake were slain of men seven thousand: and the remnant were affrighted, and gave glory to the God of heaven.",n:[]},
+{v:14,t:"The second woe is past; <em>and</em>, behold, the third woe cometh quickly.",n:[]},
+{v:15,t:"And the seventh angel sounded; and there were great voices in heaven, saying, The kingdoms of this world are become <em>the kingdoms</em> of our Lord, and of his Christ; and he shall reign for ever and ever.",n:[{tag:"note",a:"The kingdoms of this world are become the kingdoms of our Lord",t:"The great proclamation of the seventh trumpet — not yet fulfilled in time, but certain in the counsel of God. The reign of Christ is declared as accomplished fact from heaven's perspective.",s:"1611 margin, Rev 11:15"}]},
+{v:16,t:"And the four and twenty elders, which sat before God on their seats, fell upon their faces, and worshipped God,",n:[]},
+{v:17,t:"Saying, We give thee thanks, O Lord God Almighty, which art, and wast, and art to come; because thou hast taken to thee thy great power, and hast reigned.",n:[]},
+{v:18,t:"And the nations were angry, and thy wrath is come, and the time of the dead, that they should be judged, and that thou shouldest give reward unto thy servants the prophets, and to the saints, and them that fear thy name, small and great; and shouldest destroy them which destroy the earth.",n:[]},
+{v:19,t:"And the temple of God was opened in heaven, and there was seen in his temple the ark of his testament: and there were lightnings, and voices, and thunderings, and an earthquake, and great hail.",n:[{tag:"note",a:"ark of his testament",t:"The earthly ark was a copy of the heavenly original (Heb 8:5; 9:24). Its appearing here signals that God's covenant with Israel is about to be fulfilled in the events of chapters to follow.",s:"1611 margin, Rev 11:19"}]}
+]},
+12:{heading:"Chapter XII",running:"The woman, the dragon, and the man child — Satan cast to earth and the persecution of Israel",sections:{1:"The Woman and the Dragon",7:"War in Heaven",13:"The Dragon Pursues the Woman"},verses:[
+{v:1,t:"And there appeared a great wonder in heaven; a woman clothed with the sun, and the moon under her feet, and upon her head a crown of twelve stars:",n:[{tag:"note",a:"woman clothed with the sun",t:"The woman is Israel — the twelve stars recall Joseph's dream of the eleven stars bowing to him (Gen 37:9), and together with the sun and moon represent the patriarchal family. Israel brought forth the man child (Christ).",s:"1611 margin, Rev 12:1"}]},
+{v:2,t:"And she being with child cried, travailing in birth, and pained to be delivered.",n:[]},
+{v:3,t:"And there appeared another wonder in heaven; and behold a great red dragon, having seven heads and ten horns, and seven crowns upon his heads.",n:[{tag:"note",a:"great red dragon",t:"Identified in v.9 as the Devil and Satan. The seven heads and ten horns correspond to the beast's empire (ch.13,17), showing Satan as the power behind the Antichrist.",s:"1611 margin, Rev 12:3"}]},
+{v:4,t:"And his tail drew the third part of the stars of heaven, and did cast them to the earth: and the dragon stood before the woman which was ready to be delivered, for to devour her child as soon as it was born.",n:[{tag:"note",a:"third part of the stars of heaven",t:"The original rebellion of Satan drew a third of the angelic host with him (Isa 14:12-15; Ezek 28:15-16). These fallen angels are the demons of Scripture.",s:"1611 margin, Rev 12:4"}]},
+{v:5,t:"And she brought forth a man child, who was to rule all nations with a rod of iron: and her child was caught up unto God, and <em>to</em> his throne.",n:[{tag:"note",a:"caught up unto God, and to his throne",t:"The ascension of Christ (Acts 1:9-11) viewed from heaven's perspective. Satan failed to destroy him at the cross; the resurrection and ascension placed him beyond reach.",s:"1611 margin, Rev 12:5"}]},
+{v:6,t:"And the woman fled into the wilderness, where she hath a place prepared of God, that they should feed her there a thousand two hundred <em>and</em> threescore days.",n:[]},
+{v:7,t:"And there was war in heaven: Michael and his angels fought against the dragon; and the dragon fought and his angels,",n:[{tag:"note",a:"Michael",t:"The archangel whose name means Who is like God? He is the especial guardian of Israel (Dan 10:13,21; 12:1; Jude 9). This mid-tribulation battle results in Satan's permanent expulsion from heaven.",s:"1611 margin, Rev 12:7"}]},
+{v:8,t:"And prevailed not; neither was their place found any more in heaven.",n:[]},
+{v:9,t:"And the great dragon was cast out, that old serpent, called the Devil, and Satan, which deceiveth the whole world: he was cast out into the earth, and his angels were cast out with him.",n:[{tag:"note",a:"that old serpent",t:"The identification is explicit — the dragon of Revelation is the same serpent of Genesis 3. Satan's career spans from the garden to the lake of fire; Scripture presents him consistently throughout.",s:"1611 margin, Rev 12:9"}]},
+{v:10,t:"And I heard a loud voice saying in heaven, Now is come salvation, and strength, and the kingdom of our God, and the power of his Christ: for the accuser of our brethren is cast down, which accused them before our God day and night.",n:[{tag:"note",a:"accuser of our brethren ... day and night",t:"Satan's current occupation includes ceaseless accusation of believers before God (Job 1:9-11; Zech 3:1). When he is cast down, this relentless prosecution ends permanently.",s:"1611 margin, Rev 12:10"}]},
+{v:11,t:"And they overcame him by the blood of the Lamb, and by the word of their testimony; and they loved not their lives unto the death.",n:[{tag:"note",a:"blood of the Lamb ... word of their testimony",t:"The twofold weapon of the tribulation saints against Satan's accusations: the objective ground of the atonement, and their personal confession of it even at the cost of life.",s:"1611 margin, Rev 12:11"}]},
+{v:12,t:"Therefore rejoice, <em>ye</em> heavens, and ye that dwell in them. Woe to the inhabiters of the earth and of the sea! for the devil is come down unto you, having great wrath, because he knoweth that he hath but a short time.",n:[]},
+{v:13,t:"And when the dragon saw that he was cast unto the earth, he persecuted the woman which brought forth the man <em>child</em>.",n:[]},
+{v:14,t:"And to the woman were given two wings of a great eagle, that she might fly into the wilderness, into her place, where she is nourished for a time, and times, and half a time, from the face of the serpent.",n:[{tag:"note",a:"time, and times, and half a time",t:"Daniel's phrase (Dan 7:25; 12:7) — one year plus two years plus half a year = 3.5 years, the last half of the tribulation. God supernaturally protects a remnant of Israel in the wilderness.",s:"1611 margin, Rev 12:14"}]},
+{v:15,t:"And the serpent cast out of his mouth water as a flood after the woman, that he might cause her to be carried away of the flood.",n:[]},
+{v:16,t:"And the earth helped the woman, and the earth opened her mouth, and swallowed up the flood which the dragon cast out of his mouth.",n:[]},
+{v:17,t:"And the dragon was wroth with the woman, and went to make war with the remnant of her seed, which keep the commandments of God, and have the testimony of Jesus Christ.",n:[]}
+]},
+13:{heading:"Chapter XIII",running:"The beast from the sea and the beast from the earth — Antichrist's empire and the mark of the beast",sections:{1:"The Beast from the Sea",11:"The Beast from the Earth"},verses:[
+{v:1,t:"And I stood upon the sand of the sea, and saw a beast rise up out of the sea, having seven heads and ten horns, and upon his horns ten crowns, and upon his heads the name of blasphemy.",n:[{tag:"note",a:"beast rise up out of the sea",t:"The sea in prophetic Scripture often represents the Gentile nations (Isa 17:12; Rev 17:15). Antichrist rises from the mass of Gentile humanity and world politics.",s:"1611 margin, Rev 13:1"}]},
+{v:2,t:"And the beast which I saw was like unto a leopard, and his feet were as <em>the feet</em> of a bear, and his mouth as the mouth of a lion: and the dragon gave him his power, and his seat, and great authority.",n:[{tag:"note",a:"leopard ... bear ... lion",t:"In Daniel 7, these represent Greece, Medo-Persia, and Babylon. The beast of Revelation combines all previous world empires into a final synthesis of Gentile world power.",s:"1611 margin, Rev 13:2"}]},
+{v:3,t:"And I saw one of his heads as it were wounded to death; and his deadly wound was healed: and all the world wondered after the beast.",n:[{tag:"note",a:"deadly wound was healed",t:"A counterfeit resurrection — Satan's imitation of the death and resurrection of Christ, designed to compel the world's worship. Whether literal death or a political resurrection of empire is debated.",s:"1611 margin, Rev 13:3"}]},
+{v:4,t:"And they worshipped the dragon which gave power unto the beast: and they worshipped the beast, saying, Who <em>is</em> like unto the beast? who is able to make war with him?",n:[]},
+{v:5,t:"And there was given unto him a mouth speaking great things and blasphemies; and power was given unto him to continue forty <em>and</em> two months.",n:[]},
+{v:6,t:"And he opened his mouth in blasphemy against God, to blaspheme his name, and his tabernacle, and them that dwell in heaven.",n:[]},
+{v:7,t:"And it was given unto him to make war with the saints, and to overcome them: and power was given him over all kindreds, and tongues, and nations.",n:[]},
+{v:8,t:"And all that dwell upon the earth shall worship him, whose names are not written in the book of life of the Lamb slain from the foundation of the world.",n:[{tag:"note",a:"Lamb slain from the foundation of the world",t:"The atonement was not an afterthought — it was in the eternal purpose of God before creation. The book of life was written before history began; salvation is grounded in divine foreknowledge.",s:"1611 margin, Rev 13:8"}]},
+{v:9,t:"If any man have an ear, let him hear.",n:[]},
+{v:10,t:"He that leadeth into captivity shall go into captivity: he that killeth with the sword must be killed with the sword. Here is the patience and the faith of the saints.",n:[]},
+{v:11,t:"And I beheld another beast coming up out of the earth; and he had two horns like a lamb, and he spake as a dragon.",n:[{tag:"note",a:"two horns like a lamb ... spake as a dragon",t:"The false prophet — the third member of the satanic trinity. He resembles Christ in appearance (lamb) but is empowered by Satan (dragon). Religious deception is his primary weapon.",s:"1611 margin, Rev 13:11"}]},
+{v:12,t:"And he exerciseth all the power of the first beast before him, and causeth the earth and them which dwell therein to worship the first beast, whose deadly wound was healed.",n:[]},
+{v:13,t:"And he doeth great wonders, so that he maketh fire come down from heaven on the earth in the sight of men,",n:[]},
+{v:14,t:"And deceiveth them that dwell on the earth by <em>the means of</em> those miracles which he had power to do in the sight of the beast; saying to them that dwell on the earth, that they should make an image to the beast, which had the wound by a sword, and did live.",n:[]},
+{v:15,t:"And he had power to give life unto the image of the beast, that the image of the beast should both speak, and cause that as many as would not worship the image of the beast should be killed.",n:[]},
+{v:16,t:"And he causeth all, both small and great, rich and poor, free and bond, to receive a mark in their right hand, or in their foreheads:",n:[{tag:"note",a:"mark in their right hand, or in their foreheads",t:"A visible brand of allegiance to Antichrist, contrasting the seal of God (Rev 7:3). The mark is voluntary — those who receive it do so with full understanding that it means worship of the beast.",s:"1611 margin, Rev 13:16"}]},
+{v:17,t:"And that no man might buy or sell, save he that had the mark, or the name of the beast, or the number of his name.",n:[]},
+{v:18,t:"Here is wisdom. Let him that hath understanding count the number of the beast: for it is the number of a man; and his number <em>is</em> Six hundred threescore <em>and</em> six.",n:[{tag:"note",a:"Six hundred threescore and six",t:"666 — the number of man, falling perpetually short of the divine seven. Many attempts to identify a historical person have been made; the definitive identification awaits the tribulation when his identity will be revealed to those with understanding.",s:"1611 margin, Rev 13:18"}]}
+]},
+14:{heading:"Chapter XIV",running:"The Lamb and the 144,000 on Mount Zion — the three angels' messages, the harvest of the earth",sections:{1:"The Lamb on Mount Zion",6:"The Three Angels",14:"The Harvest of the Earth"},verses:[
+{v:1,t:"And I looked, and, lo, a Lamb stood on the mount Sion, and with him an hundred forty <em>and</em> four thousand, having his Father's name written in their foreheads.",n:[{tag:"note",a:"mount Sion",t:"Whether the heavenly Zion (Heb 12:22) or the earthly Jerusalem at the midpoint or end of the tribulation is debated. The contrast with ch.13 is deliberate — those marked by God versus those marked by the beast.",s:"1611 margin, Rev 14:1"}]},
+{v:2,t:"And I heard a voice from heaven, as the voice of many waters, and as the voice of a great thunder: and I heard the voice of harpers harping with their harps:",n:[]},
+{v:3,t:"And they sung as it were a new song before the throne, and before the four beasts, and the elders: and no man could learn that song but the hundred <em>and</em> forty <em>and</em> four thousand, which were redeemed from the earth.",n:[]},
+{v:4,t:"These are they which were not defiled with women; for they are virgins. These are they which follow the Lamb whithersoever he goeth. These were redeemed from among men, <em>being</em> the firstfruits unto God and to the Lamb.",n:[{tag:"note",a:"not defiled with women; for they are virgins",t:"Either literal celibacy enabling undivided consecration in their mission, or spiritual virginity — separation from the spiritual harlotry of false religion (Rev 17). Most likely both senses are intended.",s:"1611 margin, Rev 14:4"}]},
+{v:5,t:"And in their mouth was found no guile: for they are without fault before the throne of God.",n:[]},
+{v:6,t:"And I saw another angel fly in the midst of heaven, having the everlasting gospel to preach unto them that dwell on the earth, and to every nation, and kindred, and tongue, and people,",n:[{tag:"note",a:"everlasting gospel",t:"The gospel is here preached by an angelic messenger — an extraordinary provision of divine grace even in the tribulation's darkest hour. God's redemptive purpose reaches every nation before the end.",s:"1611 margin, Rev 14:6"}]},
+{v:7,t:"Saying with a loud voice, Fear God, and give glory to him; for the hour of his judgment is come: and worship him that made heaven, and earth, and the sea, and the fountains of waters.",n:[]},
+{v:8,t:"And there followed another angel, saying, Babylon is fallen, is fallen, that great city, because she made all nations drink of the wine of the wrath of her fornication.",n:[{tag:"note",a:"Babylon is fallen, is fallen",t:"Anticipatory — Babylon's fall is certain though not fully accomplished until ch.18. The double declaration (as in Isa 21:9) emphasizes the absolute certainty of the judgment.",s:"1611 margin, Rev 14:8"}]},
+{v:9,t:"And the third angel followed them, saying with a loud voice, If any man worship the beast and his image, and receive <em>his</em> mark in his forehead, or in his hand,",n:[]},
+{v:10,t:"The same shall drink of the wine of the wrath of God, which is poured out without mixture into the cup of his indignation; and he shall be tormented with fire and brimstone in the presence of the holy angels, and in the presence of the Lamb:",n:[{tag:"note",a:"without mixture",t:"Ancient wine was typically diluted with water. God's wrath here is undiluted — pure, full-strength judgment with no tempering of mercy. This is the most solemn warning in Scripture against taking the mark.",s:"1611 margin, Rev 14:10"}]},
+{v:11,t:"And the smoke of their torment ascendeth up for ever and ever: and they have no rest day nor night, who worship the beast and his image, and whosoever receiveth the mark of his name.",n:[{tag:"note",a:"for ever and ever",t:"The Greek eis aionas aionon — into the ages of the ages. The eternal, conscious torment of the lost is taught plainly here. No annihilation; no temporary punishment. The fire is not quenched.",s:"1611 margin, Rev 14:11"}]},
+{v:12,t:"Here is the patience of the saints: here <em>are</em> they that keep the commandments of God, and the faith of Jesus.",n:[]},
+{v:13,t:"And I heard a voice from heaven saying unto me, Write, Blessed <em>are</em> the dead which die in the Lord from henceforth: Yea, saith the Spirit, that they may rest from their labours; and their works do follow them.",n:[]},
+{v:14,t:"And I looked, and behold a white cloud, and upon the cloud <em>one</em> sat like unto the Son of man, having on his head a golden crown, and in his hand a sharp sickle.",n:[]},
+{v:15,t:"And another angel came out of the temple, crying with a loud voice to him that sat on the cloud, Thrust in thy sickle, and reap: for the time is come for thee to reap; for the harvest of the earth is ripe.",n:[]},
+{v:16,t:"And he that sat on the cloud thrust in his sickle on the earth; and the earth was reaped.",n:[]},
+{v:17,t:"And another angel came out of the temple which is in heaven, he also having a sharp sickle.",n:[]},
+{v:18,t:"And another angel came out from the altar, which had power over fire; and cried with a loud cry to him that had the sharp sickle, saying, Thrust in thy sharp sickle, and gather the clusters of the vine of the earth; for her grapes are fully ripe.",n:[]},
+{v:19,t:"And the angel thrust in his sickle into the earth, and gathered the vine of the earth, and cast <em>it</em> into the great winepress of the wrath of God.",n:[]},
+{v:20,t:"And the winepress was trodden without the city, and blood came out of the winepress, even unto the horse bridles, by the space of a thousand <em>and</em> six hundred furlongs.",n:[{tag:"note",a:"thousand and six hundred furlongs",t:"Approximately 200 miles — roughly the length of the land of Israel from north to south. This is the judgment of Armageddon, where the armies gathered against Jerusalem are destroyed.",s:"1611 margin, Rev 14:20"}]}
+]},
+15:{heading:"Chapter XV",running:"The song of Moses and the Lamb — the seven angels prepared with the seven last plagues",sections:{1:"The Sea of Glass and the Overcomers",5:"The Seven Angels Prepared"},verses:[
+{v:1,t:"And I saw another sign in heaven, great and marvellous, seven angels having the seven last plagues; for in them is filled up the wrath of God.",n:[{tag:"note",a:"seven last plagues",t:"The vial (bowl) judgments are the final and most concentrated outpouring of divine wrath. They are called last because in them the wrath of God is completed — nothing is held back.",s:"1611 margin, Rev 15:1"}]},
+{v:2,t:"And I saw as it were a sea of glass mingled with fire: and them that had gotten the victory over the beast, and over his image, and over his mark, <em>and</em> over the number of his name, stand on the sea of glass, having the harps of God.",n:[]},
+{v:3,t:"And they sing the song of Moses the servant of God, and the song of the Lamb, saying, Great and marvellous <em>are</em> thy works, Lord God Almighty; just and true <em>are</em> thy ways, thou King of saints.",n:[{tag:"note",a:"song of Moses ... and the song of the Lamb",t:"Moses sang after deliverance through the Red Sea (Ex 15); the Lamb's song celebrates redemption through the blood. They are one song — Old and New Testament redemption united in a single anthem.",s:"1611 margin, Rev 15:3"}]},
+{v:4,t:"Who shall not fear thee, O Lord, and glorify thy name? for <em>thou</em> only <em>art</em> holy: for all nations shall come and worship before thee; for thy judgments are made manifest.",n:[]},
+{v:5,t:"And after that I looked, and, behold, the temple of the tabernacle of the testimony in heaven was opened:",n:[]},
+{v:6,t:"And the seven angels came out of the temple, having the seven plagues, clothed in pure and white linen, and having their breasts girded with golden girdles.",n:[]},
+{v:7,t:"And one of the four beasts gave unto the seven angels seven golden vials full of the wrath of God, who liveth for ever and ever.",n:[{tag:"alt",a:"vials",t:"Or, bowls. The Greek phiala is a broad, flat bowl — the vial or cup of God's wrath. The shape suggests a sudden, complete pouring out rather than a gradual flow.",s:"1611 margin, Rev 15:7"}]},
+{v:8,t:"And the temple was filled with smoke from the glory of God, and from his power; and no man was able to enter into the temple, till the seven plagues of the seven angels were fulfilled.",n:[{tag:"note",a:"no man was able to enter into the temple",t:"As the glory filled the tabernacle and the temple at their dedications (Ex 40:35; 1 Kings 8:11), so here. No intercession is accepted during this final outpouring — the time of mercy has closed for those under judgment.",s:"1611 margin, Rev 15:8"}]}
+]},
+16:{heading:"Chapter XVI",running:"The seven bowls of wrath poured out — sores, sea of blood, rivers of blood, scorching heat, darkness, Euphrates dried, Armageddon, and the final earthquake",sections:{1:"The First Five Bowls",12:"The Sixth Bowl: Armageddon",17:"The Seventh Bowl"},verses:[
+{v:1,t:"And I heard a great voice out of the temple saying to the seven angels, Go your ways, and pour out the vials of the wrath of God upon the earth.",n:[]},
+{v:2,t:"And the first went, and poured out his vial upon the earth; and there fell a noisome and grievous sore upon the men which had the mark of the beast, and <em>upon</em> them which worshipped his image.",n:[{tag:"note",a:"noisome and grievous sore",t:"Echoes the sixth plague of Egypt (Ex 9:9-11). The mark of the beast, once desired for economic advantage, now becomes the mark of affliction.",s:"1611 margin, Rev 16:2"}]},
+{v:3,t:"And the second angel poured out his vial upon the sea; and it became as the blood of a dead <em>man</em>: and every living soul died in the sea.",n:[]},
+{v:4,t:"And the third angel poured out his vial upon the rivers and fountains of waters; and they became blood.",n:[]},
+{v:5,t:"And I heard the angel of the waters say, Thou art righteous, O Lord, which art, and wast, and shalt be, because thou hast judged thus.",n:[]},
+{v:6,t:"For they have shed the blood of saints and prophets, and thou hast given them blood to drink; for they are worthy.",n:[{tag:"note",a:"they are worthy",t:"Divine justice is precise: those who shed blood are given blood to drink. The punishment corresponds exactly to the crime. Heaven's declaration is that God is right in every judgment.",s:"1611 margin, Rev 16:6"}]},
+{v:7,t:"And I heard another out of the altar say, Even so, Lord God Almighty, true and righteous <em>are</em> thy judgments.",n:[]},
+{v:8,t:"And the fourth angel poured out his vial upon the sun; and power was given unto him to scorch men with fire.",n:[]},
+{v:9,t:"And men were scorched with great heat, and blasphemed the name of God, which hath power over these plagues: and they repented not to give him glory.",n:[{tag:"note",a:"repented not",t:"For the third time in Revelation, divine judgment produces not repentance but increased blasphemy. The hardened heart grows more rebellious under judgment — a truth confirmed by Pharaoh.",s:"1611 margin, Rev 16:9"}]},
+{v:10,t:"And the fifth angel poured out his vial upon the seat of the beast; and his kingdom was full of darkness; and they gnawed their tongues for pain,",n:[]},
+{v:11,t:"And blasphemed the God of heaven because of their pains and their sores, and repented not of their deeds.",n:[]},
+{v:12,t:"And the sixth angel poured out his vial upon the great river Euphrates; and the water thereof was dried up, that the way of the kings of the east might be prepared.",n:[{tag:"note",a:"kings of the east",t:"Literally, kings from the rising of the sun. Eastern powers — likely a massive Asiatic confederacy — march westward toward the final battle as the Euphrates is supernaturally dried (as the Jordan was for Israel, Josh 3).",s:"1611 margin, Rev 16:12"}]},
+{v:13,t:"And I saw three unclean spirits like frogs <em>come</em> out of the mouth of the dragon, and out of the mouth of the beast, and out of the mouth of the false prophet.",n:[]},
+{v:14,t:"For they are the spirits of devils, working miracles, <em>which</em> go forth unto the kings of the earth and of the whole world, to gather them to the battle of that great day of God Almighty.",n:[{tag:"note",a:"Armageddon",t:"See v.16. The satanic trinity uses supernatural deception to gather the world's armies to their doom. They think they are converging for conquest; they are being herded for judgment.",s:"1611 margin, Rev 16:14"}]},
+{v:15,t:"Behold, I come as a thief. Blessed <em>is</em> he that watcheth, and keepeth his garments, lest he walk naked, and they see his shame.",n:[]},
+{v:16,t:"And he gathered them together into a place called in the Hebrew tongue Armageddon.",n:[{tag:"heb",a:"Armageddon",t:"Har Megiddo — the mountain or hill of Megiddo, in the plain of Jezreel in northern Israel. The great plain has been the battlefield of decisive conflicts throughout biblical history (Judges 4-5; 2 Kings 23:29).",s:"1611 margin, Rev 16:16"}]},
+{v:17,t:"And the seventh angel poured out his vial into the air; and there came a great voice out of the temple of heaven, from the throne, saying, It is done.",n:[{tag:"note",a:"It is done",t:"As Christ cried It is finished at the cross (John 19:30), so here the final consummation of judgment is declared complete. The word of redemption and the word of judgment both come from the throne.",s:"1611 margin, Rev 16:17"}]},
+{v:18,t:"And there were voices, and thunders, and lightnings; and there was a great earthquake, such as was not since men were upon the earth, so mighty an earthquake, <em>and</em> so great.",n:[]},
+{v:19,t:"And the great city was divided into three parts, and the cities of the nations fell: and great Babylon came in remembrance before God, to give unto her the cup of the wine of the fierceness of his wrath.",n:[]},
+{v:20,t:"And every island fled away, and the mountains were not found.",n:[]},
+{v:21,t:"And there fell upon men a great hail out of heaven, <em>every stone</em> about the weight of a talent: and men blasphemed God because of the plague of the hail; for the plague thereof was exceeding great.",n:[{tag:"note",a:"weight of a talent",t:"A talent weighed between 75 and 100 pounds. Hailstones of this size represent divine artillery of unprecedented scale — and still men blaspheme rather than repent.",s:"1611 margin, Rev 16:21"}]}
+]},
+17:{heading:"Chapter XVII",running:"The great whore of Babylon — the woman drunk with the blood of saints, riding the scarlet beast",sections:{1:"The Whore on the Beast",7:"The Angel's Explanation",15:"The Beast Turns on the Harlot"},verses:[
+{v:1,t:"And there came one of the seven angels which had the seven vials, and talked with me, saying unto me, Come hither; I will shew unto thee the judgment of the great whore that sitteth upon many waters:",n:[{tag:"note",a:"great whore",t:"A system of false religion — spiritual adultery against God — that has corrupted the nations. She is distinct from the beast she rides; she is a religious system, he is a political power.",s:"1611 margin, Rev 17:1"}]},
+{v:2,t:"With whom the kings of the earth have committed fornication, and the inhabitants of the earth have been made drunk with the wine of her fornication.",n:[]},
+{v:3,t:"So he carried me away in the spirit into the wilderness: and I saw a woman sit upon a scarlet coloured beast, full of names of blasphemy, having seven heads and ten horns.",n:[]},
+{v:4,t:"And the woman was arrayed in purple and scarlet colour, and decked with gold and precious stones and pearls, having a golden cup in her hand full of abominations and filthiness of her fornication:",n:[]},
+{v:5,t:"And upon her forehead <em>was</em> a name written, MYSTERY, BABYLON THE GREAT, THE MOTHER OF HARLOTS AND ABOMINATIONS OF THE EARTH.",n:[{tag:"note",a:"MYSTERY, BABYLON THE GREAT",t:"Mystery — a truth hidden in the OT and revealed in the NT. Babylon is the origin of organized false religion (Gen 11) and remains its symbol. The word MYSTERY on her forehead may echo the practice of Roman harlots wearing their names.",s:"1611 margin, Rev 17:5"}]},
+{v:6,t:"And I saw the woman drunken with the blood of the saints, and with the blood of the martyrs of Jesus: and when I saw her, I wondered with great admiration.",n:[]},
+{v:7,t:"And the angel said unto me, Wherefore didst thou marvel? I will tell thee the mystery of the woman, and of the beast that carrieth her, which hath the seven heads and ten horns.",n:[]},
+{v:8,t:"The beast that thou sawest was, and is not; and shall ascend out of the bottomless pit, and go into perdition: and they that dwell on the earth shall wonder, whose names were not written in the book of life from the foundation of the world, when they behold the beast that was, and is not, and yet is.",n:[]},
+{v:9,t:"And here <em>is</em> the mind which hath wisdom. The seven heads are seven mountains, on which the woman sitteth.",n:[{tag:"note",a:"seven mountains",t:"Rome was famously built on seven hills, making this an oblique identification of the city of Rome as the seat of the harlot system. The broader system of false religion is centered there in the end times.",s:"1611 margin, Rev 17:9"}]},
+{v:10,t:"And there are seven kings: five are fallen, and one is, <em>and</em> the other is not yet come; and when he cometh, he must continue a short space.",n:[]},
+{v:11,t:"And the beast that was, and is not, even he is the eighth, and is of the seven, and goeth into perdition.",n:[]},
+{v:12,t:"And the ten horns which thou sawest are ten kings, which have received no kingdom as yet; but receive power as kings one hour with the beast.",n:[{tag:"note",a:"ten kings ... one hour with the beast",t:"A future ten-nation confederacy that rules briefly in alignment with Antichrist. The one hour denotes the brevity of their reign, not a literal sixty minutes.",s:"1611 margin, Rev 17:12"}]},
+{v:13,t:"These have one mind, and shall give their power and strength unto the beast.",n:[]},
+{v:14,t:"These shall make war with the Lamb, and the Lamb shall overcome them: for he is Lord of lords, and King of kings: and they that are with him <em>are</em> called, and chosen, and faithful.",n:[]},
+{v:15,t:"And he saith unto me, The waters which thou sawest, where the whore sitteth, are peoples, and multitudes, and nations, and tongues.",n:[]},
+{v:16,t:"And the ten horns which thou sawest upon the beast, these shall hate the whore, and shall make her desolate and naked, and shall eat her flesh, and burn her with fire.",n:[{tag:"note",a:"these shall hate the whore",t:"The political beast ultimately destroys the religious system it once tolerated. When Antichrist demands exclusive worship (Rev 13:8), he can no longer permit a competing religious institution.",s:"1611 margin, Rev 17:16"}]},
+{v:17,t:"For God hath put in their hearts to fulfil his will, and to agree, and give their kingdom unto the beast, until the words of God shall be fulfilled.",n:[{tag:"note",a:"God hath put in their hearts",t:"Even the wicked actions of Antichrist and the ten kings are within God's sovereign orchestration. They act freely; yet they fulfill his purposes — as Pharaoh and Judas did before them.",s:"1611 margin, Rev 17:17"}]},
+{v:18,t:"And the woman which thou sawest is that great city, which reigneth over the kings of the earth.",n:[]}
+]},
+18:{heading:"Chapter XVIII",running:"Babylon is fallen — the merchants' lament and heaven's rejoicing over her destruction",sections:{1:"The Fall of Babylon Proclaimed",9:"The Merchants' Lament",20:"Heaven Rejoices"},verses:[
+{v:1,t:"And after these things I saw another angel come down from heaven, having great power; and the earth was lightened with his glory.",n:[]},
+{v:2,t:"And he cried mightily with a strong voice, saying, Babylon the great is fallen, is fallen, and is become the habitation of devils, and the hold of every foul spirit, and a cage of every unclean and hateful bird.",n:[]},
+{v:3,t:"For all nations have drunk of the wine of the wrath of her fornication, and the kings of the earth have committed fornication with her, and the merchants of the earth are waxed rich through the abundance of her delicacies.",n:[]},
+{v:4,t:"And I heard another voice from heaven, saying, Come out of her, my people, that ye be not partakers of her sins, and that ye receive not of her plagues.",n:[{tag:"note",a:"Come out of her, my people",t:"God's call throughout Scripture to separate from the corrupt system of the world (Isa 48:20; Jer 51:45; 2 Cor 6:17). The presence of his people in Babylon does not mean endorsement of it.",s:"1611 margin, Rev 18:4"}]},
+{v:5,t:"For her sins have reached unto heaven, and God hath remembered her iniquities.",n:[]},
+{v:6,t:"Reward her even as she rewarded you, and double unto her double according to her works: in the cup which she hath filled fill to her double.",n:[]},
+{v:7,t:"How much she hath glorified herself, and lived deliciously, so much torment and sorrow give her: for she saith in her heart, I sit a queen, and am no widow, and shall see no sorrow.",n:[{tag:"note",a:"I sit a queen ... and shall see no sorrow",t:"The spirit of Babylon — self-glorification, security in material wealth, immunity from judgment. Compare Isa 47:7-8. God answers such boasting with sudden, total destruction.",s:"1611 margin, Rev 18:7"}]},
+{v:8,t:"Therefore shall her plagues come in one day, death, and mourning, and famine; and she shall be utterly burned with fire: for strong <em>is</em> the Lord God who judgeth her.",n:[]},
+{v:9,t:"And the kings of the earth, who have committed fornication and lived deliciously with her, shall bewail her, and lament for her, when they shall see the smoke of her burning,",n:[]},
+{v:10,t:"Standing afar off for the fear of her torment, saying, Alas, alas, that great city Babylon, that mighty city! for in one hour is thy judgment come.",n:[]},
+{v:11,t:"And the merchants of the earth shall weep and mourn over her; for no man buyeth their merchandise any more:",n:[]},
+{v:12,t:"The merchandise of gold, and silver, and precious stones, and of pearls, and fine linen, and purple, and silk, and scarlet, and all thyine wood, and all manner vessels of ivory, and all manner vessels of most precious wood, and of brass, and iron, and marble,",n:[]},
+{v:13,t:"And cinnamon, and odours, and ointments, and frankincense, and wine, and oil, and fine flour, and wheat, and beasts, and sheep, and horses, and chariots, and slaves, and souls of men.",n:[{tag:"note",a:"souls of men",t:"The final commodity in Babylon's market — human beings, body and soul. The trafficking of human souls characterizes the world system in its ultimate corruption. Christ redeems what Babylon exploits.",s:"1611 margin, Rev 18:13"}]},
+{v:14,t:"And the fruits that thy soul lusted after are departed from thee, and all things which were dainty and goodly are departed from thee, and thou shalt find them no more at all.",n:[]},
+{v:15,t:"The merchants of these things, which were made rich by her, shall stand afar off for the fear of her torment, weeping and wailing,",n:[]},
+{v:16,t:"And saying, Alas, alas, that great city, that was clothed in fine linen, and purple, and scarlet, and decked with gold, and precious stones, and pearls!",n:[]},
+{v:17,t:"For in one hour so great riches is come to nought. And every shipmaster, and all the company in ships, and sailors, and as many as trade by sea, stood afar off,",n:[]},
+{v:18,t:"And cried when they saw the smoke of her burning, saying, What <em>city is</em> like unto this great city!",n:[]},
+{v:19,t:"And they cast dust on their heads, and cried, weeping and wailing, saying, Alas, alas, that great city, wherein were made rich all that had ships in the sea by reason of her costliness! for in one hour is she made desolate.",n:[]},
+{v:20,t:"Rejoice over her, <em>thou</em> heaven, and <em>ye</em> holy apostles and prophets; for God hath avenged you on her.",n:[]},
+{v:21,t:"And a mighty angel took up a stone like a great millstone, and cast <em>it</em> into the sea, saying, Thus with violence shall that great city Babylon be thrown down, and shall be found no more at all.",n:[{tag:"note",a:"great millstone ... thrown down",t:"Echoes Jeremiah's symbolic act with the scroll and stone cast into the Euphrates (Jer 51:63-64). The violence and finality of the cast — and the permanence of the sinking — picture Babylon's total and irrecoverable destruction.",s:"1611 margin, Rev 18:21"}]},
+{v:22,t:"And the voice of harpers, and musicians, and of pipers, and trumpeters, shall be heard no more at all in thee; and no craftsman, of whatsoever craft <em>he be</em>, shall be found any more in thee; and the sound of a millstone shall be heard no more at all in thee;",n:[]},
+{v:23,t:"And the light of a candle shall shine no more at all in thee; and the voice of the bridegroom and of the bride shall be heard no more at all in thee: for thy merchants were the great men of the earth; for by thy sorceries were all nations deceived.",n:[]},
+{v:24,t:"And in her was found the blood of prophets, and of saints, and of all that were slain upon the earth.",n:[]}
+]},
+19:{heading:"Chapter XIX",running:"Hallelujah in heaven — the marriage supper of the Lamb and the Second Coming of Christ in glory",sections:{1:"Hallelujah: The Marriage Supper",11:"The Second Coming of Christ",17:"The Battle of Armageddon"},verses:[
+{v:1,t:"And after these things I heard a great voice of much people in heaven, saying, Alleluia; Salvation, and glory, and honour, and power, unto the Lord our God:",n:[{tag:"grk",a:"Alleluia",t:"Hallelujah — Praise ye the Lord. A Hebrew exclamation found four times in this chapter (vv.1,3,4,6) and nowhere else in the New Testament. Heaven borrows the Hebrew songbook of Israel to celebrate Babylon's fall.",s:"1611 margin, Rev 19:1"}]},
+{v:2,t:"For true and righteous <em>are</em> his judgments: for he hath judged the great whore, which did corrupt the earth with her fornication, and hath avenged the blood of his servants at her hand.",n:[]},
+{v:3,t:"And again they said, Alleluia. And her smoke rose up for ever and ever.",n:[]},
+{v:4,t:"And the four and twenty elders and the four beasts fell down and worshipped God that sat on the throne, saying, Amen; Alleluia.",n:[]},
+{v:5,t:"And a voice came out of the throne, saying, Praise our God, all ye his servants, and ye that fear him, both small and great.",n:[]},
+{v:6,t:"And I heard as it were the voice of a great multitude, and as the voice of many waters, and as the voice of mighty thunderings, saying, Alleluia: for the Lord God omnipotent reigneth.",n:[]},
+{v:7,t:"Let us be glad and rejoice, and give honour to him: for the marriage of the Lamb is come, and his wife hath made herself ready.",n:[{tag:"note",a:"marriage of the Lamb",t:"The consummation of God's redemptive purpose — Christ and his church united in glory. The bride is the church (Eph 5:25-32); the wedding follows the rapture and the judgment seat of Christ.",s:"1611 margin, Rev 19:7"}]},
+{v:8,t:"And to her was granted that she should be arrayed in fine linen, clean and white: for the fine linen is the righteousness of saints.",n:[{tag:"note",a:"fine linen is the righteousness of saints",t:"Not imputed righteousness alone — the word is dikaiomata, righteous acts. The bride's dress is woven from a lifetime of obedient service, transformed and glorified.",s:"1611 margin, Rev 19:8"}]},
+{v:9,t:"And he saith unto me, Write, Blessed <em>are</em> they which are called unto the marriage supper of the Lamb. And he saith unto me, These are the true sayings of God.",n:[]},
+{v:10,t:"And I fell at his feet to worship him. And he said unto me, See <em>thou do it</em> not: I am thy fellowservant, and of thy brethren that have the testimony of Jesus: worship God: for the testimony of Jesus is the spirit of prophecy.",n:[{tag:"note",a:"testimony of Jesus is the spirit of prophecy",t:"All true prophecy centers on Jesus Christ — he is both its content and its purpose. Prophecy that does not ultimately witness to him has missed its mark.",s:"1611 margin, Rev 19:10"}]},
+{v:11,t:"And I saw heaven opened, and behold a white horse; and he that sat upon him <em>was</em> called Faithful and True, and in righteousness he doth judge and make war.",n:[{tag:"note",a:"heaven opened",t:"Not a crack or a gap — the heavens split open for his coming. This is the second phase of Christ's return, distinct from the rapture (1 Thess 4:16-17): he now comes to the earth with his saints.",s:"1611 margin, Rev 19:11"}]},
+{v:12,t:"His eyes <em>were</em> as a flame of fire, and on his head <em>were</em> many crowns; and he had a name written, that no man knew, but he himself.",n:[]},
+{v:13,t:"And he <em>was</em> clothed with a vesture dipped in blood: and his name is called The Word of God.",n:[{tag:"note",a:"The Word of God",t:"The title connects this rider unmistakably with John 1:1,14. The eternal Word who became flesh now returns as the conquering King, his robe red not with his own blood but with the blood of his enemies.",s:"1611 margin, Rev 19:13"}]},
+{v:14,t:"And the armies which were in heaven followed him upon white horses, clothed in fine linen, white and clean.",n:[{tag:"note",a:"armies which were in heaven",t:"The church, the raptured and glorified saints, return with Christ to the earth. They are clothed in fine linen (the righteousness of saints, v.8); they carry no weapons — the battle belongs to the Lord.",s:"1611 margin, Rev 19:14"}]},
+{v:15,t:"And out of his mouth goeth a sharp sword, that with it he should smite the nations: and he shall rule them with a rod of iron: and he treadeth the winepress of the fierceness and wrath of Almighty God.",n:[]},
+{v:16,t:"And he hath on <em>his</em> vesture and on his thigh a name written, KING OF KINGS, AND LORD OF LORDS.",n:[]},
+{v:17,t:"And I saw an angel standing in the sun; and he cried with a loud voice, saying to all the fowls that fly in the midst of heaven, Come and gather yourselves together unto the supper of the great God;",n:[]},
+{v:18,t:"That ye may eat the flesh of kings, and the flesh of captains, and the flesh of mighty men, and the flesh of horses, and of them that sit on them, and the flesh of all <em>men, both</em> free and bond, both small and great.",n:[]},
+{v:19,t:"And I saw the beast, and the kings of the earth, and their armies, gathered together to make war against him that sat on the horse, and against his army.",n:[]},
+{v:20,t:"And the beast was taken, and with him the false prophet that wrought miracles before him, with which he deceived them that had received the mark of the beast, and them that worshipped his image. These both were cast alive into a lake of fire burning with brimstone.",n:[{tag:"note",a:"cast alive into a lake of fire",t:"Antichrist and the false prophet are the first occupants of the lake of fire, cast in 1,000 years before the rest of the lost (Rev 20:10-15). They are still there — alive, conscious — when Satan joins them.",s:"1611 margin, Rev 19:20"}]},
+{v:21,t:"And the remnant were slain with the sword of him that sat upon the horse, which <em>sword</em> proceeded out of his mouth: and all the fowls were filled with their flesh.",n:[]}
+]},
+20:{heading:"Chapter XX",running:"Satan bound, the millennial reign of Christ, Satan loosed and defeated, and the Great White Throne judgment",sections:{1:"Satan Bound for a Thousand Years",4:"The Millennium",7:"Satan Loosed and Defeated",11:"The Great White Throne"},verses:[
+{v:1,t:"And I saw an angel come down from heaven, having the key of the bottomless pit and a great chain in his hand.",n:[]},
+{v:2,t:"And he laid hold on the dragon, that old serpent, which is the Devil, and Satan, and bound him a thousand years,",n:[{tag:"note",a:"bound him a thousand years",t:"Satan's binding is total during the millennium — he cannot deceive the nations (v.3). The present restraint of 2 Thess 2:6-7 is partial; this is complete. The change in earth's character during the millennium is directly traceable to his absence.",s:"1611 margin, Rev 20:2"}]},
+{v:3,t:"And cast him into the bottomless pit, and shut him up, and set a seal upon him, that he should deceive the nations no more, till the thousand years should be fulfilled: and after that he must be loosed a little season.",n:[]},
+{v:4,t:"And I saw thrones, and they sat upon them, and judgment was given unto them: and <em>I saw</em> the souls of them that were beheaded for the witness of Jesus, and for the word of God, and which had not worshipped the beast, neither his image, neither had received <em>his</em> mark upon their foreheads, or in their hands; and they lived and reigned with Christ a thousand years.",n:[{tag:"note",a:"reigned with Christ a thousand years",t:"The first resurrection saints — including tribulation martyrs — reign with Christ in a literal 1,000-year earthly kingdom centered at Jerusalem. The millennium is the fulfillment of every OT promise of an earthly Davidic reign.",s:"1611 margin, Rev 20:4"}]},
+{v:5,t:"But the rest of the dead lived not again until the thousand years were finished. This <em>is</em> the first resurrection.",n:[]},
+{v:6,t:"Blessed and holy <em>is</em> he that hath part in the first resurrection: on such the second death hath no power, but they shall be priests of God and of Christ, and shall reign with him a thousand years.",n:[]},
+{v:7,t:"And when the thousand years are expired, Satan shall be loosed out of his prison,",n:[]},
+{v:8,t:"And shall go out to deceive the nations which are in the four quarters of the earth, Gog and Magog, to gather them together to battle: the number of whom <em>is</em> as the sand of the sea.",n:[{tag:"note",a:"Gog and Magog",t:"Not the same battle as Ezek 38-39 (which precedes the millennium) but a final symbolic rebellion using the same names. After 1,000 years of perfect government under Christ, the unregenerate hearts of unsaved nations still choose rebellion — proof that man's problem is not environment but nature.",s:"1611 margin, Rev 20:8"}]},
+{v:9,t:"And they went up on the breadth of the earth, and compassed the camp of the saints about, and the beloved city: and fire came down from God out of heaven, and devoured them.",n:[]},
+{v:10,t:"And the devil that deceived them was cast into the lake of fire and brimstone, where the beast and the false prophet <em>are</em>, and shall be tormented day and night for ever and ever.",n:[{tag:"note",a:"tormented day and night for ever and ever",t:"The beast and false prophet were cast in 1,000 years prior (Rev 19:20). Satan joins them. All three are still there — still conscious, still suffering. The lake of fire is eternal and its torment is unending.",s:"1611 margin, Rev 20:10"}]},
+{v:11,t:"And I saw a great white throne, and him that sat on it, from whose face the earth and the heaven fled away; and there was found no place for them.",n:[{tag:"note",a:"great white throne",t:"Great — in its authority and finality. White — in its absolute purity and justice. The throne before which every unbeliever from Adam to the millennium stands for final judgment. There is no appeal, no defense, no escape.",s:"1611 margin, Rev 20:11"}]},
+{v:12,t:"And I saw the dead, small and great, stand before God; and the books were opened: and another book was opened, which is <em>the book</em> of life: and the dead were judged out of those things which were written in the books, according to their works.",n:[{tag:"note",a:"the books were opened",t:"The books contain the complete record of every word, deed, and thought of every unbeliever. The book of life is opened to confirm the absence of their names. The basis of judgment is works; the evidence of condemnation is the missing name.",s:"1611 margin, Rev 20:12"}]},
+{v:13,t:"And the sea gave up the dead which were in it; and death and hell delivered up the dead which were in them: and they were judged every man according to their works.",n:[]},
+{v:14,t:"And death and hell were cast into the lake of fire. This is the second death.",n:[{tag:"note",a:"This is the second death",t:"Death and Hades — the temporary holding places of the dead — are themselves abolished by being cast into the lake of fire. The second death is the permanent, final state from which no resurrection brings release.",s:"1611 margin, Rev 20:14"}]},
+{v:15,t:"And whosoever was not found written in the book of life was cast into the lake of fire.",n:[{tag:"note",a:"whosoever was not found written",t:"The only criterion for escape from the lake of fire is a name in the book of life — which is to say, saving faith in Jesus Christ. Good works are examined only to establish the degree of condemnation, not as a means of deliverance.",s:"1611 margin, Rev 20:15"}]}
+]},
+21:{heading:"Chapter XXI",running:"The new heaven and new earth — the holy city New Jerusalem descending, all things made new",sections:{1:"All Things New",9:"The New Jerusalem Described"},verses:[
+{v:1,t:"And I saw a new heaven and a new earth: for the first heaven and the first earth were passed away; and there was no more sea.",n:[{tag:"note",a:"new heaven and a new earth",t:"Not a renovation but a re-creation — the Greek kainos denotes new in kind and quality, not merely repaired. The first creation, marred by the curse, gives way to a creation untouched by sin.",s:"1611 margin, Rev 21:1"}]},
+{v:2,t:"And I John saw the holy city, new Jerusalem, coming down from God out of heaven, prepared as a bride adorned for her husband.",n:[{tag:"note",a:"new Jerusalem, coming down from God out of heaven",t:"The city descends — it is not built by human hands. It is the dwelling place prepared by Christ (John 14:2-3), now brought to the new earth as the eternal home of the redeemed.",s:"1611 margin, Rev 21:2"}]},
+{v:3,t:"And I heard a great voice out of heaven saying, Behold, the tabernacle of God <em>is</em> with men, and he will dwell with them, and they shall be his people, and God himself shall be with them, <em>and be</em> their God.",n:[{tag:"note",a:"tabernacle of God is with men",t:"The great theme of Scripture fulfilled: God dwelling with man. The garden of Eden, the tabernacle, the temple, the incarnation, the church age — all were steps toward this: God permanently, visibly dwelling with his redeemed.",s:"1611 margin, Rev 21:3"}]},
+{v:4,t:"And God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow, nor crying, neither shall there be any more pain: for the former things are passed away.",n:[{tag:"note",a:"no more death, neither sorrow, nor crying, neither ... pain",t:"The fourfold absence defines eternity: death abolished, sorrow impossible, crying ended, pain unknown. The curse of Gen 3 is completely and permanently reversed.",s:"1611 margin, Rev 21:4"}]},
+{v:5,t:"And he that sat upon the throne said, Behold, I make all things new. And he said unto me, Write: for these words are true and faithful.",n:[]},
+{v:6,t:"And he said unto me, It is done. I am Alpha and Omega, the beginning and the end. I will give unto him that is athirst of the fountain of the water of life freely.",n:[]},
+{v:7,t:"He that overcometh shall inherit all things; and I will be his God, and he shall be my son.",n:[]},
+{v:8,t:"But the fearful, and unbelieving, and the abominable, and murderers, and whoremongers, and sorcerers, and idolaters, and all liars, shall have their part in the lake which burneth with fire and brimstone: which is the second death.",n:[{tag:"note",a:"the fearful",t:"The fearful — the cowardly — head the list. Those who knew the truth but were too afraid to confess Christ, too cautious to be identified with him. Fear of man is a capital crime against God.",s:"1611 margin, Rev 21:8"}]},
+{v:9,t:"And there came unto me one of the seven angels which had the seven vials full of the seven last plagues, and talked with me, saying, Come hither, I will shew thee the bride, the Lamb's wife.",n:[]},
+{v:10,t:"And he carried me away in the spirit to a great and high mountain, and shewed me that great city, the holy Jerusalem, descending out of heaven from God,",n:[]},
+{v:11,t:"Having the glory of God: and her light <em>was</em> like unto a stone most precious, even like a jasper stone, clear as crystal;",n:[]},
+{v:12,t:"And had a wall great and high, <em>and</em> had twelve gates, and at the gates twelve angels, and names written thereon, which are <em>the names</em> of the twelve tribes of the children of Israel:",n:[{tag:"note",a:"twelve gates ... twelve tribes of Israel",t:"The eternal city bears the names of the twelve tribes on its gates and the twelve apostles on its foundations — Israel and the church together as the complete redeemed humanity, united in the city of God.",s:"1611 margin, Rev 21:12"}]},
+{v:13,t:"On the east three gates; on the north three gates; on the south three gates; and on the west three gates.",n:[]},
+{v:14,t:"And the wall of the city had twelve foundations, and in them the names of the twelve apostles of the Lamb.",n:[]},
+{v:15,t:"And he that talked with me had a golden reed to measure the city, and the gates thereof, and the wall thereof.",n:[]},
+{v:16,t:"And the city lieth foursquare, and the length is as large as the breadth: and he measured the city with the reed, twelve thousand furlongs. The length and the breadth and the height of it are equal.",n:[{tag:"note",a:"twelve thousand furlongs",t:"Approximately 1,500 miles in each direction — length, breadth, and height. Whether a cube or a pyramid, the dimensions are without precedent. A city of this scale could house billions in eternal comfort.",s:"1611 margin, Rev 21:16"}]},
+{v:17,t:"And he measured the wall thereof, an hundred <em>and</em> forty <em>and</em> four cubits, <em>according to</em> the measure of a man, that is, of the angel.",n:[]},
+{v:18,t:"And the building of the wall of it was <em>of</em> jasper: and the city <em>was</em> pure gold, like unto clear glass.",n:[]},
+{v:19,t:"And the foundations of the wall of the city were garnished with all manner of precious stones. The first foundation <em>was</em> jasper; the second, sapphire; the third, a chalcedony; the fourth, an emerald;",n:[]},
+{v:20,t:"The fifth, sardonyx; the sixth, sardius; the seventh, chrysolite; the eighth, beryl; the ninth, a topaz; the tenth, a chrysoprasus; the eleventh, a jacinth; the twelfth, an amethyst.",n:[]},
+{v:21,t:"And the twelve gates <em>were</em> twelve pearls; every several gate was of one pearl: and the street of the city <em>was</em> pure gold, as it were transparent glass.",n:[{tag:"note",a:"every several gate was of one pearl",t:"Each gate a single pearl of impossible size — the pearl of great price (Matt 13:46) expanded to city-gate scale. Entry into eternity is through what cost the most to obtain.",s:"1611 margin, Rev 21:21"}]},
+{v:22,t:"And I saw no temple therein: for the Lord God Almighty and the Lamb are the temple of it.",n:[{tag:"note",a:"I saw no temple therein",t:"The temple was always a means of access to God. In the eternal state, access is direct and complete — the Mediator and the Father are themselves the meeting place. Every earthly temple was a shadow pointing to this.",s:"1611 margin, Rev 21:22"}]},
+{v:23,t:"And the city had no need of the sun, neither of the moon, to shine in it: for the glory of God did lighten it, and the Lamb <em>is</em> the light thereof.",n:[]},
+{v:24,t:"And the nations of them which are saved shall walk in the light of it: and the kings of the earth do bring their glory and honour into it.",n:[]},
+{v:25,t:"And the gates of it shall not be shut at all by day: for there shall be no night there.",n:[]},
+{v:26,t:"And they shall bring the glory and honour of the nations into it.",n:[]},
+{v:27,t:"And there shall in no wise enter into it any thing that defileth, neither <em>whatsoever</em> worketh abomination, or <em>maketh</em> a lie: but they which are written in the Lamb's book of life.",n:[]}
+]},
+22:{heading:"Chapter XXII",running:"The river of life, the tree of life, the final testimony of Jesus, and the closing invitation of the Spirit and the bride",sections:{1:"The River and Tree of Life",6:"The Final Testimony of Jesus",16:"The Closing Invitation"},verses:[
+{v:1,t:"And he shewed me a pure river of water of life, clear as crystal, proceeding out of the throne of God and of the Lamb.",n:[{tag:"note",a:"river of water of life",t:"The river of Eden (Gen 2:10) and the river of Ezekiel's temple (Ezek 47:1) find their ultimate fulfillment here. The source is the throne — life flows eternally from the person of God.",s:"1611 margin, Rev 22:1"}]},
+{v:2,t:"In the midst of the street of it, and on either side of the river, <em>was there</em> the tree of life, which bare twelve <em>manner of</em> fruits, <em>and</em> yielded her fruit every month: and the leaves of the tree were for the healing of the nations.",n:[{tag:"note",a:"tree of life",t:"Last seen at Eden's gate (Gen 3:24), now freely accessible at the center of the eternal city. The twelve fruits, one per month, suggest the abundance and variety of eternal life — nothing is lacking, nothing is repeated.",s:"1611 margin, Rev 22:2"}]},
+{v:3,t:"And there shall be no more curse: but the throne of God and of the Lamb shall be in it; and his servants shall serve him:",n:[{tag:"note",a:"no more curse",t:"The curse of Gen 3:17-19 is completely and permanently lifted. The earth, man, and the whole creation are freed from the bondage of corruption (Rom 8:21). The long story of the fall is over.",s:"1611 margin, Rev 22:3"}]},
+{v:4,t:"And they shall see his face; and his name <em>shall be</em> in their foreheads.",n:[{tag:"note",a:"they shall see his face",t:"The beatific vision — the highest privilege of the redeemed, impossible in the present life (Ex 33:20; John 1:18). To see God face to face is the fullness of eternal life, the end of all longing.",s:"1611 margin, Rev 22:4"}]},
+{v:5,t:"And there shall be no night there; and they need no candle, neither light of the sun; for the Lord God giveth them light: and they shall reign for ever and ever.",n:[]},
+{v:6,t:"And he said unto me, These sayings <em>are</em> faithful and true: and the Lord God of the holy prophets sent his angel to shew unto his servants the things which must shortly be done.",n:[]},
+{v:7,t:"Behold, I come quickly: blessed <em>is</em> he that keepeth the sayings of the prophecy of this book.",n:[]},
+{v:8,t:"And I John saw these things, and heard <em>them</em>. And when I had heard and seen, I fell down to worship before the feet of the angel which shewed me these things.",n:[]},
+{v:9,t:"Then saith he unto me, See <em>thou do it</em> not: for I am thy fellowservant, and of thy brethren the prophets, and of them which keep the sayings of this book: worship God.",n:[]},
+{v:10,t:"And he saith unto me, Seal not the sayings of the prophecy of this book: for the time is at hand.",n:[{tag:"note",a:"Seal not",t:"The contrast with Dan 12:4,9 is intentional. Daniel was told to seal his prophecy until the time of the end; John is told not to seal his, because the time of the end had drawn near with the coming of Christ.",s:"1611 margin, Rev 22:10"}]},
+{v:11,t:"He that is unjust, let him be unjust still: and he which is filthy, let him be filthy still: and he that is righteous, let him be righteous still: and he that is holy, let him be holy still.",n:[{tag:"note",a:"let him be unjust still",t:"At the close of time, character is fixed permanently. There is no more repentance, no more opportunity. The state in which a soul enters eternity is the state in which it remains — forever. The door does not open again.",s:"1611 margin, Rev 22:11"}]},
+{v:12,t:"And, behold, I come quickly; and my reward <em>is</em> with me, to give every man according as his work shall be.",n:[]},
+{v:13,t:"I am Alpha and Omega, the beginning and the end, the first and the last.",n:[]},
+{v:14,t:"Blessed <em>are</em> they that do his commandments, that they may have right to the tree of life, and may enter in through the gates into the city.",n:[]},
+{v:15,t:"For without <em>are</em> dogs, and sorcerers, and whoremongers, and murderers, and idolaters, and whosoever loveth and maketh a lie.",n:[{tag:"note",a:"without are dogs",t:"Outside the city, not inside the lake of fire — the language describes exclusion from the eternal city, not a second location of the lost. Dogs was a Jewish term for the impure, the profane.",s:"1611 margin, Rev 22:15"}]},
+{v:16,t:"I Jesus have sent mine angel to testify unto you these things in the churches. I am the root and the offspring of David, <em>and</em> the bright and morning star.",n:[{tag:"note",a:"root and the offspring of David",t:"As root he is David's Creator and Lord; as offspring he is David's descendant. Both the divine and human natures of Christ are affirmed in this single title (Matt 22:41-46).",s:"1611 margin, Rev 22:16"}]},
+{v:17,t:"And the Spirit and the bride say, Come. And let him that heareth say, Come. And let him that is athirst come. And whosoever will, let him take the water of life freely.",n:[{tag:"note",a:"the Spirit and the bride say, Come",t:"The last invitation of Scripture. The Holy Spirit and the church unite in calling the lost to Christ. The offer is free, universal, and urgent. This is the final note of grace before the book closes with warning.",s:"1611 margin, Rev 22:17"}]},
+{v:18,t:"For I testify unto every man that heareth the words of the prophecy of this book, If any man shall add unto these things, God shall add unto him the plagues that are written in this book:",n:[{tag:"note",a:"If any man shall add unto these things",t:"The most solemn warning in all of Scripture against tampering with God's written word. Adding or taking away from the book of Revelation — and by extension from the completed canon — brings divine judgment.",s:"1611 margin, Rev 22:18"}]},
+{v:19,t:"And if any man shall take away from the words of the book of this prophecy, God shall take away his part out of the book of life, and out of the holy city, and <em>from</em> the things which are written in this book.",n:[]},
+{v:20,t:"He which testifieth these things saith, Surely I come quickly. Amen. Even so, come, Lord Jesus.",n:[{tag:"note",a:"Even so, come, Lord Jesus",t:"The Maranatha prayer of the early church (1 Cor 16:22) — Come, O Lord. The final prayer of Scripture is not for comfort, or success, or revival, but for the return of Christ himself. This is the proper posture of the church until he comes.",s:"1611 margin, Rev 22:20"}]},
+{v:21,t:"The grace of our Lord Jesus Christ <em>be</em> with you all. Amen.",n:[{tag:"note",a:"The grace of our Lord Jesus Christ be with you all",t:"As Paul closed his epistles with grace, so the canon closes. The last word of Scripture to the church is grace — the same word with which the age of the church began. Grace opens the door; grace holds it open; grace is the last thing heard as the door closes behind us.",s:"1611 margin, Rev 22:21"}]}
+]}
+};
+
+const CH_META = {
+  1:{label:"Vision on Patmos, the Son of Man",verses:20},
+  2:{label:"Letters to Ephesus, Smyrna, Pergamos, Thyatira",verses:29},
+  3:{label:"Letters to Sardis, Philadelphia, Laodicea",verses:22},
+  4:{label:"The Throne Room of Heaven",verses:11},
+  5:{label:"The Sealed Book and the Lamb",verses:14},
+  6:{label:"The Six Seals Opened",verses:17},
+  7:{label:"The 144,000 and the Great Multitude",verses:17},
+  8:{label:"The Seventh Seal and Four Trumpets",verses:13},
+  9:{label:"The Fifth and Sixth Trumpets",verses:21},
+  10:{label:"The Mighty Angel and the Little Book",verses:11},
+  11:{label:"The Two Witnesses; the Seventh Trumpet",verses:19},
+  12:{label:"The Woman, the Dragon, the Man Child",verses:17},
+  13:{label:"The Two Beasts and the Mark",verses:18},
+  14:{label:"The 144,000 on Zion; the Harvest",verses:20},
+  15:{label:"The Song of Moses and the Lamb",verses:8},
+  16:{label:"The Seven Bowls of Wrath",verses:21},
+  17:{label:"Mystery Babylon the Great",verses:18},
+  18:{label:"Babylon Is Fallen",verses:24},
+  19:{label:"The Marriage Supper; the Second Coming",verses:21},
+  20:{label:"The Millennium and the Great White Throne",verses:15},
+  21:{label:"The New Heaven and New Earth",verses:27},
+  22:{label:"The River of Life and the Final Invitation",verses:21}
+};
+
+let currentChapter = 1;
+
+function buildIndex() {
+  const grid = document.getElementById('chapter-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  for (let c = 1; c <= 22; c++) {
+    const meta = CH_META[c];
+    const ch = REVELATION[c];
+    const noteCount = ch.verses.filter(v => v.n && v.n.length > 0).length;
+    const card = document.createElement('div');
+    card.className = 'chapter-card';
+    card.onclick = () => openChapter(c);
+    card.innerHTML = `<span class="ch-num">Chapter ${toRoman(c)}</span><span class="ch-label">${meta.label}</span><span class="ch-notes">${noteCount > 0 ? noteCount + ' note' + (noteCount > 1 ? 's' : '') : ''}</span>`;
+    grid.appendChild(card);
+  }
+}
+
+function toRoman(n) {
+  const vals = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+  const syms = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+  let result = '';
+  for (let i = 0; i < vals.length; i++) {
+    while (n >= vals[i]) { result += syms[i]; n -= vals[i]; }
+  }
+  return result;
+}
+
+function openChapter(n) {
+  currentChapter = n;
+  const ch = REVELATION[n];
+  const meta = CH_META[n];
+  document.getElementById('ch-heading').textContent = ch.heading;
+  document.getElementById('ch-running').textContent = ch.running;
+  document.getElementById('nav-label').textContent = 'Revelation · Chapter ' + toRoman(n);
+  const container = document.getElementById('verse-container');
+  container.innerHTML = '';
+  const sections = ch.sections || {};
+  ch.verses.forEach(vObj => {
+    if (sections[vObj.v]) {
+      const sb = document.createElement('div');
+      sb.className = 'section-break';
+      sb.textContent = sections[vObj.v];
+      container.appendChild(sb);
+    }
+    const hasNote = vObj.n && vObj.n.length > 0;
+    const block = document.createElement('div');
+    block.className = 'verse-block' + (hasNote ? ' has-note' : '');
+    block.id = 'v' + vObj.v;
+    if (hasNote) block.onclick = () => toggleNote('note' + vObj.v, block);
+    const numSpan = document.createElement('span');
+    numSpan.className = 'verse-num';
+    numSpan.textContent = vObj.v;
+    const textSpan = document.createElement('span');
+    textSpan.className = 'verse-text';
+    textSpan.innerHTML = vObj.t + (hasNote ? '<span class="note-dot"></span>' : '');
+    block.appendChild(numSpan);
+    block.appendChild(textSpan);
+    container.appendChild(block);
+    if (hasNote) {
+      const panel = document.createElement('div');
+      panel.className = 'note-panel';
+      panel.id = 'note' + vObj.v;
+      vObj.n.forEach(note => {
+        const tagClass = 'tag-' + (note.tag === 'alt' ? 'alt' : note.tag === 'heb' ? 'heb' : note.tag === 'grk' ? 'grk' : 'note');
+        const tagLabel = note.tag === 'alt' ? 'OR' : note.tag === 'heb' ? 'HEB' : note.tag === 'grk' ? 'GRK' : 'NOTE';
+        const entry = document.createElement('div');
+        entry.className = 'note-entry';
+        entry.innerHTML = `<span class="tag ${tagClass}">${tagLabel}</span><div class="note-content"><span class="anchor">${note.a}</span><span class="text">${note.t}</span><div class="source">${note.s}</div></div>`;
+        panel.appendChild(entry);
+      });
+      container.appendChild(panel);
+    }
+  });
+  const noteCount = ch.verses.filter(v => v.n && v.n.length > 0).length;
+  document.getElementById('ch-stats').innerHTML = `<span>${meta.verses}</span> verses &nbsp;·&nbsp; <span>${noteCount}</span> marginal notes &nbsp;·&nbsp; Revelation ${n}`;
+  document.getElementById('view-index').classList.remove('active');
+  document.getElementById('view-chapter').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function toggleNote(id, block) {
+  const panel = document.getElementById(id);
+  const isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.note-panel.open').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.verse-block.active').forEach(b => b.classList.remove('active'));
+  if (!isOpen) { panel.classList.add('open'); block.classList.add('active'); }
+}
+
+function showIndex() {
+  document.getElementById('view-chapter').classList.remove('active');
+  document.getElementById('view-index').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function prevChapter() {
+  if (currentChapter > 1) openChapter(currentChapter - 1);
+  else showIndex();
+}
+
+function nextChapter() {
+  if (currentChapter < 22) openChapter(currentChapter + 1);
+  else showIndex();
+}
+
+function expandAll() {
+  document.querySelectorAll('.note-panel').forEach(p => p.classList.add('open'));
+  document.querySelectorAll('.verse-block.has-note').forEach(b => b.classList.add('active'));
+}
+
+function collapseAll() {
+  document.querySelectorAll('.note-panel').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.verse-block').forEach(b => b.classList.remove('active'));
+}
+
+buildIndex();
+</script>
+</body>
+</html>
